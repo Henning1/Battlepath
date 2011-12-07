@@ -6,10 +6,11 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 
 
-public class Input implements MouseListener {
+public class Input implements MouseListener, MouseMotionListener {
 
 	Game g;
 	Dimension size=null;
@@ -49,6 +50,21 @@ public class Input implements MouseListener {
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
 		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent arg0) {
+		Point p = arg0.getPoint();
+		g.c = new Point2D.Double(
+				(double)p.x/(double)size.width,
+				(double)p.y/(double)size.height);
 		
 	}
 

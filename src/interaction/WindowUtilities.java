@@ -34,8 +34,8 @@ public class WindowUtilities {
     frame.setContentPane(panel);
     r.panel = panel;
     frame.addWindowListener(new ExitListener());
-    
     panel.addMouseListener(i);
+    panel.addMouseMotionListener(i);
     frame.setVisible(true);
     i.size = panel.size();
     return(frame);

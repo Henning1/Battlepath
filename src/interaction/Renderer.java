@@ -98,6 +98,7 @@ public class Renderer extends Thread {
     }
     
     double width = (double)panel.size().width;
+    double height = (double)panel.size().height;
     ArrayList<Point2D> path = game.u.path;
     g2d.setColor(new Color(0,255,0));
     if(path != null) {
@@ -117,10 +118,13 @@ public class Renderer extends Thread {
     
     //g2d.setColor(new Color(255,0,0));
     g2d.fill(new Ellipse2D.Double(game.u.pos.getX()*width-(size/2),
-    							  game.u.pos.getY()*width-(size/2),
+    							  game.u.pos.getY()*height-(size/2),
     							  size,size));
 
-
+    g2d.draw(new Ellipse2D.Double(game.c.getX()*width-(size/2),
+			  game.c.getY()*height-(size/2),
+			  size,size));
+    
     Graphics2D g2dpanel = (Graphics2D)g;
     g2dpanel.drawImage(back,null, 0,0);
     

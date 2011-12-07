@@ -12,6 +12,7 @@ public class Game extends Thread {
 	Pathplanner p;
 	//Point2D pos;
 	public Unit u;
+	public Point2D c= new Point2D.Double(0,0);
 	
 	public Game(Field f, Point2D startpos) {
 		this.f = f;

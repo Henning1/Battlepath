@@ -15,7 +15,7 @@ public class Battlepath {
 	
 	public static void main(String[] args) {
 
-		Field f = new Field(32,32);
+		Field f = new Field(120,120);
 		randomCircles(f,40,0.15);
 		
 		Point2D start;
