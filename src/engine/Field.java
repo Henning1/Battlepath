@@ -5,9 +5,9 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /*
- * A field stores the Level information. It is seperated in square Tiles.
- * (0,0) is bottom left, (1,1) is top right.
- * At this point a Tile with value 0 is empty  and atile with value 1 an obstacle
+ * A field stores the Level information. It is separated in square Tiles.
+ * (0,0) is bottom left, (1,1) is bottom right.
+ * At this point a Tile with value 0 is empty  and a tile with value 1 an obstacle
  */
 
 
