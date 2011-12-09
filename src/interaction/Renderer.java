@@ -37,8 +37,8 @@ public class Renderer {
   private void draw(Graphics g) {
     double width = (double)panel.getWidth();
     double height = (double)panel.getHeight();
-    double sizeX = (double)(panel.size().width)/(double)game.f.tilesX;
-    double sizeY = (double)(panel.size().height)/(double)game.f.tilesY;
+    double sizeX = (double)(panel.getWidth())/(double)game.f.tilesX;
+    double sizeY = (double)(panel.getHeight())/(double)game.f.tilesY;
     
     BufferedImage back = new BufferedImage((int)width,(int)height,BufferedImage.TYPE_BYTE_INDEXED);
     Graphics2D g2d = back.createGraphics();   
