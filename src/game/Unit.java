@@ -11,7 +11,7 @@ public class Unit extends Entity {
 
 	Game game;
 	public ArrayList<Point2D> path;
-	double speed = 0.003;
+	double speed = 0.3;
 	
 	
 	public Unit(Point2D position, Game game) {
@@ -23,7 +23,7 @@ public class Unit extends Entity {
 		path = game.p.plan(pos, dest);
 	}
 	
-	public void process() {
+	public void process(double dt) {
 		
 		if(path != null && path.size() > 0) {
 			if(pos.distance(path.get(0)) < GlobalInfo.accuracy) {
@@ -36,9 +36,13 @@ public class Unit extends Entity {
 						(dest.getX()-pos.getX())/distance,
 						(dest.getY()-pos.getY())/distance);
 				
+				double movex = moveNormalized.getX()*speed;
+				double movey = moveNormalized.getY()*speed;
+				
 				pos = new Point2D.Double(
-						pos.getX()+moveNormalized.getX()*speed,
-						pos.getY()+moveNormalized.getY()*speed);
+						pos.getX()+movex*dt,
+						pos.getY()+movey*dt);
+				
 			}
 			
 		}

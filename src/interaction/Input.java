@@ -9,14 +9,21 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 
+import javax.swing.JFrame;
+
 
 public class Input implements MouseListener, MouseMotionListener {
 
 	Game g;
-	Dimension size=null;
+	public Dimension size=null;
 	
-	public Input(Game g) {
+	public Input(Game g, JFrame frame) {
 		this.g = g;
+		frame.addMouseMotionListener(this);
+		frame.addMouseListener(this);
+		size = new Dimension();
+		size.width = frame.getContentPane().getWidth();
+		size.height = frame.getContentPane().getHeight();
 	}
 	
 	@Override

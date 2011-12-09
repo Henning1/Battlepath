@@ -8,4 +8,5 @@ public class Entity {
 	public Entity(Point2D position) {
 		pos = position;
 	}
+
 }

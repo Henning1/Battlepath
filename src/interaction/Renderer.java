@@ -14,41 +14,27 @@ import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-public class Renderer extends Thread {
+public class Renderer {
   
 	
 
   public JPanel panel;
   private Game game;
   
-  public Renderer(Game g) {
+  public Renderer(Game g, JFrame frame) {
 	  this.game = g;
+	  this.panel = (JPanel) frame.getContentPane();
+  }
+
+  
+  public void render() {
+	  draw(panel.getGraphics());
   }
   
-  public void run() {
-      while(true) {
-    	  draw(panel.getGraphics());
-    	  try {
-			sleep(20);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-      } 
-
-  }
-  
-  public void draw(Graphics g) {
-    //clear(g);
-    
-	//Color pathColor = new Color((int)(Math.random()*255),(int)(Math.random()*255),(int)(Math.random()*255));
-	
-	
- 
-    
-    
-
+  private void draw(Graphics g) {
     double width = (double)panel.getWidth();
     double height = (double)panel.getHeight();
     double sizeX = (double)(panel.size().width)/(double)game.f.tilesX;
@@ -106,13 +92,11 @@ public class Renderer extends Thread {
     g2d.setColor(new Color(0,255,0));
     if(path != null) {
     	if(path.size() > 0) {
-    		g2d.setColor(new Color(255,0,0));
     		g2d.drawLine((int)(game.u.pos.getX()*width), 
 					 (int)(game.u.pos.getY()*height),
 					 (int)(path.get(0).getX()*width), 
 					 (int)(path.get(0).getY()*height));
     	}
-    	g2d.setColor(new Color(0,255,0));
     	for(int i=0;i<path.size()-1;i++) {
     		g2d.drawLine((int)(path.get(i).getX()*width), 
     					 (int)(path.get(i).getY()*height),
@@ -120,8 +104,6 @@ public class Renderer extends Thread {
     					 (int)(path.get(i+1).getY()*height));
     	}
     }
-    
-    //g2d.setColor(new Color(255,0,0));
     
     g2d.fill(new Ellipse2D.Double((game.u.pos.getX()*width)-(sizeX/4),
     							  (game.u.pos.getY()*height)-(sizeY/4),
@@ -146,7 +128,6 @@ public class Renderer extends Thread {
     
     Graphics2D g2dpanel = (Graphics2D)g;
     g2dpanel.drawImage(back,null, 0,0);
-    
   }
 
   public int gt(int x, int y) {

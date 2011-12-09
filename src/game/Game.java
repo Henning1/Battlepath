@@ -6,42 +6,28 @@ import engine.Field;
 import engine.Pathplanner;
 
 
-public class Game extends Thread {
+public class Game {
 	
 	public Field f;
 	Pathplanner p;
-	//Point2D pos;
 	public Unit u;
-	public Point2D c= new Point2D.Double(0,0);
+	public Point2D c = new Point2D.Double(0,0);
+
+	public long frameTime=0;
 	
 	public Game(Field f, Point2D startpos) {
 		this.f = f;
 		this.p = new Pathplanner(f);
-		//this.pos = startpos;
 		u = new Unit(startpos, this);
 	}
 	
 	
 	public void click(Point2D clickPos) {
 		u.moveTo(clickPos);
-		/*
-		ArrayList<Point2D> path = p.plan(pos, clickPos);
-		if(path != null) {
-			f.setTilesTo(path, 2);
-			pos = clickPos;
-		}*/
 	}
 	
-	  public void run() {
-	      while(true) {
-	    	  u.process();
-	    	  try {
-				sleep(10);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-	      } 
-
-	  }
+	public void step(double dt) {
+		u.process(dt);
+	}
 	
 }

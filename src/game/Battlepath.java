@@ -7,53 +7,39 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Random;
 
+import javax.swing.JFrame;
+
 import engine.Field;
+import engine.MainLoop;
 
 
 public class Battlepath {
-	static Random g = new Random();
+	static Random rand = new Random();
 	
 	public static void main(String[] args) {
 
-		Field f = new Field(20,20);
+		Field f = new Field(32,32);
 		randomCircles(f,40,0.15);
-		
+	
 		Point2D start;
-		start = new Point2D.Double(g.nextDouble(), g.nextDouble());
-		
+		start = new Point2D.Double(rand.nextDouble(), rand.nextDouble());
 		while(f.tileAt(start) == 1)
-			start = new Point2D.Double(g.nextDouble(), g.nextDouble());
+			start = new Point2D.Double(rand.nextDouble(), rand.nextDouble());
 		
-		f.setTile(start, 2);
+		
+		JFrame frame = WindowUtilities.openFrame(600,600);
 		
 		Game game = new Game(f,start);
-		Input input = new Input(game);
-		Renderer renderer = new Renderer(game);
-		
-		/*
-		long tstBefore;
-		long tstAfter;
+		Input input = new Input(game,frame);
+		Renderer renderer = new Renderer(game,frame);
 
-		tstBefore = System.currentTimeMillis();
-
-		plan = planner.plan(start,goal);
-
-		tstAfter = System.currentTimeMillis();
-		System.out.println("Path calculations in: " + (tstAfter-tstBefore) + " ms");
-		*/
-		
-		
-		WindowUtilities.openInJFrame(renderer, 600, 600, "Battlepath", input);
-		renderer.start();
-		game.start();
+		MainLoop.startLoop(renderer, game);
 
 	}
 	
 	public static void randomCircles(Field f, int n, double maxr) {
-		
-		
 		for(int i=0; i<n; i++) {
-			f.createCricle(new Point2D.Double(g.nextDouble(), g.nextDouble()), g.nextDouble()*maxr);
+			f.createCricle(new Point2D.Double(rand.nextDouble(), rand.nextDouble()), rand.nextDouble()*maxr);
 		}
 	}
 }

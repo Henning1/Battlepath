@@ -90,24 +90,6 @@ public class Pathplanner {
 					nodes.put(nnew.getPos(), nnew);
 					fChecks.setTile(nnew.getPos(), 1);
 				}
-				
-				
-				/*
-				boolean skip=false;
-				ArrayList<Point2D> path = n.getPath();
-				for(int i=2; i<path.size(); i++) {
-					Point2D prev = path.get(i);
-					if(field.sameTile(nb, prev)) {
-						skip=true;
-						break;
-					}
-				}
-				if(fringe.contains(nnew)) skip=true;
-				
-				if(!skip) {
-					fringe.add(nnew);
-					fChecks.setTile(nnew.getPos(), 1);
-				}*/
 			}
 			
 			
@@ -123,10 +105,6 @@ public class Pathplanner {
 		
 		if(n.equals(goal)) return 0;
 		return n.distance(goal);
-		/*
-		if(n.equals(goal)) return 0;
-		else return Math.abs(n.getX()-goal.getX())+Math.abs(n.getX()-goal.getX());
-		*/
 	}
 	
 
