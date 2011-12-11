@@ -18,7 +18,7 @@ public class Battlepath {
 	
 	public static void main(String[] args) {
 
-		Field f = new Field(32,32);
+		Field f = new Field(30,30);
 		randomCircles(f,40,0.15);
 	
 		Point2D start;
@@ -27,7 +27,7 @@ public class Battlepath {
 			start = new Point2D.Double(rand.nextDouble(), rand.nextDouble());
 		
 		
-		JFrame frame = WindowUtilities.openFrame(600,600);
+		JFrame frame = WindowUtilities.openFrame(700,700);
 		
 		Game game = new Game(f,start);
 		Input input = new Input(game,frame);

@@ -12,8 +12,6 @@ public class Game {
 	Pathplanner p;
 	public Unit u;
 	public Point2D c = new Point2D.Double(0,0);
-
-	public long frameTime=0;
 	
 	public Game(Field f, Point2D startpos) {
 		this.f = f;
@@ -22,8 +20,12 @@ public class Game {
 	}
 	
 	
-	public void click(Point2D clickPos) {
+	public void leftclick(Point2D clickPos) {
 		u.moveTo(clickPos);
+	}
+	
+	public void rightclick(Point2D clickPos) {
+		u.pos = clickPos;
 	}
 	
 	public void step(double dt) {

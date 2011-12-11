@@ -10,6 +10,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.Point2D;
 
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 
 public class Input implements MouseListener, MouseMotionListener {
@@ -18,12 +19,13 @@ public class Input implements MouseListener, MouseMotionListener {
 	public Dimension size=null;
 	
 	public Input(Game g, JFrame frame) {
+		
 		this.g = g;
 		frame.addMouseMotionListener(this);
 		frame.addMouseListener(this);
 		size = new Dimension();
-		size.width = frame.getContentPane().getWidth();
-		size.height = frame.getContentPane().getHeight();
+		size.width = ((JPanel)frame.getContentPane()).getWidth();
+		size.height = ((JPanel)frame.getContentPane()).getHeight();
 	}
 	
 	@Override
@@ -33,8 +35,8 @@ public class Input implements MouseListener, MouseMotionListener {
 				(double)pclick.x/(double)size.width,
 				(double)pclick.y/(double)size.height);
 		
-		g.click(clickpos);
-		
+		if(arg0.getButton()==MouseEvent.BUTTON1) g.leftclick(clickpos);
+		else if(arg0.getButton()==MouseEvent.BUTTON3) g.rightclick(clickpos);
 	}
 
 	@Override

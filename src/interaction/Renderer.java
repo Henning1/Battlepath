@@ -1,5 +1,6 @@
 package interaction;
 
+import engine.MainLoop;
 import game.Game;
 
 import java.awt.Color;
@@ -37,8 +38,9 @@ public class Renderer {
   private void draw(Graphics g) {
     double width = (double)panel.getWidth();
     double height = (double)panel.getHeight();
-    double sizeX = (double)(panel.getWidth())/(double)game.f.tilesX;
-    double sizeY = (double)(panel.getHeight())/(double)game.f.tilesY;
+    
+    double sizeX = width/(double)game.f.tilesX;
+    double sizeY = height/(double)game.f.tilesY;
     
     BufferedImage back = new BufferedImage((int)width,(int)height,BufferedImage.TYPE_BYTE_INDEXED);
     Graphics2D g2d = back.createGraphics();   
@@ -125,6 +127,14 @@ public class Renderer {
 			 	 (int)(game.c.getY()*height), 
 			 	 (int)(game.c.getX()*width+(sizeY/2)+5), 
 			 	 (int)(game.c.getY()*height));
+    
+    
+    
+    
+    String fps = Double.toString(MainLoop.framerate);
+    int dot = fps.indexOf(".");
+    
+    g2d.drawString(fps.substring(0, dot+2) + " fps", 5.0f,15.0f);
     
     Graphics2D g2dpanel = (Graphics2D)g;
     g2dpanel.drawImage(back,null, 0,0);

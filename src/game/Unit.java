@@ -11,7 +11,7 @@ public class Unit extends Entity {
 
 	Game game;
 	public ArrayList<Point2D> path;
-	double speed = 0.3;
+	double speed = 0.45;
 	
 	
 	public Unit(Point2D position, Game game) {
