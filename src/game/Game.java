@@ -11,6 +11,7 @@ public class Game {
 	public Field f;
 	Pathplanner p;
 	public Unit u;
+	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public Point2D c = new Point2D.Double(0,0);
 	
 	public Game(Field f, Point2D startpos) {
@@ -26,8 +27,8 @@ public class Game {
 	
 	public void middleclick(Point2D clickPos) {
 		//Should there be a method for getting an angle from two Point2Ds?
-		double direction = Math.atan((u.pos.getY()-clickPos.getY())/(u.pos.getX()-clickPos.getX()));
-		u.emitProjectile(direction);
+		double direction = Math.atan2((clickPos.getY()-u.pos.getY()),(clickPos.getX()-u.pos.getX()));
+		projectiles.add(new Projectile(u.pos, direction, this));
 	}
 	
 	public void rightclick(Point2D clickPos) {

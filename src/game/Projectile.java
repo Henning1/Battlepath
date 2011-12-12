@@ -5,9 +5,9 @@ import java.awt.geom.Point2D;
 public class Projectile extends Entity {
 
 	Game game;
-	double direction;
+	public double direction;
 	
-	double speed = 0.5;
+	double speed = 0;
 	
 	public Projectile(Point2D position, double direction, Game game) {
 		super(position);
@@ -17,10 +17,10 @@ public class Projectile extends Entity {
 	
 	@Override
 	public void process(double dt) {
-		double movex = Math.cos(direction)*speed;
+		/*double movex = Math.cos(direction)*speed;
 		double movey = Math.sin(direction)*speed;
 		pos = new Point2D.Double(
 				pos.getX()+movex*dt,
-				pos.getY()+movey*dt);
+				pos.getY()+movey*dt);*/
 	}
 }

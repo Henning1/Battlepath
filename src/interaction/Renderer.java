@@ -2,6 +2,7 @@ package interaction;
 
 import engine.MainLoop;
 import game.Game;
+import game.Projectile;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -111,7 +112,17 @@ public class Renderer {
     							  (game.u.pos.getY()*height)-(sizeY/4),
     							  sizeX/2,sizeY/2));
     
-    
+    //Projectiles
+    //FIXME: Unfinished, broken
+    for (Projectile proj : game.projectiles) {
+    	double length = 5;
+    	double x = Math.cos(proj.direction)*length;
+		double y = Math.sin(proj.direction)*length;
+		g2d.drawLine((int)(proj.pos.getX()*width),
+					 (int)(proj.pos.getY()*height),
+					 (int)(x*width),
+					 (int)(y*height));
+    }
     
     g2d.draw(new Ellipse2D.Double(
     		  game.c.getX()*width-(sizeX/2),
