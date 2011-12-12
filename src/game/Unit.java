@@ -23,6 +23,10 @@ public class Unit extends Entity {
 		path = game.p.plan(pos, dest);
 	}
 	
+	public void emitProjectile(double direction) {
+		new Projectile(pos, direction, game);
+	}
+	
 	public void process(double dt) {
 		
 		if(path != null && path.size() > 0) {

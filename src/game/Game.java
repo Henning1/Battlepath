@@ -24,6 +24,12 @@ public class Game {
 		u.moveTo(clickPos);
 	}
 	
+	public void middleclick(Point2D clickPos) {
+		//Should there be a method for getting an angle from two Point2Ds?
+		double direction = Math.atan((u.pos.getY()-clickPos.getY())/(u.pos.getX()-clickPos.getX()));
+		u.emitProjectile(direction);
+	}
+	
 	public void rightclick(Point2D clickPos) {
 		u.pos = clickPos;
 	}

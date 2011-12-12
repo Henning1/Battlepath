@@ -36,6 +36,7 @@ public class Input implements MouseListener, MouseMotionListener {
 				(double)pclick.y/(double)size.height);
 		
 		if(arg0.getButton()==MouseEvent.BUTTON1) g.leftclick(clickpos);
+		else if(arg0.getButton()==MouseEvent.BUTTON2) g.middleclick(clickpos);
 		else if(arg0.getButton()==MouseEvent.BUTTON3) g.rightclick(clickpos);
 	}
 
