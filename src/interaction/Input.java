@@ -7,10 +7,11 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.awt.geom.Point2D;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import util.Vector2D;
 
 
 public class Input implements MouseListener, MouseMotionListener {
@@ -31,7 +32,7 @@ public class Input implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
 		Point pclick = arg0.getPoint();
-		Point2D clickpos = new Point2D.Double(
+		Vector2D clickpos = new Vector2D(
 				(double)pclick.x/(double)size.width,
 				(double)pclick.y/(double)size.height);
 		
@@ -72,7 +73,7 @@ public class Input implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		Point p = arg0.getPoint();
-		g.c = new Point2D.Double(
+		g.c = new Vector2D(
 				(double)p.x/(double)size.width,
 				(double)p.y/(double)size.height);
 		

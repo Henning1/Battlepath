@@ -1,11 +1,12 @@
 package game;
-import java.awt.geom.Point2D;
+
+import util.Vector2D;
 
 
 public abstract class Entity {
-	public Point2D pos;
+	public Vector2D pos;
 	
-	public Entity(Point2D position) {
+	public Entity(Vector2D position) {
 		pos = position;
 	}
 

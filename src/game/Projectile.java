@@ -1,26 +1,23 @@
 package game;
 
-import java.awt.geom.Point2D;
+import util.Vector2D;
+
 
 public class Projectile extends Entity {
 
 	Game game;
-	public double direction;
+	public Vector2D direction;
 	
-	double speed = 0;
+	double speed = 1;
 	
-	public Projectile(Point2D position, double direction, Game game) {
+	public Projectile(Vector2D position, Vector2D direction, Game game) {
 		super(position);
 		this.game = game;
-		this.direction = direction;
+		this.direction = direction.normalize();
 	}
 	
 	@Override
 	public void process(double dt) {
-		/*double movex = Math.cos(direction)*speed;
-		double movey = Math.sin(direction)*speed;
-		pos = new Point2D.Double(
-				pos.getX()+movex*dt,
-				pos.getY()+movey*dt);*/
+		pos = pos.add(direction.scalar(speed*dt));
 	}
 }

@@ -4,7 +4,6 @@ import interaction.Renderer;
 import game.Game;
 
 public class MainLoop {
-    static double t = 0.0;
     static double dt = 0.01;
 
     static double currentTime;
@@ -33,24 +32,15 @@ public class MainLoop {
             	 fpsStart = newTime;
             	 frames = 0;
              }
-             /*
-             frames 
-             	/ 
-             interval
-             
-             120
-              /
-             0.5
-             */
+   
              currentTime = newTime;
              accumulator += frameTime;
-
 
              while ( accumulator >= dt )
              {
                   g.step(dt);
                   accumulator -= dt;
-                  t += dt;
+                  GlobalInfo.time += dt;
              }
 
              r.render();

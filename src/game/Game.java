@@ -1,6 +1,7 @@
 package game;
-import java.awt.geom.Point2D;
 import java.util.ArrayList;
+
+import util.Vector2D;
 
 import engine.Field;
 import engine.Pathplanner;
@@ -12,31 +13,32 @@ public class Game {
 	Pathplanner p;
 	public Unit u;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
-	public Point2D c = new Point2D.Double(0,0);
+	public Vector2D c = new Vector2D(0,0);
 	
-	public Game(Field f, Point2D startpos) {
+	public Game(Field f, Vector2D startpos) {
 		this.f = f;
 		this.p = new Pathplanner(f);
 		u = new Unit(startpos, this);
 	}
 	
 	
-	public void leftclick(Point2D clickPos) {
+	public void leftclick(Vector2D clickPos) {
 		u.moveTo(clickPos);
 	}
 	
-	public void rightclick(Point2D clickPos) {
-		//Should there be a method for getting an angle from two Point2Ds?
-		double direction = Math.atan2((clickPos.getY()-u.pos.getY()),(clickPos.getX()-u.pos.getX()));
-		projectiles.add(new Projectile(u.pos, direction, this));
+	public void rightclick(Vector2D clickPos) {
+		projectiles.add(new Projectile(u.pos, clickPos.subtract(u.pos), this));
 	}
 	/*
-	public void rightclick(Point2D clickPos) {
+	public void rightclick(Vector2D clickPos) {
 		u.pos = clickPos;
 	}
 	*/
 	public void step(double dt) {
 		u.process(dt);
+		for(Projectile proj : projectiles) {
+			proj.process(dt);
+		}
 	}
 	
 }
