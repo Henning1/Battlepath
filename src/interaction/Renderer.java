@@ -61,7 +61,7 @@ public class Renderer {
     	for(int y=0; y<game.f.tilesY;y++) {
     		switch(game.f.tiles[x][y]) {
     		case 1:
-    			g2d.setColor(new Color(255,0,0));
+    			g2d.setColor(new Color(200,0,0));
     			g2d.fill(new Rectangle2D.Double(
         				(double)x*sizeX,(double)y*sizeY,sizeX,sizeY));
     			break;
@@ -99,10 +99,13 @@ public class Renderer {
     							  sizeX/2,sizeY/2));
     
     //Projectiles
-    for (Projectile proj : game.projectiles) {
-		line(proj.pos, proj.pos.add(proj.direction.scalar(0.01)));		
+    g2d.setColor(new Color(0,0,255));
+    for (int i=0;i<game.projectiles.size();i++) {
+		Projectile proj = game.projectiles.get(i);
+    	line(proj.pos, proj.pos.add(proj.direction.scalar(0.01)));		
     }
     
+    g2d.setColor(new Color(0,255,0));
     g2d.draw(new Ellipse2D.Double(
     		  game.c.x()*width-(sizeX/2),
 			  game.c.y()*height-(sizeY/2),
