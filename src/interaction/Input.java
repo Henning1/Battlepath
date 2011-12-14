@@ -31,14 +31,7 @@ public class Input implements MouseListener, MouseMotionListener {
 	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		Point pclick = arg0.getPoint();
-		Vector2D clickpos = new Vector2D(
-				(double)pclick.x/(double)size.width,
-				(double)pclick.y/(double)size.height);
 		
-		if(arg0.getButton()==MouseEvent.BUTTON1) g.leftclick(clickpos);
-		//else if(arg0.getButton()==MouseEvent.BUTTON2) g.middleclick(clickpos);
-		else if(arg0.getButton()==MouseEvent.BUTTON3) g.rightclick(clickpos);
 	}
 
 	@Override
@@ -54,7 +47,14 @@ public class Input implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		Point pclick = arg0.getPoint();
+		Vector2D clickpos = new Vector2D(
+				(double)pclick.x/(double)size.width,
+				(double)pclick.y/(double)size.height);
+		
+		if(arg0.getButton()==MouseEvent.BUTTON1) g.leftclick(clickpos);
+		//else if(arg0.getButton()==MouseEvent.BUTTON2) g.middleclick(clickpos);
+		else if(arg0.getButton()==MouseEvent.BUTTON3) g.rightclick(clickpos);
 		
 	}
 
@@ -66,7 +66,10 @@ public class Input implements MouseListener, MouseMotionListener {
 
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
-		// TODO Auto-generated method stub
+		Point p = arg0.getPoint();
+		g.c = new Vector2D(
+				(double)p.x/(double)size.width,
+				(double)p.y/(double)size.height);
 		
 	}
 

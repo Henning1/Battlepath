@@ -92,7 +92,7 @@ public class Pathplanner {
 	
 
 	
-    public class Node implements Comparable {
+    public class Node implements Comparable<Object> {
         private ArrayList<Vector2D> moves=new ArrayList<Vector2D>();
         private double f;
         private double cost;

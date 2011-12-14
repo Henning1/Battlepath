@@ -100,7 +100,7 @@ public class Renderer {
     
     //Projectiles
     for (Projectile proj : game.projectiles) {
-		line(proj.pos, proj.pos.add(proj.direction.scalar(0.05)));		
+		line(proj.pos, proj.pos.add(proj.direction.scalar(0.01)));		
     }
     
     g2d.draw(new Ellipse2D.Double(
