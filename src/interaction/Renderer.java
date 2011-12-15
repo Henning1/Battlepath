@@ -23,6 +23,7 @@ public class Renderer {
 
   public JPanel panel;
   private Game game;
+  int tileSize;
  
   //This variable has a special function
   //it is only valid during the execution if render()
@@ -32,11 +33,12 @@ public class Renderer {
   
   private double width, height;
   
-  public Renderer(Game g, JFrame frame) {
+  public Renderer(Game g, int tS, JFrame frame) {
 	  this.game = g;
 	  this.panel = (JPanel) frame.getContentPane();
 	  width = (double)panel.getWidth();
 	  height = (double)panel.getHeight();
+	  tileSize = tS;
   }
 
   
@@ -46,10 +48,6 @@ public class Renderer {
   
   private void draw(Graphics g) {
 
-    
-    double sizeX = width/(double)game.f.tilesX;
-    double sizeY = height/(double)game.f.tilesY;
-    
     BufferedImage back = new BufferedImage((int)width,(int)height,BufferedImage.TYPE_BYTE_INDEXED);
     Graphics2D g2d = back.createGraphics();   
     graphics = g2d;
@@ -57,18 +55,18 @@ public class Renderer {
     g2d.setColor(new Color(0,0,0));
     g2d.fillRect(0, 0, (int)width, (int)height);
     
-    for(int x=0;x<game.f.tilesX;x++) {
-    	for(int y=0; y<game.f.tilesY;y++) {
+    for(int x=0; x < game.f.tilesX; x++) {
+    	for(int y=0; y < game.f.tilesY; y++) {
     		switch(game.f.tiles[x][y]) {
     		case 1:
     			g2d.setColor(new Color(200,0,0));
     			g2d.fill(new Rectangle2D.Double(
-        				(double)x*sizeX,(double)y*sizeY,sizeX,sizeY));
+        				(double)x*tileSize,(double)y*tileSize,tileSize,tileSize));
     			break;
     		case 2:
     			g2d.setColor(new Color(0,0,255));
     			g2d.fill(new Rectangle2D.Double(
-    					(double)x*sizeX,(double)y*sizeY,sizeX,sizeY));
+    					(double)x*tileSize,(double)y*tileSize,tileSize,tileSize));
     			break;
     		
     		}
@@ -81,45 +79,45 @@ public class Renderer {
     g2d.setColor(new Color(0,255,0));
     if(path != null) {
     	if(path.size() > 0) {
-    		g2d.drawLine((int)(game.u.pos.x()*width), 
-					 (int)(game.u.pos.y()*height),
-					 (int)(path.get(0).x()*width), 
-					 (int)(path.get(0).y()*height));
+    		g2d.drawLine((int)(game.u.pos.x()*tileSize), 
+					 (int)(game.u.pos.y()*tileSize),
+					 (int)(path.get(0).x()*tileSize), 
+					 (int)(path.get(0).y()*tileSize));
     	}
     	for(int i=0;i<path.size()-1;i++) {
-    		g2d.drawLine((int)(path.get(i).x()*width), 
-    					 (int)(path.get(i).y()*height),
-    					 (int)(path.get(i+1).x()*width), 
-    					 (int)(path.get(i+1).y()*height));
+    		g2d.drawLine((int)(path.get(i).x()*tileSize), 
+    					 (int)(path.get(i).y()*tileSize),
+    					 (int)(path.get(i+1).x()*tileSize), 
+    					 (int)(path.get(i+1).y()*tileSize));
     	}
     }
     
-    g2d.fill(new Ellipse2D.Double((game.u.pos.x()*width)-(sizeX/4),
-    							  (game.u.pos.y()*height)-(sizeY/4),
-    							  sizeX/2,sizeY/2));
+    g2d.fill(new Ellipse2D.Double((game.u.pos.x()*tileSize)-(tileSize/4),
+    							  (game.u.pos.y()*tileSize)-(tileSize/4),
+    							  tileSize/2,tileSize/2));
     
     //Projectiles
     g2d.setColor(new Color(0,0,255));
     for (int i=0;i<game.projectiles.size();i++) {
 		Projectile proj = game.projectiles.get(i);
-    	line(proj.pos, proj.pos.add(proj.direction.scalar(0.01)));		
+    	line(proj.pos, proj.pos.add(proj.direction.scalar(0.5)));		
     }
     
     g2d.setColor(new Color(0,255,0));
     g2d.draw(new Ellipse2D.Double(
-    		  game.c.x()*width-(sizeX/2),
-			  game.c.y()*height-(sizeY/2),
-			  sizeX,sizeY));
+    		  game.c.x()*tileSize-(tileSize/2),
+			  game.c.y()*tileSize-(tileSize/2),
+			  tileSize,tileSize));
     
-    g2d.drawLine((int)(game.c.x()*width), 
-    			 (int)(game.c.y()*height-(sizeY/2)-5), 
-    			 (int)(game.c.x()*width), 
-    			 (int)(game.c.y()*height+(sizeY/2)+5));
+    g2d.drawLine((int)(game.c.x()*tileSize), 
+    			 (int)(game.c.y()*tileSize-(tileSize/2)-5), 
+    			 (int)(game.c.x()*tileSize), 
+    			 (int)(game.c.y()*tileSize+(tileSize/2)+5));
     
-    g2d.drawLine((int)(game.c.x()*width-(sizeY/2)-5), 
-			 	 (int)(game.c.y()*height), 
-			 	 (int)(game.c.x()*width+(sizeY/2)+5), 
-			 	 (int)(game.c.y()*height));
+    g2d.drawLine((int)(game.c.x()*tileSize-(tileSize/2)-5), 
+			 	 (int)(game.c.y()*tileSize), 
+			 	 (int)(game.c.x()*tileSize+(tileSize/2)+5), 
+			 	 (int)(game.c.y()*tileSize));
     
     
     
@@ -135,8 +133,8 @@ public class Renderer {
   
     private void line(Vector2D a, Vector2D b) {
     	graphics.drawLine(
-    		 (int)(a.x()*width), (int)(a.y()*height), 
-   			 (int)(b.x()*width), (int)(b.y()*height));
+    		 (int)(a.x()*tileSize), (int)(a.y()*tileSize), 
+   			 (int)(b.x()*tileSize), (int)(b.y()*tileSize));
     }
 
   public int gt(int x, int y) {

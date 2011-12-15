@@ -16,28 +16,33 @@ public class Field {
 	public int tiles[][];
 	public int tilesX=0;
 	public int tilesY=0;
+	public int tileSize;
 	
-	public Field(int numX, int numY) {
+	public Field(int numX, int numY, int tS) {
 		tiles = new int[numX][numY];
 		tilesX = numX;
-		tilesY = numY;	
+		tilesY = numY;
+		tileSize = tS;
 	}
 	
 	public void createCricle(Vector2D pos, double r) {
 		for(int x=0; x<tilesX; x++) {
-			for(int y=0;y<tilesY; y++) {
+			for(int y=0; y<tilesY; y++) {
+				//System.out.println(pos.distance(getWorldPos(new Point(x,y))));
 				if(pos.distance(getWorldPos(new Point(x,y))) < r)
 					tiles[x][y] = 1;
 			}
 		}
-		
 	}
 	
 	//Returns the position of the center of a Tile
 	public Vector2D getWorldPos(Point pos) {
+		/*return new Vector2D(
+				(double)pos.x/(double)tilesX+tileSize/2,
+				(double)pos.y/(double)tilesY+tileSize/2);*/
 		return new Vector2D(
-				(double)pos.x/(double)tilesX+tilesize()/2,
-				(double)pos.y/(double)tilesY+tilesize()/2);
+				(double)pos.x/(double)tileSize,
+				(double)pos.y/(double)tileSize);
 	}
 	
 	public void setTile(Vector2D pos, int value) {
@@ -47,8 +52,8 @@ public class Field {
 	
 	public Point tileIndexAt(Vector2D pos) {
 		return new Point(
-				(int)(pos.x()*(double)tilesX),
-				(int)(pos.y()*(double)tilesY));
+				(int)(pos.x()),
+				(int)(pos.y()));
 	}
 	
 	public int tileValueAt(Vector2D pos) {
@@ -57,10 +62,6 @@ public class Field {
 		 ||tile.y>=tilesY || tile.y < 0)
 			return 1;
 		return tiles[tile.x][tile.y];
-	}
-	
-	public double tilesize() {
-		return 1.0/(double)tilesX;
 	}
 	
 	public ArrayList<Vector2D> neighbours(Vector2D pos) {
