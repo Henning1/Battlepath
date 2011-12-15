@@ -24,7 +24,7 @@ public class Battlepath {
 		int fieldWidth = 60;
 		int fieldHeight = 30;
 		Field f = new Field(fieldWidth, fieldHeight, tileSize);
-		randomCircles(f, fieldWidth*fieldHeight/20, 0.15);
+		randomCircles(f, fieldWidth*fieldHeight/20, 3);
 	
 		Vector2D start;
 		start = new Vector2D(rand.nextDouble()*fieldWidth, rand.nextDouble()*fieldHeight);
@@ -46,7 +46,7 @@ public class Battlepath {
 	
 	public static void randomCircles(Field f, int n, double maxr) {
 		for(int i=0; i<n; i++) {
-			f.createCricle(new Vector2D(rand.nextDouble()*f.tilesX/f.tileSize, rand.nextDouble()*f.tilesY/f.tileSize), rand.nextDouble()*maxr);
+			f.createCricle(new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY), rand.nextDouble()*maxr);
 		}
 	}
 }

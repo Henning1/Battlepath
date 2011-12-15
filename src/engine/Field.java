@@ -90,7 +90,6 @@ public class Field {
 		result.add(bottom);
 		
 		
-		
 		result = removeInvalidTiles(result);
 		
 		
@@ -106,9 +105,9 @@ public class Field {
 	
 	public ArrayList<Vector2D> removeInvalidTiles(ArrayList<Vector2D> tiles) {
 		for(int i=0; i<tiles.size();i++) {
-			Vector2D p =tiles.get(i);
-			if(p.x() < 0 || p.x() > 1.0 ||
-			   p.y() < 0 || p.y() > 1.0) {
+			Vector2D p = tiles.get(i);
+			if(p.x() < 0 || p.x() > tilesX ||
+			   p.y() < 0 || p.y() > tilesY) {
 				tiles.remove(i);
 				i--;
 			}
