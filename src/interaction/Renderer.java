@@ -100,7 +100,7 @@ public class Renderer {
     g2d.setColor(new Color(0,0,255));
     for (int i=0;i<game.projectiles.size();i++) {
 		Projectile proj = game.projectiles.get(i);
-    	line(proj.pos, proj.pos.add(proj.direction.scalar(0.5)));		
+    	line(proj.pos, proj.pos.add(proj.direction.scalar(0.5)));
     }
     
     g2d.setColor(new Color(0,255,0));

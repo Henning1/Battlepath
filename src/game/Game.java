@@ -16,11 +16,10 @@ public class Game {
 	public Vector2D c = new Vector2D(0,0);
 	public int tileSize;
 	
-	public Game(Field f, Vector2D startpos, int tS) {
+	public Game(Field f, Vector2D startpos) {
 		this.f = f;
 		this.p = new Pathplanner(f);
 		u = new Unit(startpos, this);
-		tileSize = tS;
 	}
 	
 	

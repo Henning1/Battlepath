@@ -19,7 +19,6 @@ public class Battlepath {
 	static Random rand = new Random();
 	
 	public static void main(String[] args) {
-		
 
 		int tileSize = 20;
 		int fieldWidth = 60;
@@ -35,7 +34,7 @@ public class Battlepath {
 		
 		JFrame frame = WindowUtilities.openFrame(f.tilesX*tileSize,f.tilesY*tileSize);
 		
-		Game game = new Game(f,start, tileSize);
+		Game game = new Game(f,start);
 		new Input(game,frame, tileSize);
 		Renderer renderer = new Renderer(game,tileSize,frame);
 

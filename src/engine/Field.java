@@ -41,8 +41,8 @@ public class Field {
 				(double)pos.x/(double)tilesX+tileSize/2,
 				(double)pos.y/(double)tilesY+tileSize/2);*/
 		return new Vector2D(
-				(double)pos.x/(double)tileSize,
-				(double)pos.y/(double)tileSize);
+				(double)pos.x+0.5,
+				(double)pos.y+0.5);
 	}
 	
 	public void setTile(Vector2D pos, int value) {
