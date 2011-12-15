@@ -8,6 +8,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import util.Line2D;
 import util.Vector2D;
 
 import engine.Field;
@@ -18,6 +19,13 @@ public class Battlepath {
 	static Random rand = new Random();
 	
 	public static void main(String[] args) {
+		
+		
+		Vector2D a = new Vector2D(0,0);
+		Vector2D b = new Vector2D(0,1);
+		Vector2D c = new Vector2D(1,1);
+		Line2D l = new Line2D(a, b);
+		System.out.println(l.signedDistance(c));
 		
 		
 		Field f = new Field(30,30);

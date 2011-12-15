@@ -62,6 +62,10 @@ public class Vector2D {
 		return new Vector2D(x*a,y*a);
 	}
 	
+	public double dotProduct(Vector2D v) {
+		return x*v.x+y*v.y;
+	}
+	
 	public double angle() {	
 		double angle = Math.atan2(y, x);
 		if (angle < 0) angle += 2*Math.PI;

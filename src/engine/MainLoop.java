@@ -27,6 +27,16 @@ public class MainLoop {
     		 double newTime = (double)System.currentTimeMillis() / 1000.0;
              double frameTime = newTime - currentTime;
              
+             double waittime = 0.01 - frameTime;
+             if(waittime > 0) {
+              	try {            		 
+					Thread.sleep((long) (waittime*1000));
+					frameTime += waittime;
+              	} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+             }
+             
              if(currentTime >= fpsStart + fpsInterval) {
             	 framerate =  frames / (currentTime - fpsStart);
             	 fpsStart = newTime;
