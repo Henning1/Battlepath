@@ -10,6 +10,7 @@ import java.awt.Graphics2D;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.Point;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -44,6 +45,12 @@ public class Renderer {
   
   public void render() {
 	  draw(panel.getGraphics());
+  }
+  
+  public Vector2D screenToWorld(Point p) {
+	  return new Vector2D(
+			  (double)p.x / (double)tileSize, 
+			  (double)p.y / (double)tileSize);
   }
   
   private void draw(Graphics g) {

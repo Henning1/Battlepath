@@ -36,8 +36,8 @@ public class Battlepath {
 		JFrame frame = WindowUtilities.openFrame(f.tilesX*tileSize,f.tilesY*tileSize);
 		
 		Game game = new Game(f,start, tileSize);
-		new Input(game,frame, tileSize);
 		Renderer renderer = new Renderer(game,tileSize,frame);
+		new Input(game, frame, renderer);
 
 		MainLoop.startLoop(renderer, game);
 

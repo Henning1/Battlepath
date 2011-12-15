@@ -17,18 +17,18 @@ import util.Vector2D;
 public class Input implements MouseListener, MouseMotionListener {
 
 	Game g;
+	Renderer r;
 	public Dimension size=null;
-	int tileSize;
 	
-	public Input(Game g, JFrame frame, int tS) {
+	public Input(Game g, JFrame frame, Renderer r) {
 		
 		this.g = g;
+		this.r = r;
 		frame.addMouseMotionListener(this);
 		frame.addMouseListener(this);
 		size = new Dimension();
 		size.width = ((JPanel)frame.getContentPane()).getWidth();
 		size.height = ((JPanel)frame.getContentPane()).getHeight();
-		tileSize = tS;
 	}
 	
 	@Override
@@ -50,9 +50,7 @@ public class Input implements MouseListener, MouseMotionListener {
 	@Override
 	public void mousePressed(MouseEvent arg0) {
 		Point pclick = arg0.getPoint();
-		Vector2D clickpos = new Vector2D(
-				(double)pclick.x/(double)tileSize,
-				(double)pclick.y/(double)tileSize);
+		Vector2D clickpos = r.screenToWorld(pclick);
 		
 		if(arg0.getButton()==MouseEvent.BUTTON1) g.leftclick(clickpos);
 		//else if(arg0.getButton()==MouseEvent.BUTTON2) g.middleclick(clickpos);
@@ -69,18 +67,14 @@ public class Input implements MouseListener, MouseMotionListener {
 	@Override
 	public void mouseDragged(MouseEvent arg0) {
 		Point p = arg0.getPoint();
-		g.c = new Vector2D(
-				(double)p.x/(double)tileSize,
-				(double)p.y/(double)tileSize);
+		g.c = r.screenToWorld(p);
 		
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		Point p = arg0.getPoint();
-		g.c = new Vector2D(
-				(double)p.x/(double)tileSize,
-				(double)p.y/(double)tileSize);
+		g.c = r.screenToWorld(p);
 		
 	}
 
