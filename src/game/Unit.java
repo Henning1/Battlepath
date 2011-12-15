@@ -12,7 +12,7 @@ public class Unit extends Entity {
 
 	Game game;
 	public ArrayList<Vector2D> path;
-	double speed = 0.4;
+	double speed = 0;
 	//Unit health, 0-100
 	int health = 0;
 	
@@ -20,6 +20,7 @@ public class Unit extends Entity {
 		super(position);
 		this.game = game;
 		health = 100;
+		speed = 0.4 * game.tileSize;
 	}
 	
 	public void moveTo(Vector2D dest) {

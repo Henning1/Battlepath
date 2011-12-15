@@ -20,7 +20,7 @@ public class Pathplanner {
 	}
 	
 	public ArrayList<Vector2D> plan(Vector2D start, Vector2D goal) {
-		fChecks = new Field(field.tilesX,field.tilesY);
+		fChecks = new Field(field.tilesX,field.tilesY,field.tileSize);
 		
 		fringe = new PriorityQueue<Node>();
 		nodes = new HashMap<Integer, Node>();

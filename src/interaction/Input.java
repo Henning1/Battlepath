@@ -18,8 +18,9 @@ public class Input implements MouseListener, MouseMotionListener {
 
 	Game g;
 	public Dimension size=null;
+	int tileSize;
 	
-	public Input(Game g, JFrame frame) {
+	public Input(Game g, JFrame frame, int tS) {
 		
 		this.g = g;
 		frame.addMouseMotionListener(this);
@@ -27,6 +28,7 @@ public class Input implements MouseListener, MouseMotionListener {
 		size = new Dimension();
 		size.width = ((JPanel)frame.getContentPane()).getWidth();
 		size.height = ((JPanel)frame.getContentPane()).getHeight();
+		tileSize = tS;
 	}
 	
 	@Override
@@ -49,8 +51,8 @@ public class Input implements MouseListener, MouseMotionListener {
 	public void mousePressed(MouseEvent arg0) {
 		Point pclick = arg0.getPoint();
 		Vector2D clickpos = new Vector2D(
-				(double)pclick.x/(double)size.width,
-				(double)pclick.y/(double)size.height);
+				(double)pclick.x/(double)tileSize,
+				(double)pclick.y/(double)tileSize);
 		
 		if(arg0.getButton()==MouseEvent.BUTTON1) g.leftclick(clickpos);
 		//else if(arg0.getButton()==MouseEvent.BUTTON2) g.middleclick(clickpos);
@@ -68,8 +70,8 @@ public class Input implements MouseListener, MouseMotionListener {
 	public void mouseDragged(MouseEvent arg0) {
 		Point p = arg0.getPoint();
 		g.c = new Vector2D(
-				(double)p.x/(double)size.width,
-				(double)p.y/(double)size.height);
+				(double)p.x/(double)tileSize,
+				(double)p.y/(double)tileSize);
 		
 	}
 
@@ -77,8 +79,8 @@ public class Input implements MouseListener, MouseMotionListener {
 	public void mouseMoved(MouseEvent arg0) {
 		Point p = arg0.getPoint();
 		g.c = new Vector2D(
-				(double)p.x/(double)size.width,
-				(double)p.y/(double)size.height);
+				(double)p.x/(double)tileSize,
+				(double)p.y/(double)tileSize);
 		
 	}
 
