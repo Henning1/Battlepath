@@ -71,6 +71,7 @@ public class Pathplanner {
 			
 			
 		}
+		System.out.println("No success, expanded Nodes: " + expands);
 		return null;
 	}
 	
