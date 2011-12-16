@@ -24,8 +24,6 @@ public class Game {
 	
 	
 	public void leftclick(Vector2D clickPos) {
-		System.out.println(f.tileIndexAt(clickPos));
-		System.out.println(f.tileValueAt(clickPos));
 		u.moveTo(clickPos);
 	}
 	

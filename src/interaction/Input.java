@@ -24,8 +24,8 @@ public class Input implements MouseListener, MouseMotionListener {
 		
 		this.g = g;
 		this.r = r;
-		frame.addMouseMotionListener(this);
-		frame.addMouseListener(this);
+		frame.getContentPane().addMouseMotionListener(this);
+		frame.getContentPane().addMouseListener(this);
 		size = new Dimension();
 		size.width = ((JPanel)frame.getContentPane()).getWidth();
 		size.height = ((JPanel)frame.getContentPane()).getHeight();
