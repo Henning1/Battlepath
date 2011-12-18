@@ -13,6 +13,7 @@ public class Game {
 	Pathplanner p;
 	public Unit u;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
+	public ArrayList<Particle> particles = new ArrayList<Particle>();
 	public Vector2D c = new Vector2D(0,0);
 	public int tileSize;
 	
@@ -37,8 +38,18 @@ public class Game {
 	*/
 	public void step(double dt) {
 		u.process(dt);
-		for(Projectile proj : projectiles) {
+		for (int i=0;i<projectiles.size();i++) {
+			Projectile proj = projectiles.get(i);
 			proj.process(dt);
+			//I am aware of the fact that this is executed multiple times - this is just testing until we have collision
+			// (btw: looks cooler than single execution^^)
+			if(Math.round(u.pos.distance(proj.pos)) == 10)
+				for (int j = 0;j<=20;j++)
+					particles.add(new Particle(proj.pos, Vector2D.fromAngle(j*18, 1), 0.6, Math.random()*5));
+		}
+		for (int i=0;i<particles.size();i++) {
+			Particle part = particles.get(i);
+			part.process(dt);
 		}
 	}
 	

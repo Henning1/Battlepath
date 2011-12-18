@@ -2,6 +2,7 @@ package interaction;
 
 import engine.MainLoop;
 import game.Game;
+import game.Particle;
 import game.Projectile;
 
 import java.awt.Color;
@@ -108,6 +109,14 @@ public class Renderer {
     for (int i=0;i<game.projectiles.size();i++) {
 		Projectile proj = game.projectiles.get(i);
     	line(proj.pos, proj.pos.add(proj.direction.scalar(0.5)));
+    }
+    
+    //Particles;
+    g2d.setColor(new Color(255,255,255));
+    for (int i=0;i<game.particles.size();i++) {
+		Particle part = game.particles.get(i);
+		if(part.destroyed == false)
+			line(part.pos, part.pos.add(part.direction.scalar(0.1)));
     }
     
     g2d.setColor(new Color(0,255,0));
