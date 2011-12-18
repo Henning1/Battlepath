@@ -28,7 +28,7 @@ public class Game {
 	}
 	
 	public void rightclick(Vector2D clickPos) {
-		projectiles.add(new Projectile(u.pos, clickPos.subtract(u.pos), this));
+		projectiles.add(new Projectile(u.pos, clickPos.subtract(u.pos)));
 	}
 	/*
 	public void rightclick(Vector2D clickPos) {

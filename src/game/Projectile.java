@@ -5,14 +5,12 @@ import util.Vector2D;
 
 public class Projectile extends Entity {
 
-	Game game;
 	public Vector2D direction;
 	
 	double speed = 10;
 	
-	public Projectile(Vector2D position, Vector2D direction, Game game) {
+	public Projectile(Vector2D position, Vector2D direction) {
 		super(position);
-		this.game = game;
 		this.direction = direction.normalize();
 	}
 	
