@@ -46,6 +46,8 @@ public class Game {
 		for (int i=0;i<particles.size();i++) {
 			Particle part = particles.get(i);
 			part.process(dt);
+			if(part.destroyed)
+				particles.remove(i);
 		}
 	}
 	
