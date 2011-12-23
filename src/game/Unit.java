@@ -3,6 +3,8 @@ package game;
 
 import java.util.ArrayList;
 
+import collision.CollisionDetection;
+
 import util.Vector2D;
 
 import engine.GlobalInfo;
@@ -12,7 +14,10 @@ public class Unit extends Entity {
 
 	Game game;
 	public ArrayList<Vector2D> path;
-	double speed = 4;
+	public Vector2D velocity = new Vector2D(0,0);
+	double speed = 2;
+	double radius = 0.25;
+	
 	//Unit health, 0-100
 	int health = 0;
 	
@@ -43,18 +48,24 @@ public class Unit extends Entity {
 	
 	public void process(double dt) {
 		
+		CollisionDetection cd = new CollisionDetection(game.f);
+		
+		
 		if(path != null && path.size() > 0) {
 			if(pos.distance(path.get(0)) < GlobalInfo.accuracy) {
 				path.remove(0);
+				velocity = new Vector2D(0,0);
 			}
 			if(path.size() > 0) {
 				Vector2D dest = path.get(0);
-				Vector2D move = dest.subtract(pos).normalize().scalar(speed);
-				
-				pos = pos.add(move.scalar(dt));
+				velocity = dest.subtract(pos).normalize().scalar(speed);
 			}
 			
 		}
+		
+		cd.collideAndSlide(pos, velocity.scalar(dt), radius);
+		
+		pos = pos.add(velocity.scalar(dt));
 		
 	}
 

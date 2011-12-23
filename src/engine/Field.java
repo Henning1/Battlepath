@@ -13,16 +13,21 @@ import util.Vector2D;
 
 
 public class Field {
-	public int tiles[][];
+	public Tile tiles[][];
 	public int tilesX=0;
 	public int tilesY=0;
-	public int tileSize;
 	
-	public Field(int numX, int numY, int tS) {
-		tiles = new int[numX][numY];
+	public Field(int numX, int numY) {
+		tiles = new Tile[numX][numY];
 		tilesX = numX;
 		tilesY = numY;
-		tileSize = tS;
+		
+		for(int x=0;x<tilesX;x++) {
+			for(int y=0;y<tilesY;y++) {
+				tiles[x][y] = new Tile(
+						new Vector2D(x,y), new Vector2D(x+1,y+1),0);
+			}
+		}
 	}
 	
 	public void createCricle(Vector2D pos, double r) {
@@ -30,7 +35,7 @@ public class Field {
 			for(int y=0; y<tilesY; y++) {
 				//System.out.println(pos.distance(getWorldPos(new Point(x,y))));
 				if(pos.distance(getWorldPos(new Point(x,y))) < r)
-					tiles[x][y] = 1;
+					tiles[x][y].setType(1);
 			}
 		}
 	}
@@ -47,7 +52,7 @@ public class Field {
 	
 	public void setTile(Vector2D pos, int value) {
 		Point p = tileIndexAt(pos);
-		tiles[p.x][p.y] = value;
+		tiles[p.x][p.y].setType(value);
 	}
 	
 	public Point tileIndexAt(Vector2D pos) {
@@ -61,7 +66,7 @@ public class Field {
 		if(tile.x>=tilesX || tile.x < 0
 		 ||tile.y>=tilesY || tile.y < 0)
 			return 1;
-		return tiles[tile.x][tile.y];
+		return tiles[tile.x][tile.y].getType();
 	}
 	
 	public ArrayList<Vector2D> neighbours(Vector2D pos) {
@@ -147,5 +152,7 @@ public class Field {
 		}
 		
 	}
+	
+	
 	
 }

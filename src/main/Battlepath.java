@@ -8,6 +8,8 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
+import collision.CollisionPackage;
+
 import util.Line2D;
 import util.Vector2D;
 
@@ -20,10 +22,22 @@ public class Battlepath {
 	
 	public static void main(String[] args) {
 
+		
+		CollisionPackage cp = new CollisionPackage(
+				new Vector2D(1.5,1.3), new Vector2D(0,-0.5), 0.25,
+				new Line2D(new Vector2D(2,1), new Vector2D(1,1)));
+		
+		cp.calcIntersection();
+		
+		System.out.println("distance: " + cp.distance);
+		System.out.println("signeddistance: " + cp.signeddistance);
+		
+		
+		
 		int tileSize = 20;
 		int fieldWidth = 60;
 		int fieldHeight = 30;
-		Field f = new Field(fieldWidth, fieldHeight, tileSize);
+		Field f = new Field(fieldWidth, fieldHeight);
 		randomCircles(f, fieldWidth*fieldHeight/20, 3);
 	
 		Vector2D start;
@@ -38,8 +52,10 @@ public class Battlepath {
 		Game game = new Game(f,start);
 
 		Renderer renderer = new Renderer(game,tileSize,frame);
-		new Input(game, frame, renderer);
+		Input input = new Input(frame, renderer);
 
+		game.input = input;
+		
 		MainLoop.startLoop(renderer, game);
 
 	}

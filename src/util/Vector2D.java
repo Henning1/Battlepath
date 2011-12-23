@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 import engine.GlobalInfo;
 
 public class Vector2D {
-	double x,y;
+	public double x,y;
 	
 	public Vector2D(double x, double y) {
 		this.x = x;
@@ -47,7 +47,7 @@ public class Vector2D {
 	}
 	
 	public Vector2D orthogonal() {
-		return new Vector2D(y,-x);
+		return new Vector2D(-y,x);
 	}
 	
 	public Vector2D add(Vector2D v) {
