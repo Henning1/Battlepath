@@ -10,6 +10,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
+import java.util.HashMap;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
@@ -25,13 +27,10 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	public boolean mouse1down=false;
 	public boolean mouse2down=false;
 	public boolean mouse1clicked=false;
-	boolean mouse2clicked=false;
+	public boolean mouse2clicked=false;
 	public Vector2D cursorPos=new Vector2D(0,0);
 	
-	public boolean keyup=false;
-	public boolean keydown=false;
-	public boolean keyleft=false;
-	public boolean keyright=false;
+	public HashMap<Integer, Long> pressedKeys;
 	
 	public Input(JFrame frame, Renderer r) {
 		
@@ -42,6 +41,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 		size = new Dimension();
 		size.width = ((JPanel)frame.getContentPane()).getWidth();
 		size.height = ((JPanel)frame.getContentPane()).getHeight();
+		pressedKeys = new HashMap<Integer, Long>();
 	}
 	
 	public boolean getMouse1Click() {
@@ -60,10 +60,16 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 		return false;
 	}
 	
+	public boolean isPressed(Integer key) {
+		return pressedKeys.containsKey(key);
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		mouse1clicked = true;
-		mouse2clicked = true;
+		if(arg0.getButton()==MouseEvent.BUTTON1) 
+			mouse1clicked = true;
+		else if(arg0.getButton()==MouseEvent.BUTTON3)
+			mouse2clicked = true;
 	}
 
 	@Override
@@ -112,29 +118,21 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 
 	@Override
 	public void keyPressed(KeyEvent arg0) {
-		if(arg0.getKeyChar() == 'w')
-			keyup = true;
-		if(arg0.getKeyChar() == 'a')
-			keyleft = true;
-		if(arg0.getKeyChar() == 's')
-			keydown = true;
-		if(arg0.getKeyChar() == 'd')
-			keyright = true;
-		
-		
+		int c = arg0.getKeyCode();
+		long w = arg0.getWhen();
+		if(!pressedKeys.containsKey(c)) {
+			pressedKeys.put(c, w);
+		}
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
-		if(arg0.getKeyChar() == 'w')
-			keyup = false;
-		if(arg0.getKeyChar() == 'a')
-			keyleft = false;
-		if(arg0.getKeyChar() == 's')
-			keydown = false;
-		if(arg0.getKeyChar() == 'd')
-			keyright = false;
-		
+		int c = arg0.getKeyCode();
+		long w = arg0.getWhen();
+		//Only remove if the time difference between keyPressed and keyReleased
+		//is not zero, this keeps out auto-repeated keystrokes on all platforms.
+		if(pressedKeys.containsKey(c) && w - pressedKeys.get(c) != 0)
+			pressedKeys.remove((Integer)c);
 	}
 
 	@Override
@@ -142,5 +140,4 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 		// TODO Auto-generated method stub
 		
 	}
-
 }

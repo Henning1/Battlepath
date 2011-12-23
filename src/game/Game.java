@@ -1,5 +1,7 @@
 package game;
+
 import interaction.Input;
+import interaction.KeyBindings;
 
 import java.util.ArrayList;
 
@@ -53,12 +55,12 @@ public class Game {
 			projectiles.add(
 					new Projectile(u.pos, input.cursorPos.subtract(u.pos)));
 		
-		
-		if(input.keyright) u.velocity.x = 5;
-		else if(input.keyleft) u.velocity.x = -5;
+		if(input.isPressed(KeyBindings.MOVE_LEFT)) u.velocity.x = 5;
+		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -5;
 		else u.velocity.x = 0;
-		if(input.keydown) u.velocity.y = 5;
-		else if(input.keyup) u.velocity.y = -5;
+		
+		if(input.isPressed(KeyBindings.MOVE_DOWN)) u.velocity.y = 5;
+		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = -5;
 		else u.velocity.y = 0;
 		
 		
