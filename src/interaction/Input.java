@@ -11,11 +11,27 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 import java.util.HashMap;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import util.Vector2D;
+
+class Remover extends TimerTask {
+	int key;
+	HashMap<Integer, Remover> pressedKeys;
+	public Remover(int k, HashMap<Integer, Remover> pK) {
+		key = k;
+		pressedKeys = pK;
+	}
+	
+	@Override
+	public void run() {
+		pressedKeys.remove(key);
+	}
+}
 
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener {
@@ -30,7 +46,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	public boolean mouse2clicked=false;
 	public Vector2D cursorPos=new Vector2D(0,0);
 	
-	public HashMap<Integer, Long> pressedKeys;
+	HashMap<Integer, Remover> pressedKeys;
+	Timer timer;
 	
 	public Input(JFrame frame, Renderer r) {
 		
@@ -41,7 +58,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 		size = new Dimension();
 		size.width = ((JPanel)frame.getContentPane()).getWidth();
 		size.height = ((JPanel)frame.getContentPane()).getHeight();
-		pressedKeys = new HashMap<Integer, Long>();
+		pressedKeys = new HashMap<Integer, Remover>();
+		timer = new Timer();
 	}
 	
 	public boolean getMouse1Click() {
@@ -90,7 +108,6 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 			mouse1down = true;
 		else if(arg0.getButton()==MouseEvent.BUTTON3)
 			mouse2down = true;
-		
 	}
 
 	@Override
@@ -106,7 +123,6 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	public void mouseDragged(MouseEvent arg0) {
 		Point p = arg0.getPoint();
 		cursorPos = r.screenToWorld(p);
-		
 	}
 
 	@Override
@@ -119,20 +135,17 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 	@Override
 	public void keyPressed(KeyEvent arg0) {
 		int c = arg0.getKeyCode();
-		long w = arg0.getWhen();
-		if(!pressedKeys.containsKey(c)) {
-			pressedKeys.put(c, w);
-		}
+		if(!pressedKeys.containsKey(c))
+			pressedKeys.put((Integer)c, null);
+		else
+			pressedKeys.get(c).cancel();
 	}
 
 	@Override
 	public void keyReleased(KeyEvent arg0) {
 		int c = arg0.getKeyCode();
-		long w = arg0.getWhen();
-		//Only remove if the time difference between keyPressed and keyReleased
-		//is not zero, this keeps out auto-repeated keystrokes on all platforms.
-		if(pressedKeys.containsKey(c) && w - pressedKeys.get(c) != 0)
-			pressedKeys.remove((Integer)c);
+		pressedKeys.put((Integer)c, new Remover(c, pressedKeys));
+		timer.schedule(pressedKeys.get(c), 2);
 	}
 
 	@Override
