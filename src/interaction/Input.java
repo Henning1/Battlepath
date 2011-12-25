@@ -138,7 +138,12 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 		if(!pressedKeys.containsKey(c))
 			pressedKeys.put((Integer)c, null);
 		else
-			pressedKeys.get(c).cancel();
+		{
+			try {
+				pressedKeys.get(c).cancel();
+			}
+			catch (java.lang.NullPointerException e) {}
+		}
 	}
 
 	@Override
