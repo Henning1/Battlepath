@@ -4,6 +4,7 @@ package game;
 import java.util.ArrayList;
 
 import collision.CollisionDetection;
+import collision.CollisionPackage;
 
 import util.Vector2D;
 
@@ -16,8 +17,8 @@ public class Unit extends Entity {
 	public ArrayList<Vector2D> path;
 	public Vector2D velocity = new Vector2D(0,0);
 	double speed = 2;
-	double radius = 0.25;
-	
+	public double radius = 1;
+	public CollisionPackage cp;
 	//Unit health, 0-100
 	int health = 0;
 	
@@ -63,9 +64,9 @@ public class Unit extends Entity {
 			
 		}
 		
-		cd.collideAndSlide(pos, velocity.scalar(dt), radius);
+		cp = cd.collideAndSlide(this, velocity.scalar(dt),5);
 		
-		pos = pos.add(velocity.scalar(dt));
+		//if(cp == null)	pos = pos.add(velocity.scalar(dt));
 		
 	}
 

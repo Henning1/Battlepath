@@ -22,23 +22,18 @@ public class Battlepath {
 	
 	public static void main(String[] args) {
 
+		Line2D line = new Line2D(new Vector2D(1,2), new Vector2D(1,1));
 		
 		CollisionPackage cp = new CollisionPackage(
-				new Vector2D(1.5,1.3), new Vector2D(0,-0.5), 0.25,
-				new Line2D(new Vector2D(2,1), new Vector2D(1,1)));
-		
+				new Vector2D(1.5,0.999999), new Vector2D(-1,0), 0.25, line);
+
 		cp.calcIntersection();
-		
-		System.out.println("distance: " + cp.distance);
-		System.out.println("signeddistance: " + cp.signeddistance);
-		
-		
 		
 		int tileSize = 20;
 		int fieldWidth = 60;
 		int fieldHeight = 30;
 		Field f = new Field(fieldWidth, fieldHeight);
-		randomCircles(f, fieldWidth*fieldHeight/20, 3);
+		randomCircles(f, fieldWidth*fieldHeight/50, 3);
 	
 		Vector2D start;
 		start = new Vector2D(rand.nextDouble()*fieldWidth, rand.nextDouble()*fieldHeight);

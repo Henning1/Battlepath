@@ -21,11 +21,15 @@ public class Line2D {
 	}
 	
 	public double signedDistance(Vector2D point) {
-		return normal.dotProduct(point.subtract(base));
+		return -normal.dotProduct(base.subtract(point));
 	}
 	
-	public boolean linePointInSegment(Vector2D point) {
-		return a.distance(point) + b.distance(point) <= a.distance(b) + 0.05;
+	public double distance(Vector2D point) {
+		return Math.abs(signedDistance(point));
+	}
+	
+	public boolean pointInSegment(Vector2D point) {
+		return a.distance(point) + b.distance(point) <= a.distance(b) + 0.0001;
 	}
 	
 	

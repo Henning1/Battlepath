@@ -4,6 +4,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 
 import engine.Field;
+import game.Unit;
 
 import util.Line2D;
 import util.Vector2D;
@@ -50,20 +51,50 @@ public class CollisionDetection {
 		if(p.y < 0) p.y = 0;
 	}
 	
-	public Line2D collideAndSlide(
-			Vector2D position, Vector2D velocity, double radius) {
+	public CollisionPackage collideAndSlide(Unit u, Vector2D v, int d) {
+		if(d==0) return null;
 		
-		
-		
-		ArrayList<Line2D> model = relevantData(position, velocity, radius);
-		
-		ArrayList<Vector2D> points = new ArrayList<Vector2D>();
+		ArrayList<Line2D> model = relevantData(u.pos, v, u.radius);		
 		
 		CollisionPackage closestCollision = null;
+		double howClose = Double.MAX_VALUE;
+		for(Line2D line : model) {
+			CollisionPackage cp = new CollisionPackage(u.pos,v,u.radius,line);
+			cp.calcIntersection();
+			if(cp.collision && cp.distance < howClose) {
+				closestCollision = cp;
+				howClose = cp.distance;
+				//System.out.println(cp);
+			}
+		}
+		double veryCloseDistance = 0.05;
+		if(closestCollision != null) {
+			
+	
+			Vector2D p = closestCollision.collisionPoint;
+			Vector2D radius = p.subtract(u.pos);
+			
+			Line2D slidingplane = new Line2D(p, radius.orthogonal().add(p));
+			
+			Vector2D move = v.scalar(closestCollision.t*0.95);
+			u.pos = u.pos.add(move);
+			
+	
+			System.out.println(closestCollision);
+			
+			double distance = slidingplane.distance(u.pos.add(v));
+			
+			Vector2D newDestinationPoint = u.pos.add(v).subtract(
+					slidingplane.normal.scalar(distance));
+			
+			collideAndSlide(u,newDestinationPoint.subtract(u.pos), d-1);
+			
 		
-
+		} else {
+			u.pos = u.pos.add(v);
+		}
 		
-		
-		return null; //collisionLine;
+		return closestCollision;
 	}
+
 }

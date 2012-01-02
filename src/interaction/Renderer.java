@@ -18,6 +18,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import collision.CollisionDetection;
+import collision.CollisionPackage;
 
 import util.Line2D;
 import util.Vector2D;
@@ -105,10 +106,36 @@ public class Renderer {
     	}
     }
     
-    g2d.fill(new Ellipse2D.Double((game.u.pos.x()*tileSize)-(tileSize/4),
-    							  (game.u.pos.y()*tileSize)-(tileSize/4),
-    							  tileSize/2,tileSize/2));
+    /*
+    if(cp != null) {
+    	g2d.setColor(new Color(255,255,0));
+        g2d.fill(new Ellipse2D.Double((cp.intersectionPoint.x*tileSize)-(tileSize/4),
+				  (cp.intersectionPoint.y*tileSize)-(tileSize/4),
+				  tileSize/2,tileSize/2));
+    	
+    	
+    }*/
+    double r = game.u.radius;
+    if(game.u.cp != null && game.u.cp.collision) {
+    	if(game.u.cp.edge) {
+    		g2d.setColor(new Color(255,0,0));
+    	} else {
+    		g2d.setColor(new Color(0,0,255));
+    	}
+        
+        g2d.fill(new Ellipse2D.Double(
+        		game.u.cp.collisionPoint.x*tileSize,
+        		game.u.cp.collisionPoint.y*tileSize,
+                0.2*tileSize,0.2*tileSize));
+    } else {
+    		g2d.setColor(new Color(0,255,0));
+    }
     
+
+    
+    g2d.fill(new Ellipse2D.Double((game.u.pos.x()*tileSize)-(r*tileSize),
+			  (game.u.pos.y()*tileSize)-(r*tileSize),
+			  r*tileSize*2,r*tileSize*2));
     //Projectiles
     g2d.setColor(new Color(0,0,255));
     for (int i=0;i<game.projectiles.size();i++) {
@@ -144,6 +171,7 @@ public class Renderer {
 			 	 (int)(cursor.y()*tileSize));
    
     g2d.setColor(new Color(255,255,0));
+    
     CollisionDetection cd = new CollisionDetection(game.f);
     ArrayList<Line2D> data = cd.relevantData(game.u.pos, game.u.velocity, 0.25);
     for(Line2D l : data) {
@@ -153,12 +181,8 @@ public class Renderer {
     }
     
     
-    Line2D line = cd.collideAndSlide(game.u.pos, game.u.velocity, 0.25);
-    if(line != null) collisionLine = line;
-    if(collisionLine != null) {
-    	g2d.setColor(new Color(0,0,255));
-    	line(collisionLine);
-    }
+    
+
     /*if(cpoints!=null) {
     for(Vector2D p : cpoints) {
 		g2d.fill(new Rectangle2D.Double(
