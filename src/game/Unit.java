@@ -18,7 +18,7 @@ public class Unit extends Entity {
 	public Vector2D velocity = new Vector2D(0,0);
 	public Vector2D direction = new Vector2D(0,0);
 	double speed = 2;
-	public double radius = 1.5;
+	public double radius = 1.2;
 	public CollisionPackage cp;
 	public boolean actionmode = true;
 	//Unit health, 0-100

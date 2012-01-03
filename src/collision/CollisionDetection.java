@@ -53,19 +53,15 @@ public class CollisionDetection {
 	}
 	
 	public void collideAndSlide(Unit u, double dt) {
-		System.out.println(u);
-		System.out.println(u.velocity);
-		System.out.println(u.velocity.scalar(dt));
 		pCollideAndSlide(u,u.velocity.scalar(dt),3);
 	}
 	
 	
 	private void pCollideAndSlide(Unit u, Vector2D v,int d) {
 		if(d==0) return;
-		System.out.println(v);
 
 		ArrayList<Line2D> model = relevantData(u.pos, v, u.radius);	
-		CollisionPackage closestCollision = getClosestCollision(model,v, u);
+		CollisionPackage closestCollision = collide(model,v, u);
 
 		if(closestCollision != null) {
 			//slide to obstacle and retrieve transformed velocity
@@ -128,7 +124,11 @@ public class CollisionDetection {
 		return newVelocityVector;
 	}
 	
-	private CollisionPackage getClosestCollision(ArrayList<Line2D> model, Vector2D v, Unit u) {
+	public CollisionPackage collide(Unit u, Vector2D v) {
+		return collide(relevantData(u.pos,v,u.radius),v,u);
+	}
+	
+	private CollisionPackage collide(ArrayList<Line2D> model, Vector2D v, Unit u) {
 		CollisionPackage closestCollision = null;
 		double howClose = Double.MAX_VALUE;
 		for(Line2D line : model) {

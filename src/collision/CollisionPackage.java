@@ -154,66 +154,6 @@ public class CollisionPackage {
 		return collision;
 	}
 	
-	
-	
-	/*
-	public boolean calcIntersection() {
-		signeddistance = line.signedDistance(basepoint);
-		distance = Math.abs(signeddistance);
-		
-		double dot = line.normal().dotProduct(velocity);
-		if(dot != 0) {
-			t0 = (radius - signeddistance) / dot;
-			t1 = (-radius - signeddistance) / dot;
-		}
-		else {
-			if(distance <= radius) {
-				t0 = 0;
-				t1 = 1;
-			}
-			return false;
-		}
-		
-		if((t0 < 0 || t0 > 1) && (t1 < 0 || t1 > 1)) return false;
-		
-		if(t0 < 0 || t0 > 1) return false;
-		
-		//planeIntersectionPoint = basePoint - planeNormal + t0 * velocity
-		intersectionPoint = basepoint.subtract(line.normal().scalar(radius))
-				.add(velocity.scalar(t0));
-		
-		if(line.pointInSegment(intersectionPoint)) {
-			collision = true;
-			t = t0;
-			return true;
-		}
-		
-		distance = Double.MAX_VALUE;
-		collision = checkPoint(line.a) | checkPoint(line.b);
-		
-		return collision;
-
-	}
-	
-	private boolean checkPoint(Vector2D point) {
-		double a = velocity.dotProduct(velocity);
-		double b = 2*velocity.dotProduct(basepoint.subtract(point));
-		double c = Math.pow(point.subtract(basepoint).length(),2) - radius*radius;
-		
-		double x = util.Util.getLowestRoot(a, b, c, 1);
-		if(x==-1) return false;
-		System.out.println(x); 	
-		double dist = x*velocity.length();
-		if(dist < distance) {
-			distance = dist;
-			intersectionPoint = point;
-			t=x;
-		}
-		
-		return true;
-		
-	}*/
-	
 	public String toString() {
 		return "velocity: " + velocity + "\n"
 				+ "basepoint: " + basepoint + "\n"
