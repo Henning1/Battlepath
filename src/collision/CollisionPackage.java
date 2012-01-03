@@ -44,7 +44,7 @@ public class CollisionPackage {
 			line.normal.dotProduct(velocity);
 		// if sphere is travelling parrallel to the plane:
 		if (normalDotVelocity == 0.0f) {
-			if (Math.abs(signedDistToTrianglePlane) >= 1.0f) {
+			if (Math.abs(signedDistToTrianglePlane) >= radius) {
 				// Sphere is not embedded in plane.
 				// No collision possible:
 				return collision;
@@ -59,8 +59,8 @@ public class CollisionPackage {
 		}
 		else {
 			// N dot D is not 0. Calculate intersection interval:
-			t0=(-1.0-signedDistToTrianglePlane)/normalDotVelocity;
-			t1=( 1.0-signedDistToTrianglePlane)/normalDotVelocity;
+			t0=(-radius-signedDistToTrianglePlane)/normalDotVelocity;
+			t1=( radius-signedDistToTrianglePlane)/normalDotVelocity;
 			// Swap so t0 < t1
 			if (t0 > t1) {
 				double temp = t1;
@@ -92,7 +92,7 @@ public class CollisionPackage {
 		
 		if (!embeddedInPlane) {
 			Vector2D planeIntersectionPoint = 
-				basepoint.subtract(line.normal)
+				basepoint.subtract(line.normal.scalar(radius))
 				.add(velocity.scalar(t0));
 				if (line.pointInSegment(planeIntersectionPoint))
 				{
@@ -122,7 +122,7 @@ public class CollisionPackage {
 				// P1
 				Vector2D p1 = line.a;
 				b = 2.0*(velocity.dotProduct(basepoint.subtract(p1)));
-				c = (p1.subtract(basepoint)).squaredLength() - 1.0;
+				c = (p1.subtract(basepoint)).squaredLength() - Math.pow(radius, 2);
 				newT = Util.getLowestRoot(a,b,c, t);
 				if(newT != -1) {
 					t = newT;
@@ -132,7 +132,7 @@ public class CollisionPackage {
 				// P2
 				Vector2D p2 = line.b;
 				b = 2.0*(velocity.dotProduct(basepoint.subtract(p2)));
-				c = (p2.subtract(basepoint)).squaredLength() - 1.0;
+				c = (p2.subtract(basepoint)).squaredLength() - Math.pow(radius, 2);
 				
 				newT = Util.getLowestRoot(a,b,c, t);
 				if(newT != -1) {
@@ -144,7 +144,7 @@ public class CollisionPackage {
 				// Set result:
 				if (collision == true) {
 					// distance to collision: ’t’ is time of collision
-					double distToCollision = t*velocity.length();
+					//distance = t*velocity.length();
 					// Does this triangle qualify for the closest hit?
 					// it does if it’s the first hit or the closest
 					// Collision information nessesary for sliding

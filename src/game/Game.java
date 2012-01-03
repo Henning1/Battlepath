@@ -19,6 +19,7 @@ public class Game {
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
 	
+	
 	public Input input;
 	
 	public Game(Field f, Vector2D startpos) {
@@ -57,12 +58,12 @@ public class Game {
 			projectiles.add(
 					new Projectile(u.pos, input.cursorPos.subtract(u.pos)));
 		
-		if(input.isPressed(KeyBindings.MOVE_LEFT)) u.velocity.x = 5;
-		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -5;
+		if(input.isPressed(KeyBindings.MOVE_LEFT)) u.velocity.x = 8;
+		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -8;
 		else u.velocity.x = 0;
 		
-		if(input.isPressed(KeyBindings.MOVE_DOWN)) u.velocity.y = 5;
-		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = -5;
+		if(input.isPressed(KeyBindings.MOVE_DOWN)) u.velocity.y = 8;
+		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = -8;
 		else u.velocity.y = 0;
 		
 		

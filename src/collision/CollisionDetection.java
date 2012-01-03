@@ -12,6 +12,7 @@ import util.Vector2D;
 public class CollisionDetection {
 	
 	Field field;
+	private double veryCloseDistance = 0.0005;
 	
 	public CollisionDetection(Field field) {
 		this.field = field;
@@ -51,11 +52,83 @@ public class CollisionDetection {
 		if(p.y < 0) p.y = 0;
 	}
 	
-	public CollisionPackage collideAndSlide(Unit u, Vector2D v, int d) {
-		if(d==0) return null;
+	public void collideAndSlide(Unit u, double dt) {
+		System.out.println(u);
+		System.out.println(u.velocity);
+		System.out.println(u.velocity.scalar(dt));
+		pCollideAndSlide(u,u.velocity.scalar(dt),3);
+	}
+	
+	
+	private void pCollideAndSlide(Unit u, Vector2D v,int d) {
+		if(d==0) return;
+		System.out.println(v);
+
+		ArrayList<Line2D> model = relevantData(u.pos, v, u.radius);	
+		CollisionPackage closestCollision = getClosestCollision(model,v, u);
+
+		if(closestCollision != null) {
+			//slide to obstacle and retrieve transformed velocity
+			Vector2D newVelocity = slide(closestCollision,u);
+			//recurse
+			if(newVelocity != null)
+				pCollideAndSlide(u,newVelocity,--d);
+
+		} else {
+			u.pos = u.pos.add(v);
+		}
 		
-		ArrayList<Line2D> model = relevantData(u.pos, v, u.radius);		
+	}
+	
+
+	
+	// returns new velocity
+	private Vector2D slide(CollisionPackage closestCollision, Unit u) {
+		Vector2D v = closestCollision.velocity;
+		// *** Collision occured ***
+		// The original destination point
+		Vector2D destinationPoint = u.pos.add(v);
+		Vector2D newBasePoint = u.pos;
+		// only update if we are not already very close
+		// and if so we only move very close to intersection..not
+		// to the exact spot.
+		if (closestCollision.distance>=veryCloseDistance)
+		{
+			Vector2D newV = v.copy();
+			newV.normalize().scalar(closestCollision.distance-veryCloseDistance);
+			newBasePoint = closestCollision.basepoint.add(newV);
+			// Adjust polygon intersection point (so sliding
+			// plane will be unaffected by the fact that we
+			// move slightly less than collision tells us)
+			newV.normalize();
+			closestCollision.collisionPoint = 
+					closestCollision.collisionPoint.subtract(newV.scalar(veryCloseDistance));
+		}
+		// Determine the sliding plane
+		Vector2D slidePlaneOrigin =	closestCollision.collisionPoint;
+		Vector2D slidePlaneNormal =
+			newBasePoint.subtract(closestCollision.collisionPoint).normalize();
+
+		Line2D slidingPlane = new Line2D(slidePlaneOrigin,slidePlaneOrigin.add(slidePlaneNormal.orthogonal()));
+		// Again, sorry about formatting.. but look carefully ;)
+		Vector2D newDestinationPoint = destinationPoint.subtract(
+				slidingPlane.normal().scalar(slidingPlane.signedDistance(destinationPoint)));
+
+	
+		// Generate the slide vector, which will become our new
+		// velocity vector for the next iteration
+		Vector2D newVelocityVector = newDestinationPoint.subtract(closestCollision.collisionPoint);
+		// Recurse:
+		// dont recurse if the new velocity is very small
+		if (newVelocityVector.length() < veryCloseDistance) {
+			return null;
+		}
+		u.pos = newBasePoint;
 		
+		return newVelocityVector;
+	}
+	
+	private CollisionPackage getClosestCollision(ArrayList<Line2D> model, Vector2D v, Unit u) {
 		CollisionPackage closestCollision = null;
 		double howClose = Double.MAX_VALUE;
 		for(Line2D line : model) {
@@ -64,37 +137,10 @@ public class CollisionDetection {
 			if(cp.collision && cp.distance < howClose) {
 				closestCollision = cp;
 				howClose = cp.distance;
-				//System.out.println(cp);
 			}
 		}
-		double veryCloseDistance = 0.05;
-		if(closestCollision != null) {
-			
-	
-			Vector2D p = closestCollision.collisionPoint;
-			Vector2D radius = p.subtract(u.pos);
-			
-			Line2D slidingplane = new Line2D(p, radius.orthogonal().add(p));
-			
-			Vector2D move = v.scalar(closestCollision.t*0.95);
-			u.pos = u.pos.add(move);
-			
-	
-			System.out.println(closestCollision);
-			
-			double distance = slidingplane.distance(u.pos.add(v));
-			
-			Vector2D newDestinationPoint = u.pos.add(v).subtract(
-					slidingplane.normal.scalar(distance));
-			
-			collideAndSlide(u,newDestinationPoint.subtract(u.pos), d-1);
-			
-		
-		} else {
-			u.pos = u.pos.add(v);
-		}
-		
 		return closestCollision;
 	}
-
+	
+	
 }
