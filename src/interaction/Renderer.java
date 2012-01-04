@@ -17,9 +17,6 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import collision.CollisionSystem;
-import collision.Collision;
-
 import util.Line2D;
 import util.Vector2D;
 

@@ -1,6 +1,5 @@
 package main;
 import game.Game;
-import game.Unit;
 import interaction.Input;
 import interaction.Renderer;
 import interaction.WindowUtilities;
@@ -9,10 +8,8 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import collision.Collision;
 import collision.CollisionSystem;
 
-import util.Line2D;
 import util.Vector2D;
 
 import engine.Field;

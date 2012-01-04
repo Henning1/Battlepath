@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import engine.Field;
 import game.Entity;
 import game.Game;
-import game.Unit;
 
 import util.Line2D;
 import util.Vector2D;

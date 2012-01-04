@@ -1,6 +1,5 @@
 package collision;
 
-import game.Unit;
 import util.Line2D;
 import util.Util;
 import util.Vector2D;
@@ -39,7 +38,7 @@ public class Collision {
 		// position to triangle plane
 		double signedDistToTrianglePlane =
 				line.signedDistance(basepoint);
-		// cache this as we’re going to use it a few times below:
+		// cache this as we're going to use it a few times below:
 		double normalDotVelocity =
 			line.normal.dotProduct(velocity);
 		// if sphere is travelling parrallel to the plane:
@@ -102,7 +101,7 @@ public class Collision {
 					collisionPoint = planeIntersectionPoint;
 				}
 			}
-			// if we haven’t found a collision already we’ll have to
+			// if we haven't found a collision already we'll have to
 			// sweep sphere against points and edges of the triangle.
 			// Note: A collision inside the triangle (the check above)
 			// will always happen before a vertex or edge collision!
@@ -143,10 +142,10 @@ public class Collision {
 	
 				// Set result:
 				if (collision == true) {
-					// distance to collision: ’t’ is time of collision
+					// distance to collision: 't' is time of collision
 					//distance = t*velocity.length();
 					// Does this triangle qualify for the closest hit?
-					// it does if it’s the first hit or the closest
+					// it does if it's the first hit or the closest
 					// Collision information nessesary for sliding
 					//colPackage->nearestDistance = distToCollision;
 				}
