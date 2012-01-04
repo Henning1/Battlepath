@@ -17,8 +17,8 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import collision.CollisionDetection;
-import collision.CollisionPackage;
+import collision.CollisionSystem;
+import collision.Collision;
 
 import util.Line2D;
 import util.Vector2D;
@@ -115,21 +115,7 @@ public class Renderer {
     	
     	
     }*/
-    double r = game.u.radius;
-    if(game.u.cp != null && game.u.cp.collision) {
-    	if(game.u.cp.edge) {
-    		g2d.setColor(new Color(255,0,0));
-    	} else {
-    		g2d.setColor(new Color(0,0,255));
-    	}
-        
-        g2d.fill(new Ellipse2D.Double(
-        		game.u.cp.collisionPoint.x*tileSize,
-        		game.u.cp.collisionPoint.y*tileSize,
-                0.2*tileSize,0.2*tileSize));
-    } else {
-    		g2d.setColor(new Color(0,255,0));
-    }
+    double r = game.u.getRadius();
     
 
     
@@ -171,14 +157,14 @@ public class Renderer {
 			 	 (int)(cursor.y()*tileSize));
    
     g2d.setColor(new Color(255,255,0));
-    
-    CollisionDetection cd = new CollisionDetection(game.f);
+    /*
+    CollisionSystem cd = new CollisionSystem(game.f);
     ArrayList<Line2D> data = cd.relevantData(game.u.pos, game.u.velocity, 0.25);
     for(Line2D l : data) {
     	line(l);
     	Vector2D middle = new Vector2D((l.a.x+l.b.x)/2,(l.a.y+l.b.y)/2);
     	line(middle, middle.add(l.normal().scalar(0.25)));
-    }
+    }*/
     
     
     

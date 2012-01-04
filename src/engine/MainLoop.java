@@ -22,7 +22,7 @@ public class MainLoop {
     	currentTime = (double)System.currentTimeMillis() / 1000.0;
     	fpsStart = currentTime;
     	
-    	while (engine.GlobalInfo.running)
+    	while (engine.GInfo.running)
         {
     		 double newTime = (double)System.currentTimeMillis() / 1000.0;
              double frameTime = newTime - currentTime;
@@ -50,7 +50,7 @@ public class MainLoop {
              {
                   g.step(dt);
                   accumulator -= dt;
-                  GlobalInfo.time += dt;
+                  GInfo.time += dt;
              }
 
              r.render();

@@ -13,8 +13,8 @@ public class Particle extends Entity {
 	double acceleration = 10;
 	public boolean destroyed = false;
 	
-	public Particle(Vector2D position, Vector2D direction, double lifetime, double speed) {
-		super(position);
+	public Particle(Vector2D position, Vector2D direction, double lifetime, double speed, Game game) {
+		super(position,game);
 		this.direction = direction.normalize();
 		this.lifetime = lifetime;
 		this.speed = speed;
@@ -33,5 +33,10 @@ public class Particle extends Entity {
 			pos = pos.add(direction.scalar(speed*dt));
 			speed += acceleration*dt;
 		}
+	}
+
+	@Override
+	public double getRadius() {
+		return 0.01;
 	}
 }

@@ -3,29 +3,26 @@ package game;
 
 import java.util.ArrayList;
 
-import collision.CollisionDetection;
-import collision.CollisionPackage;
+import collision.CollisionSystem;
+import collision.Collision;
+import collision.Move;
 
 import util.Vector2D;
 
-import engine.GlobalInfo;
+import engine.GInfo;
 
 
 public class Unit extends Entity {
 
-	Game game;
 	public ArrayList<Vector2D> path;
-	public Vector2D velocity = new Vector2D(0,0);
 	public Vector2D direction = new Vector2D(0,0);
-	double speed = 2;
-	public double radius = 1.2;
-	public CollisionPackage cp;
+	double speed = 4;
 	public boolean actionmode = true;
 	//Unit health, 0-100
 	int health = 0;
 	
 	public Unit(Vector2D position, Game game) {
-		super(position);
+		super(position,game);
 		this.game = game;
 		health = 100;
 	}
@@ -49,13 +46,17 @@ public class Unit extends Entity {
 		return health;
 	}
 	
+	public Vector2D velocityDt() {
+		return velocity.scalar(game.dt);
+	}
+	
 	public void process(double dt) {
 		
-		CollisionDetection cd = new CollisionDetection(game.f);
+		CollisionSystem cd = new CollisionSystem(game.f, game);
 		
 		
 		if(path != null && path.size() > 0) {
-			if(pos.distance(path.get(0)) < GlobalInfo.accuracy) {
+			if(pos.distance(path.get(0)) < GInfo.accuracy) {
 				path.remove(0);
 				velocity = new Vector2D(0,0);
 			}
@@ -66,10 +67,14 @@ public class Unit extends Entity {
 			
 		}
 		
-		cd.collideAndSlide(this,dt);
+		Move move = cd.collideAndSlide(this);
+		move.apply();
 		
-		//if(cp == null)	pos = pos.add(velocity.scalar(dt));
-		
+	}
+
+	@Override
+	public double getRadius() {
+		return 0.48;
 	}
 
 }

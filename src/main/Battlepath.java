@@ -8,7 +8,7 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import collision.CollisionPackage;
+import collision.Collision;
 
 import util.Line2D;
 import util.Vector2D;
@@ -21,13 +21,6 @@ public class Battlepath {
 	static Random rand = new Random();
 	
 	public static void main(String[] args) {
-
-		Line2D line = new Line2D(new Vector2D(1,2), new Vector2D(1,1));
-		
-		CollisionPackage cp = new CollisionPackage(
-				new Vector2D(1.5,0.999999), new Vector2D(-1,0), 0.25, line);
-
-		cp.calcIntersection();
 		
 		int tileSize = 20;
 		int fieldWidth = 60;

@@ -5,7 +5,7 @@ import interaction.KeyBindings;
 
 import java.util.ArrayList;
 
-import collision.CollisionDetection;
+import collision.CollisionSystem;
 
 import util.Vector2D;
 
@@ -20,7 +20,8 @@ public class Game {
 	public Unit u;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
-	CollisionDetection cd;
+	CollisionSystem collisionSystem;
+	public double dt;
 	
 	public Input input;
 	
@@ -28,13 +29,13 @@ public class Game {
 		this.f = f;
 		this.p = new Pathplanner(f);
 		u = new Unit(startpos, this);
-		cd = new CollisionDetection(f);
+		collisionSystem = new CollisionSystem(f,this);
 	}
 	
 
 	
 	public void step(double dt) {
-		
+		this.dt = dt;
 		processInput();
 		
 		u.process(dt);
@@ -42,14 +43,10 @@ public class Game {
 		for (int i=0;i<projectiles.size();i++) {
 			Projectile proj = projectiles.get(i);
 			proj.process(dt);
-			//I am aware of the fact that this is executed multiple times - this is just testing until we have collision
-			// (btw: looks cooler than single execution^^)
-			Unit dummy = new Unit(proj.pos,this);
-			dummy.velocity = proj.direction.scalar(dt);
-			dummy.radius = 0.1;
-			if(cd.collide(dummy,dummy.velocity) != null) {
-				for (int j = 0;j<=1120;j++)
-					particles.add(new Particle(proj.pos, Vector2D.fromAngle(j*18, 1), 0.6, Math.random()*5));
+
+			if(collisionSystem.collide(proj) != null) {
+				for (int j = 0;j<=120;j++)
+					particles.add(new Particle(proj.pos, Vector2D.fromAngle(j*18, 1), 0.6, Math.random()*5, this));
 				delList.add(proj);
 			}
 		}
@@ -66,14 +63,14 @@ public class Game {
 		if(input.getMouse1Click()) u.moveTo(input.cursorPos);
 		if(input.getMouse2Click())
 			projectiles.add(
-					new Projectile(u.pos, input.cursorPos.subtract(u.pos)));
+					new Projectile(u.pos, input.cursorPos.subtract(u.pos),this));
 		
-		if(input.isPressed(KeyBindings.MOVE_LEFT)) u.velocity.x = 8;
-		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -8;
+		if(input.isPressed(KeyBindings.MOVE_LEFT)) u.velocity.x = 5;
+		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -5;
 		else u.velocity.x = 0;
 		
-		if(input.isPressed(KeyBindings.MOVE_DOWN)) u.velocity.y = 8;
-		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = -8;
+		if(input.isPressed(KeyBindings.MOVE_DOWN)) u.velocity.y = 5;
+		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = -5;
 		else u.velocity.y = 0;
 		
 		
