@@ -15,21 +15,20 @@ import engine.Pathplanner;
 
 public class Game {
 	
-	public Field f;
-	Pathplanner p;
+	public Field field;
+	public Pathplanner pathPlanner;
+	public CollisionSystem collisionSystem;
+	public Input input;
 	public Unit u;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
-	CollisionSystem collisionSystem;
+	
 	public double dt;
 	
-	public Input input;
 	
-	public Game(Field f, Vector2D startpos) {
-		this.f = f;
-		this.p = new Pathplanner(f);
+	
+	public Game(Vector2D startpos) {
 		u = new Unit(startpos, this);
-		collisionSystem = new CollisionSystem(f,this);
 	}
 	
 

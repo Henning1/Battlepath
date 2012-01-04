@@ -69,59 +69,34 @@ public class Renderer {
     g2d.setColor(new Color(0,0,0));
     g2d.fillRect(0, 0, (int)width, (int)height);
     
-    for(int x=0; x < game.f.tilesX; x++) {
-    	for(int y=0; y < game.f.tilesY; y++) {
-    		switch(game.f.tiles[x][y].getType()) {
+    for(int x=0; x < game.field.tilesX; x++) {
+    	for(int y=0; y < game.field.tilesY; y++) {
+    		switch(game.field.tiles[x][y].getType()) {
     		case 1:
     			g2d.setColor(new Color(200,0,0));
-    			g2d.fill(new Rectangle2D.Double(
-        				(double)x*tileSize,(double)y*tileSize,tileSize,tileSize));
+    			block(new Vector2D(x,y));
     			break;
     		case 2:
     			g2d.setColor(new Color(0,0,255));
-    			g2d.fill(new Rectangle2D.Double(
-    					(double)x*tileSize,(double)y*tileSize,tileSize,tileSize));
+    			block(new Vector2D(x,y));
     			break;
-    		
     		}
-
     	}
     }
     
-
     ArrayList<Vector2D> path = game.u.path;
     g2d.setColor(new Color(0,255,0));
     if(path != null) {
     	if(path.size() > 0) {
-    		g2d.drawLine((int)(game.u.pos.x()*tileSize), 
-					 (int)(game.u.pos.y()*tileSize),
-					 (int)(path.get(0).x()*tileSize), 
-					 (int)(path.get(0).y()*tileSize));
+    		line(game.u.pos,path.get(0));
     	}
     	for(int i=0;i<path.size()-1;i++) {
-    		g2d.drawLine((int)(path.get(i).x()*tileSize), 
-    					 (int)(path.get(i).y()*tileSize),
-    					 (int)(path.get(i+1).x()*tileSize), 
-    					 (int)(path.get(i+1).y()*tileSize));
+    		line(path.get(i),path.get(i+1));
     	}
     }
     
-    /*
-    if(cp != null) {
-    	g2d.setColor(new Color(255,255,0));
-        g2d.fill(new Ellipse2D.Double((cp.intersectionPoint.x*tileSize)-(tileSize/4),
-				  (cp.intersectionPoint.y*tileSize)-(tileSize/4),
-				  tileSize/2,tileSize/2));
-    	
-    	
-    }*/
-    double r = game.u.getRadius();
-    
+    circle(game.u.pos,game.u.getRadius(),true);
 
-    
-    g2d.fill(new Ellipse2D.Double((game.u.pos.x()*tileSize)-(r*tileSize),
-			  (game.u.pos.y()*tileSize)-(r*tileSize),
-			  r*tileSize*2,r*tileSize*2));
     //Projectiles
     g2d.setColor(new Color(0,0,255));
     for (int i=0;i<game.projectiles.size();i++) {
@@ -141,11 +116,8 @@ public class Renderer {
     Vector2D cursor = game.input.cursorPos;
     
     g2d.setColor(new Color(0,255,0));
-    g2d.draw(new Ellipse2D.Double(
-    		cursor.x()*tileSize-(tileSize/2),
-    		cursor.y()*tileSize-(tileSize/2),
-			  tileSize,tileSize));
-    
+    circle(cursor,0.5,false);
+
     g2d.drawLine((int)(cursor.x()*tileSize), 
     			 (int)(cursor.y()*tileSize-(tileSize/2)-5), 
     			 (int)(cursor.x()*tileSize), 
@@ -157,27 +129,9 @@ public class Renderer {
 			 	 (int)(cursor.y()*tileSize));
    
     g2d.setColor(new Color(255,255,0));
-    /*
-    CollisionSystem cd = new CollisionSystem(game.f);
-    ArrayList<Line2D> data = cd.relevantData(game.u.pos, game.u.velocity, 0.25);
-    for(Line2D l : data) {
-    	line(l);
-    	Vector2D middle = new Vector2D((l.a.x+l.b.x)/2,(l.a.y+l.b.y)/2);
-    	line(middle, middle.add(l.normal().scalar(0.25)));
-    }*/
-    
-    
-    
-
-    /*if(cpoints!=null) {
-    for(Vector2D p : cpoints) {
-		g2d.fill(new Rectangle2D.Double(
-				(double)p.x*tileSize,(double)p.y*tileSize,tileSize/4,tileSize/4));
-    }}*/
     
     String fps = Double.toString(MainLoop.framerate);
     int dot = fps.indexOf(".");
-    
     g2d.drawString(fps.substring(0, dot+2) + " fps", 5.0f,15.0f);
     
     Graphics2D g2dpanel = (Graphics2D)g;
@@ -193,10 +147,29 @@ public class Renderer {
     private void line(Line2D l) {
     	line(l.a, l.b);
     }
+    
+    private void circle(Vector2D pos, double r, boolean filled) {
+    	if(filled) {
+    		graphics.fill(new Ellipse2D.Double(
+    			(pos.x-r)*tileSize,
+    			(pos.y-r)*tileSize,
+    			r*tileSize*2,r*tileSize*2));
+    	} else {
+    		graphics.draw(new Ellipse2D.Double(
+        			(pos.x-r)*tileSize,
+        			(pos.y-r)*tileSize,
+        			r*tileSize*2,r*tileSize*2));
+    	}
+    }
+    
+	private void block(Vector2D pos) {
+		graphics.fill(new Rectangle2D.Double(
+			(double)pos.x*tileSize,(double)pos.y*tileSize,tileSize,tileSize));
+	}
 
   public int gt(int x, int y) {
 	  try{
-		  return game.f.tiles[x][y].getType();
+		  return game.field.tiles[x][y].getType();
 	  }
 	  catch(Exception e)
 	  {

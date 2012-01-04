@@ -28,7 +28,7 @@ public class Unit extends Entity {
 	}
 	
 	public void moveTo(Vector2D dest) {
-		path = game.p.plan(pos, dest);
+		path = game.pathPlanner.plan(pos, dest);
 	}
 	
 	public void setHealth(int h) {
@@ -52,7 +52,7 @@ public class Unit extends Entity {
 	
 	public void process(double dt) {
 		
-		CollisionSystem cd = new CollisionSystem(game.f, game);
+		CollisionSystem cs = game.collisionSystem;
 		
 		
 		if(path != null && path.size() > 0) {
@@ -67,14 +67,14 @@ public class Unit extends Entity {
 			
 		}
 		
-		Move move = cd.collideAndSlide(this);
+		Move move = cs.collideAndSlide(this);
 		move.apply();
 		
 	}
 
 	@Override
 	public double getRadius() {
-		return 0.48;
+		return 0.99;
 	}
 
 }
