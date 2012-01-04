@@ -10,6 +10,7 @@ import collision.CollisionSystem;
 import util.Vector2D;
 
 import engine.Field;
+import engine.GlobalInfo;
 import engine.Pathplanner;
 
 
@@ -23,9 +24,10 @@ public class Game {
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
 	
+	boolean[] lastMouseState = new boolean[2];
+	double lastShot = 0;
+	
 	public double dt;
-	
-	
 	
 	public Game(Vector2D startpos) {
 		u = new Unit(startpos, this);
@@ -46,7 +48,7 @@ public class Game {
 
 			if(collisionSystem.collide(proj) != null) {
 				for (int j = 0;j<=200;j++)
-					particles.add(new Particle(proj.pos, Vector2D.fromAngle(j*18, 1), Math.random()/2+0.1, Math.random()*5, this));
+					particles.add(new Particle(proj.pos, Vector2D.fromAngle(j*1.8, 1), Math.random()/2+0.1, Math.random()*5, this));
 				delList.add(proj);
 			}
 		}
@@ -60,10 +62,12 @@ public class Game {
 	}
 	
 	public void processInput() {
-		if(input.getMouse1Click()) u.moveTo(input.cursorPos);
-		if(input.getMouse2Click())
+		if(input.mouse1down && !lastMouseState[0]) u.moveTo(input.cursorPos);
+		if((input.mouse2down && !lastMouseState[1]) || (input.mouse2down && GlobalInfo.time - lastShot > 0.5)) {
 			projectiles.add(
 					new Projectile(u.pos, input.cursorPos.subtract(u.pos),this));
+			lastShot = GlobalInfo.time;
+		}
 		
 		if(input.isPressed(KeyBindings.MOVE_LEFT)) u.velocity.x = 5;
 		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -5;
@@ -73,7 +77,8 @@ public class Game {
 		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = -5;
 		else u.velocity.y = 0;
 		
-		
+		lastMouseState[0] = input.mouse1down;
+		lastMouseState[1] = input.mouse2down;
 	}
 	
 }
