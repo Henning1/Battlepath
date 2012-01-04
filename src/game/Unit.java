@@ -74,7 +74,7 @@ public class Unit extends Entity {
 
 	@Override
 	public double getRadius() {
-		return 0.99;
+		return 0.49;
 	}
 
 }

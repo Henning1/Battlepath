@@ -40,12 +40,13 @@ public class Game {
 		u.process(dt);
 		ArrayList<Projectile> delList = new ArrayList<Projectile>();
 		for (int i=0;i<projectiles.size();i++) {
+			
 			Projectile proj = projectiles.get(i);
 			proj.process(dt);
 
 			if(collisionSystem.collide(proj) != null) {
-				for (int j = 0;j<=120;j++)
-					particles.add(new Particle(proj.pos, Vector2D.fromAngle(j*18, 1), 0.6, Math.random()*5, this));
+				for (int j = 0;j<=200;j++)
+					particles.add(new Particle(proj.pos, Vector2D.fromAngle(j*18, 1), Math.random()/2+0.1, Math.random()*5, this));
 				delList.add(proj);
 			}
 		}

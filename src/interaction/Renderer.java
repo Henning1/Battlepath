@@ -98,18 +98,22 @@ public class Renderer {
     circle(game.u.pos,game.u.getRadius(),true);
 
     //Projectiles
-    g2d.setColor(new Color(0,0,255));
+    g2d.setColor(new Color(100,100,255));
     for (int i=0;i<game.projectiles.size();i++) {
 		Projectile proj = game.projectiles.get(i);
-    	line(proj.pos, proj.pos.add(proj.direction.scalar(0.5)));
+    	line(proj.pos, proj.pos.subtract(proj.direction.scalar(1.5)));
     }
     
     //Particles;
-    g2d.setColor(new Color(255,255,255));
     for (int i=0;i<game.particles.size();i++) {
 		Particle part = game.particles.get(i);
-		if(part.destroyed == false)
-			line(part.pos, part.pos.add(part.direction.scalar(0.1)));
+		if(!part.destroyed) {
+			int c = 350 -(int) (part.life/part.lifetime*255);
+			c = c % 256;
+			//g2d.setColor(new Color(255,255,255,c));
+			g2d.setColor(new Color(255,255,255));
+			line(part.pos, part.pos.subtract(part.direction.scalar(0.1)));
+		}
     }
     
     

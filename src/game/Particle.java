@@ -7,10 +7,10 @@ public class Particle extends Entity {
 
 	public Vector2D direction;
 	
-	double speed;
-	double lifetime;
-	double life = 0;
-	double acceleration = 10;
+	public double speed;
+	public double lifetime;
+	public double life = 0;
+	public double acceleration = 10;
 	public boolean destroyed = false;
 	
 	public Particle(Vector2D position, Vector2D direction, double lifetime, double speed, Game game) {

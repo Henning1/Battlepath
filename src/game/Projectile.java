@@ -8,7 +8,7 @@ public class Projectile extends Entity {
 
 
 	public Vector2D direction;
-	double speed = 10;
+	double speed = 50;
 	
 	public Projectile(Vector2D position, Vector2D direction, Game game) {
 		super(position,game);
