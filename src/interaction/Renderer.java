@@ -27,7 +27,7 @@ public class Renderer {
   public JPanel panel;
   private Game game;
   int tileSize;
- 
+  
   Line2D collisionLine;
   
   //This variable has a special function
@@ -117,7 +117,11 @@ public class Renderer {
     Vector2D cursor = game.input.cursorPos;
     
     g2d.setColor(new Color(0,255,0));
-    circle(cursor,0.5,false);
+    //Cannot use circle because cursor shall not have an offset
+    graphics.draw(new Ellipse2D.Double(
+			(cursor.x-0.5)*tileSize,
+			(cursor.y-0.5)*tileSize,
+			0.5*tileSize*2,0.5*tileSize*2));
 
     g2d.drawLine((int)(cursor.x()*tileSize), 
     			 (int)(cursor.y()*tileSize-(tileSize/2)-5), 
@@ -141,8 +145,10 @@ public class Renderer {
   
     private void line(Vector2D a, Vector2D b) {
     	graphics.drawLine(
-    		 (int)(a.x()*tileSize), (int)(a.y()*tileSize), 
-   			 (int)(b.x()*tileSize), (int)(b.y()*tileSize));
+    	//	 (int)(a.x()*tileSize), (int)(a.y()*tileSize), 
+   		//	 (int)(b.x()*tileSize), (int)(b.y()*tileSize));
+    		(int)(a.x()*tileSize+game.viewOffset.x*tileSize), (int)(a.y()*tileSize+game.viewOffset.y*tileSize), 
+    	   	(int)(b.x()*tileSize+game.viewOffset.x*tileSize), (int)(b.y()*tileSize+game.viewOffset.y*tileSize));
     }
     
     private void line(Line2D l) {
@@ -152,20 +158,24 @@ public class Renderer {
     private void circle(Vector2D pos, double r, boolean filled) {
     	if(filled) {
     		graphics.fill(new Ellipse2D.Double(
-    			(pos.x-r)*tileSize,
-    			(pos.y-r)*tileSize,
+    			//(pos.x-r)*tileSize,
+    			//(pos.y-r)*tileSize,
+    			(pos.x-r+game.viewOffset.x)*tileSize,
+    			(pos.y-r+game.viewOffset.y)*tileSize,
     			r*tileSize*2,r*tileSize*2));
     	} else {
     		graphics.draw(new Ellipse2D.Double(
-        			(pos.x-r)*tileSize,
-        			(pos.y-r)*tileSize,
+        			//(pos.x-r)*tileSize,
+        			//(pos.y-r)*tileSize,
+    				(pos.x-r+game.viewOffset.x)*tileSize,
+        			(pos.y-r+game.viewOffset.y)*tileSize,
         			r*tileSize*2,r*tileSize*2));
     	}
     }
     
 	private void block(Vector2D pos) {
 		graphics.fill(new Rectangle2D.Double(
-			(double)pos.x*tileSize,(double)pos.y*tileSize,tileSize,tileSize));
+			(double)(pos.x+game.viewOffset.x)*tileSize,(double)(pos.y+game.viewOffset.y)*tileSize,tileSize,tileSize));
 	}
 
   public int gt(int x, int y) {

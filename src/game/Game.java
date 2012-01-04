@@ -27,17 +27,21 @@ public class Game {
 	boolean[] lastMouseState = new boolean[2];
 	double lastShot = 0;
 	
+	//Though used for scrolling (=> Renderer), Game is interested in this.
+	public Vector2D viewOffset;
+	
 	public double dt;
 	
 	public Game(Vector2D startpos) {
 		u = new Unit(startpos, this);
+		viewOffset = new Vector2D(0,0);
 	}
 	
 
 	
 	public void step(double dt) {
 		this.dt = dt;
-		processInput();
+		processInput(dt);
 		
 		u.process(dt);
 		ArrayList<Projectile> delList = new ArrayList<Projectile>();
@@ -61,11 +65,13 @@ public class Game {
 		}
 	}
 	
-	public void processInput() {
-		if(input.mouse1down && !lastMouseState[0]) u.moveTo(input.cursorPos);
+	public void processInput(double dt) {
+		Vector2D worldCursorPos = input.cursorPos.subtract(viewOffset);
+		
+		if(input.mouse1down && !lastMouseState[0]) u.moveTo(worldCursorPos);
 		if((input.mouse2down && GlobalInfo.time - lastShot > 0.3)) {
 			projectiles.add(
-					new Projectile(u.pos, input.cursorPos.subtract(u.pos),this));
+					new Projectile(u.pos, worldCursorPos.subtract(u.pos),this));
 			lastShot = GlobalInfo.time;
 		}
 		
@@ -79,6 +85,13 @@ public class Game {
 		
 		lastMouseState[0] = input.mouse1down;
 		lastMouseState[1] = input.mouse2down;
+		
+		if(input.isPressed(KeyBindings.SCROLL_LEFT)) viewOffset.x =  viewOffset.x >= 0 ? 0 : viewOffset.x+20*dt;
+		else if(input.isPressed(KeyBindings.SCROLL_RIGHT)) viewOffset.x = viewOffset.x <= -field.tilesX ? -field.tilesX : viewOffset.x-20*dt;
+		
+		if(input.isPressed(KeyBindings.SCROLL_UP)) viewOffset.y = viewOffset.y >= 0 ? 0 : viewOffset.y+20*dt;
+		else if(input.isPressed(KeyBindings.SCROLL_DOWN)) viewOffset.y = viewOffset.y <= -field.tilesY ? -field.tilesY : viewOffset.y-20*dt;
+		
 	}
 	
 }

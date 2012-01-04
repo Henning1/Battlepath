@@ -82,10 +82,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener {
 		return pressedKeys.containsKey(key);
 	}
 	
-	int c=0;
 	@Override
 	public void mouseClicked(MouseEvent arg0) {
-		System.out.println("click" +c++);
 		if(arg0.getButton()==MouseEvent.BUTTON1) 
 			mouse1clicked = true;
 		else if(arg0.getButton()==MouseEvent.BUTTON3)

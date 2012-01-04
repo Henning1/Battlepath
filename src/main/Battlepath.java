@@ -22,13 +22,13 @@ public class Battlepath {
 	
 	public static void main(String[] args) {
 		int tileSize = 20;
-		int fieldWidth = 60;
-		int fieldHeight = 30;
+		int fieldWidth = 200;
+		int fieldHeight = 200;
 		Field f = new Field(fieldWidth, fieldHeight);
 		randomCircles(f, fieldWidth*fieldHeight/50, 3);
 		Vector2D start = findStartPos(f);
 		
-		JFrame frame = WindowUtilities.openFrame(f.tilesX*tileSize,f.tilesY*tileSize);
+		JFrame frame = WindowUtilities.openFrame(1000,800);
 
 		Game game = new Game(start);
 		Renderer renderer = new Renderer(game,tileSize,frame);
