@@ -7,7 +7,7 @@ import collision.Collision;
 import collision.Move;
 import util.Vector2D;
 
-import engine.GInfo;
+import engine.GlobalInfo;
 
 
 public abstract class Entity {

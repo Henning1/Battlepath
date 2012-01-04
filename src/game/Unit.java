@@ -9,7 +9,7 @@ import collision.Move;
 
 import util.Vector2D;
 
-import engine.GInfo;
+import engine.GlobalInfo;
 
 
 public class Unit extends Entity {
@@ -56,7 +56,7 @@ public class Unit extends Entity {
 		
 		
 		if(path != null && path.size() > 0) {
-			if(pos.distance(path.get(0)) < GInfo.accuracy) {
+			if(pos.distance(path.get(0)) < GlobalInfo.accuracy) {
 				path.remove(0);
 				velocity = new Vector2D(0,0);
 			}

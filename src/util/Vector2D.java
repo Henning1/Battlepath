@@ -2,7 +2,7 @@ package util;
 
 import java.awt.geom.Point2D;
 
-import engine.GInfo;
+import engine.GlobalInfo;
 
 public class Vector2D {
 	public double x,y;
@@ -83,8 +83,8 @@ public class Vector2D {
 	public boolean equals(Object o) {
 		if(o instanceof Vector2D) {
 			Vector2D v = (Vector2D)o;
-			return Util.doubleEquals(x, v.x, GInfo.accuracy)
-				&& Util.doubleEquals(y, v.y, GInfo.accuracy);
+			return Util.doubleEquals(x, v.x, GlobalInfo.accuracy)
+				&& Util.doubleEquals(y, v.y, GlobalInfo.accuracy);
 		}
 		return false;
 	}
