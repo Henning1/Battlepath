@@ -63,7 +63,7 @@ public class Game {
 	
 	public void processInput() {
 		if(input.mouse1down && !lastMouseState[0]) u.moveTo(input.cursorPos);
-		if((input.mouse2down && !lastMouseState[1]) || (input.mouse2down && GlobalInfo.time - lastShot > 0.5)) {
+		if((input.mouse2down && GlobalInfo.time - lastShot > 0.3)) {
 			projectiles.add(
 					new Projectile(u.pos, input.cursorPos.subtract(u.pos),this));
 			lastShot = GlobalInfo.time;

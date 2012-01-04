@@ -4,7 +4,6 @@ package game;
 import java.util.ArrayList;
 
 import collision.CollisionSystem;
-import collision.Collision;
 import collision.Move;
 
 import util.Vector2D;
