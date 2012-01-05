@@ -14,9 +14,9 @@ public class WindowUtilities {
    *  Pops up a JFrame with specified Container as the content pane.
    */
 
-  public static JFrame openFrame(int width,int height) {
+  public static JFrame openFrame(Dimension size) {
     JFrame frame = new JFrame("Battlepath");
-    frame.setSize(width, height);
+    frame.setSize(size.width, size.height);
     JPanel panel = new JPanel();
     frame.setContentPane(panel);
     frame.addWindowListener(new ExitListener());

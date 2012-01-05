@@ -35,6 +35,7 @@ public class Renderer {
   //and provides access to the g2d object to the
   //classes draw functions
   private Graphics2D graphics;
+  private Vector2D offset;
   
   private double width, height;
   
@@ -51,17 +52,13 @@ public class Renderer {
 	  draw(panel.getGraphics());
   }
   
-  public Vector2D screenToWorld(Point p) {
-	  return new Vector2D(
-			  (double)p.x / (double)tileSize, 
-			  (double)p.y / (double)tileSize);
-  }
-  
   private void draw(Graphics g) {
 
     BufferedImage back = new BufferedImage((int)width,(int)height,BufferedImage.TYPE_BYTE_INDEXED);
     Graphics2D g2d = back.createGraphics();   
     graphics = g2d;
+    
+    offset = game.view.offset;
     
     g2d.setColor(new Color(0,0,0));
     g2d.fillRect(0, 0, (int)width, (int)height);
@@ -98,7 +95,10 @@ public class Renderer {
     g2d.setColor(new Color(100,100,255));
     for (int i=0;i<game.projectiles.size();i++) {
 		Projectile proj = game.projectiles.get(i);
-    	line(proj.pos, proj.pos.subtract(proj.direction.scalar(1.5)));
+		if(proj.pos.distance(game.u.pos) > 1.5)
+			line(proj.pos, proj.pos.subtract(proj.direction.scalar(1.5)));
+		else 
+			line(proj.pos, game.u.pos);
     }
     
     //Particles;
@@ -113,25 +113,25 @@ public class Renderer {
 		}
     }
     
-    
-    Vector2D cursor = game.input.cursorPos;
-    
+    //**************CURSOR*******************
+    Point cursor = game.input.viewCursorPos;
     g2d.setColor(new Color(0,255,0));
-    //Cannot use circle because cursor shall not have an offset
+   
     graphics.draw(new Ellipse2D.Double(
-			(cursor.x-0.5)*tileSize,
-			(cursor.y-0.5)*tileSize,
+			cursor.x-0.5*tileSize,
+			cursor.y-0.5*tileSize,
 			0.5*tileSize*2,0.5*tileSize*2));
 
-    g2d.drawLine((int)(cursor.x()*tileSize), 
-    			 (int)(cursor.y()*tileSize-(tileSize/2)-5), 
-    			 (int)(cursor.x()*tileSize), 
-    			 (int)(cursor.y()*tileSize+(tileSize/2)+5));
+    g2d.drawLine((int)(cursor.x), 
+    			 (int)(cursor.y-(tileSize/2)-5), 
+    			 (int)(cursor.x), 
+    			 (int)(cursor.y+(tileSize/2)+5));
     
-    g2d.drawLine((int)(cursor.x()*tileSize-(tileSize/2)-5), 
-			 	 (int)(cursor.y()*tileSize), 
-			 	 (int)(cursor.x()*tileSize+(tileSize/2)+5),
-			 	 (int)(cursor.y()*tileSize));
+    g2d.drawLine((int)(cursor.x-(tileSize/2)-5), 
+			 	 (int)(cursor.y), 
+			 	 (int)(cursor.x+(tileSize/2)+5),
+			 	 (int)(cursor.y));
+    
    
     g2d.setColor(new Color(255,255,0));
     
@@ -147,8 +147,8 @@ public class Renderer {
     	graphics.drawLine(
     	//	 (int)(a.x()*tileSize), (int)(a.y()*tileSize), 
    		//	 (int)(b.x()*tileSize), (int)(b.y()*tileSize));
-    		(int)(a.x()*tileSize+game.viewOffset.x*tileSize), (int)(a.y()*tileSize+game.viewOffset.y*tileSize), 
-    	   	(int)(b.x()*tileSize+game.viewOffset.x*tileSize), (int)(b.y()*tileSize+game.viewOffset.y*tileSize));
+    		(int)((a.x()+offset.x)*tileSize), (int)((a.y()+offset.y)*tileSize), 
+    	   	(int)((b.x()+offset.x)*tileSize), (int)((b.y()+offset.y)*tileSize));
     }
     
     private void line(Line2D l) {
@@ -160,22 +160,22 @@ public class Renderer {
     		graphics.fill(new Ellipse2D.Double(
     			//(pos.x-r)*tileSize,
     			//(pos.y-r)*tileSize,
-    			(pos.x-r+game.viewOffset.x)*tileSize,
-    			(pos.y-r+game.viewOffset.y)*tileSize,
+    			(pos.x-r+offset.x)*tileSize,
+    			(pos.y-r+offset.y)*tileSize,
     			r*tileSize*2,r*tileSize*2));
     	} else {
     		graphics.draw(new Ellipse2D.Double(
         			//(pos.x-r)*tileSize,
         			//(pos.y-r)*tileSize,
-    				(pos.x-r+game.viewOffset.x)*tileSize,
-        			(pos.y-r+game.viewOffset.y)*tileSize,
+    				(pos.x-r+offset.x)*tileSize,
+        			(pos.y-r+offset.y)*tileSize,
         			r*tileSize*2,r*tileSize*2));
     	}
     }
     
 	private void block(Vector2D pos) {
 		graphics.fill(new Rectangle2D.Double(
-			(double)(pos.x+game.viewOffset.x)*tileSize,(double)(pos.y+game.viewOffset.y)*tileSize,tileSize,tileSize));
+			(double)(pos.x+offset.x)*tileSize,(double)(pos.y+offset.y)*tileSize,tileSize,tileSize));
 	}
 
   public int gt(int x, int y) {

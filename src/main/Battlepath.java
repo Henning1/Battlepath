@@ -1,9 +1,11 @@
 package main;
 import game.Game;
+import game.View;
 import interaction.Input;
 import interaction.Renderer;
 import interaction.WindowUtilities;
 
+import java.awt.Dimension;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -24,22 +26,24 @@ public class Battlepath {
 		int tileSize = 20;
 		int fieldWidth = 200;
 		int fieldHeight = 200;
+		Dimension windowSize = new Dimension(1000,800);
 		Field f = new Field(fieldWidth, fieldHeight);
 		randomCircles(f, fieldWidth*fieldHeight/50, 3);
 		Vector2D start = findStartPos(f);
 		
-		JFrame frame = WindowUtilities.openFrame(1000,800);
+		JFrame frame = WindowUtilities.openFrame(windowSize);
+		Dimension paneSize = frame.getContentPane().getSize();
 
 		Game game = new Game(start);
 		Renderer renderer = new Renderer(game,tileSize,frame);
 		
 		game.field = f;
-		game.input = new Input(frame, renderer);
+		game.input = new Input(frame, renderer, game);
 		game.pathPlanner =  new Pathplanner(f);
 		game.collisionSystem = new CollisionSystem(f,game);
+		game.view = new View(paneSize, tileSize, game);
 		
 		MainLoop.startLoop(renderer, game);
-
 	}
 	
 	public static Vector2D findStartPos(Field f) {

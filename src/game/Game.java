@@ -23,18 +23,15 @@ public class Game {
 	public Unit u;
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
+	public View view;
 	
-	boolean[] lastMouseState = new boolean[2];
+	boolean[] lastMouseState = new boolean[3];
 	double lastShot = 0;
-	
-	//Though used for scrolling (=> Renderer), Game is interested in this.
-	public Vector2D viewOffset;
 	
 	public double dt;
 	
 	public Game(Vector2D startpos) {
 		u = new Unit(startpos, this);
-		viewOffset = new Vector2D(0,0);
 	}
 	
 
@@ -66,14 +63,21 @@ public class Game {
 	}
 	
 	public void processInput(double dt) {
-		Vector2D worldCursorPos = input.cursorPos.subtract(viewOffset);
+		//Mouse
 		
-		if(input.mouse1down && !lastMouseState[0]) u.moveTo(worldCursorPos);
-		if((input.mouse2down && GlobalInfo.time - lastShot > 0.3)) {
+		if(input.mouseButtonPressed[0] && !lastMouseState[0]) {
+			u.moveTo(input.cursorPos);
+		}
+		
+		if((input.mouseButtonPressed[2] && GlobalInfo.time - lastShot > 0.3)) {
 			projectiles.add(
-					new Projectile(u.pos, worldCursorPos.subtract(u.pos),this));
+					new Projectile(u.pos, input.cursorPos.subtract(u.pos),this));
 			lastShot = GlobalInfo.time;
 		}
+		
+		System.arraycopy(input.mouseButtonPressed, 0, lastMouseState, 0, input.mouseButtonPressed.length);
+		
+		//Keyboard part one (input.isPressed)
 		
 		if(input.isPressed(KeyBindings.MOVE_LEFT)) u.velocity.x = 5;
 		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -5;
@@ -83,14 +87,22 @@ public class Game {
 		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = -5;
 		else u.velocity.y = 0;
 		
-		lastMouseState[0] = input.mouse1down;
-		lastMouseState[1] = input.mouse2down;
+		if(input.isPressed(KeyBindings.SCROLL_LEFT)) view.moveOffset(new Vector2D(20, 0).scalar(dt));
+		else if(input.isPressed(KeyBindings.SCROLL_RIGHT)) view.moveOffset(new Vector2D(-20, 0).scalar(dt));
 		
-		if(input.isPressed(KeyBindings.SCROLL_LEFT)) viewOffset.x =  viewOffset.x >= 0 ? 0 : viewOffset.x+20*dt;
-		else if(input.isPressed(KeyBindings.SCROLL_RIGHT)) viewOffset.x = viewOffset.x <= -field.tilesX ? -field.tilesX : viewOffset.x-20*dt;
+		if(input.isPressed(KeyBindings.SCROLL_UP)) view.moveOffset(new Vector2D(0, 20).scalar(dt));
+		else if(input.isPressed(KeyBindings.SCROLL_DOWN)) view.moveOffset(new Vector2D(0, -20).scalar(dt));
 		
-		if(input.isPressed(KeyBindings.SCROLL_UP)) viewOffset.y = viewOffset.y >= 0 ? 0 : viewOffset.y+20*dt;
-		else if(input.isPressed(KeyBindings.SCROLL_DOWN)) viewOffset.y = viewOffset.y <= -field.tilesY ? -field.tilesY : viewOffset.y-20*dt;
+		//Keyboard part two (input.getKeyBuffer)
+		
+		for(int key : input.getKeyBuffer()) {
+			if(key == KeyBindings.ZOOM_IN) {
+				//
+			}
+			if(key == KeyBindings.ZOOM_OUT) {
+				
+			}
+		}
 		
 	}
 	

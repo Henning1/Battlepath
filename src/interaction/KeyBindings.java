@@ -11,4 +11,6 @@ public class KeyBindings {
 	public static int SCROLL_LEFT = KeyEvent.VK_LEFT;
 	public static int SCROLL_UP = KeyEvent.VK_UP;
 	public static int SCROLL_DOWN = KeyEvent.VK_DOWN;
+	public static int ZOOM_IN = KeyEvent.VK_PLUS;
+	public static int ZOOM_OUT = KeyEvent.VK_MINUS;
 }
