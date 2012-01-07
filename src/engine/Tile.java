@@ -37,4 +37,8 @@ public class Tile {
 	public int getType() {
 		return type;
 	}
+	
+	public String toString() {
+		return Integer.toString(type);
+	}
 }

@@ -80,6 +80,10 @@ public class Vector2D {
 		return angle;
 	}
 	
+	public Vector2D negate() {
+		return new Vector2D(-x,-y);
+	}
+	
 	public boolean equals(Object o) {
 		if(o instanceof Vector2D) {
 			Vector2D v = (Vector2D)o;

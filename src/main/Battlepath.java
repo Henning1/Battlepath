@@ -1,11 +1,13 @@
 package main;
 import game.Game;
+import game.GameMode;
 import game.View;
 import interaction.Input;
 import interaction.Renderer;
 import interaction.WindowUtilities;
 
 import java.awt.Dimension;
+import java.awt.Point;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -42,16 +44,16 @@ public class Battlepath {
 		game.pathPlanner =  new Pathplanner(f);
 		game.collisionSystem = new CollisionSystem(f,game);
 		game.view = new View(paneSize, tileSize, game);
+		game.setMode(GameMode.ACTION);
 		
 		MainLoop.startLoop(renderer, game);
 	}
 	
 	public static Vector2D findStartPos(Field f) {
-		Vector2D start;
-		start = new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY);
-		while(f.tileValueAt(start) == 1)
-			start = new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY);
-		return start;
+		Point start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
+		while(f.tiles[start.x][start.y].getType() == 1)
+			start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
+		return f.getWorldPos(start);
 	}
 	
 	public static void randomCircles(Field f, int n, double maxr) {

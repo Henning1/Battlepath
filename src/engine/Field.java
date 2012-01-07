@@ -42,9 +42,6 @@ public class Field {
 	
 	//Returns the position of the center of a Tile
 	public Vector2D getWorldPos(Point pos) {
-		/*return new Vector2D(
-				(double)pos.x/(double)tilesX+tileSize/2,
-				(double)pos.y/(double)tilesY+tileSize/2);*/
 		return new Vector2D(
 				(double)pos.x+0.5,
 				(double)pos.y+0.5);

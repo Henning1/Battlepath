@@ -65,9 +65,10 @@ public class Renderer {
     
     for(int x=0; x < game.field.tilesX; x++) {
     	for(int y=0; y < game.field.tilesY; y++) {
+    		Color colx = new Color(200,x,y);
     		switch(game.field.tiles[x][y].getType()) {
     		case 1:
-    			g2d.setColor(new Color(200,0,0));
+    			g2d.setColor(colx);
     			block(new Vector2D(x,y));
     			break;
     		case 2:
@@ -145,10 +146,8 @@ public class Renderer {
   
     private void line(Vector2D a, Vector2D b) {
     	graphics.drawLine(
-    	//	 (int)(a.x()*tileSize), (int)(a.y()*tileSize), 
-   		//	 (int)(b.x()*tileSize), (int)(b.y()*tileSize));
-    		(int)((a.x()+offset.x)*tileSize), (int)((a.y()+offset.y)*tileSize), 
-    	   	(int)((b.x()+offset.x)*tileSize), (int)((b.y()+offset.y)*tileSize));
+    		(int)((a.x()+offset.x)*scaleFactor()), (int)((a.y()+offset.y)*scaleFactor()), 
+    	   	(int)((b.x()+offset.x)*scaleFactor()), (int)((b.y()+offset.y)*scaleFactor()));
     }
     
     private void line(Line2D l) {
@@ -158,24 +157,24 @@ public class Renderer {
     private void circle(Vector2D pos, double r, boolean filled) {
     	if(filled) {
     		graphics.fill(new Ellipse2D.Double(
-    			//(pos.x-r)*tileSize,
-    			//(pos.y-r)*tileSize,
-    			(pos.x-r+offset.x)*tileSize,
-    			(pos.y-r+offset.y)*tileSize,
-    			r*tileSize*2,r*tileSize*2));
+    			(pos.x-r+offset.x)*scaleFactor(),
+    			(pos.y-r+offset.y)*scaleFactor(),
+    			r*scaleFactor()*2,r*scaleFactor()*2));
     	} else {
     		graphics.draw(new Ellipse2D.Double(
-        			//(pos.x-r)*tileSize,
-        			//(pos.y-r)*tileSize,
-    				(pos.x-r+offset.x)*tileSize,
-        			(pos.y-r+offset.y)*tileSize,
-        			r*tileSize*2,r*tileSize*2));
+    				(pos.x-r+offset.x)*scaleFactor(),
+        			(pos.y-r+offset.y)*scaleFactor(),
+        			r*scaleFactor()*2,r*scaleFactor()*2));
     	}
     }
     
 	private void block(Vector2D pos) {
 		graphics.fill(new Rectangle2D.Double(
-			(double)(pos.x+offset.x)*tileSize,(double)(pos.y+offset.y)*tileSize,tileSize,tileSize));
+			(double)(pos.x+offset.x)*scaleFactor(),(double)(pos.y+offset.y)*scaleFactor(),scaleFactor(),scaleFactor()));
+	}
+	
+	private double scaleFactor() {
+		return tileSize * game.view.zoom;
 	}
 
   public int gt(int x, int y) {

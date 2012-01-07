@@ -44,10 +44,9 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	public Dimension size=null;
 	
 	public boolean[] mouseButtonPressed = new boolean[3];
-	public Vector2D cursorPos = new Vector2D(0,0);
 	public Point viewCursorPos = new Point(0,0);
 	
-	ArrayList<Integer> keyBuffer;
+	ArrayList<Character> keyBuffer;
 	HashMap<Integer, Remover> pressedKeys;
 	Timer timer;
 	
@@ -62,7 +61,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		size.width = ((JPanel)frame.getContentPane()).getWidth();
 		size.height = ((JPanel)frame.getContentPane()).getHeight();
 		pressedKeys = new HashMap<Integer, Remover>();
-		keyBuffer = new ArrayList<Integer>();
+		keyBuffer = new ArrayList<Character>();
 		timer = new Timer();
 	}
 		
@@ -70,11 +69,15 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		return pressedKeys.containsKey(key);
 	}
 	
-	public ArrayList<Integer> getKeyBuffer() {
-		ArrayList<Integer> retBuf;
-		retBuf = keyBuffer;
+	public ArrayList<Character> getKeyBuffer() {
+		ArrayList<Character> retBuf = new ArrayList<Character>();
+		retBuf.addAll(keyBuffer);
 		keyBuffer.clear();
 		return retBuf;
+	}
+	
+	public Vector2D getCursorPos() {
+		return g.view.viewToWorld(viewCursorPos);
 	}
 	
 	@Override
@@ -107,14 +110,12 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	public void mouseDragged(MouseEvent arg0) {
 		Point p = arg0.getPoint();
 		viewCursorPos = p;
-		cursorPos = g.view.viewToWorld(p);
 	}
 
 	@Override
 	public void mouseMoved(MouseEvent arg0) {
 		Point p = arg0.getPoint();
 		viewCursorPos = p;
-		cursorPos = g.view.viewToWorld(p);
 	}
 
 	@Override
@@ -140,7 +141,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 
 	@Override
 	public void keyTyped(KeyEvent arg0) {
-		keyBuffer.add(arg0.getKeyCode());
+		keyBuffer.add(arg0.getKeyChar());
 	}
 
 	@Override

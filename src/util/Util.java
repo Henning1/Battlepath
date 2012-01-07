@@ -12,7 +12,7 @@ public class Util {
 		// If determinant is negative it means no solutions.
 		if (determinant < 0.0f) return -1;
 		// calculate the two roots: (if determinant == 0 then
-		// x1==x2 but let’s disregard that slight optimization)
+		// x1==x2 but let's disregard that slight optimization)
 		double sqrtD = Math.sqrt(determinant);
 		double r1 = (-b - sqrtD) / (2*a);
 		double r2 = (-b + sqrtD) / (2*a);
@@ -34,5 +34,11 @@ public class Util {
 		}
 		// No (valid) solutions
 		return -1;
+	}
+	
+	public static double valueInBounds(double min, double value, double max) {
+		if(value < min) return min;
+		else if (value > max) return max;
+		else return value;
 	}
 }
