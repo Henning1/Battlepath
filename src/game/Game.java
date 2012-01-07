@@ -60,6 +60,10 @@ public class Game {
 			if(part.destroyed)
 				particles.remove(i);
 		}
+		for (int i=0;i<towers.size();i++) {
+			Tower tow = towers.get(i);
+			tow.process(dt);
+		}
 		view.process(dt);
 	}
 	
@@ -136,6 +140,11 @@ public class Game {
 			}
 		}
 		
+	}
+	
+	public void emitShot(Vector2D start, Vector2D direction) {
+		projectiles.add(
+				new Projectile(start, direction, this));
 	}
 	
 }

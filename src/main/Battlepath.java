@@ -71,7 +71,7 @@ public class Battlepath {
 			Point tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
 			while(f.tiles[tower.x][tower.y].getType() == 1)
 				tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
-			list.add(new Tower(f.getWorldPos(tower).subtract(new Vector2D(0.5, 0.5)), g));
+			list.add(new Tower(f.getWorldPos(tower), g));
 		}
 		return list;
 	}

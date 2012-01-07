@@ -72,11 +72,11 @@ public class Renderer {
     		switch(game.field.tiles[x][y].getType()) {
     		case 1:
     			g2d.setColor(colx);
-    			block(new Vector2D(x,y));
+    			block(new Vector2D(x+0.5,y+0.5));
     			break;
     		case 2:
     			g2d.setColor(new Color(0,0,255));
-    			block(new Vector2D(x,y));
+    			block(new Vector2D(x+0.5,y+0.5));
     			break;
     		}
     	}
@@ -101,7 +101,8 @@ public class Renderer {
     g2d.setColor(new Color(0,0,255));
     for (int i=0;i<game.towers.size();i++) {
 		Tower tow = game.towers.get(i);
-		diamond(tow.pos);
+		block(tow.pos);
+		line(tow.pos, tow.pos.subtract(tow.aim.scalar(2)));
     }
 
     //Projectiles
@@ -199,7 +200,7 @@ public class Renderer {
     
 	private void block(Vector2D pos) {
 		graphics.fill(new Rectangle2D.Double(
-			(double)(pos.x+offset.x)*scaleFactor(),(double)(pos.y+offset.y)*scaleFactor(),scaleFactor(),scaleFactor()));
+			(double)(pos.x-0.5+offset.x)*scaleFactor(),(double)(pos.y-0.5+offset.y)*scaleFactor(),scaleFactor(),scaleFactor()));
 	}
 	
 	private double scaleFactor() {
