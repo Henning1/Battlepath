@@ -21,9 +21,10 @@ public class Game {
 	public Input input;
 	public Unit u;
 	//TODO: Merge these
-	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
-	public ArrayList<Particle> particles = new ArrayList<Particle>();
-	public ArrayList<Tower> towers = new ArrayList<Tower>();
+	public ArrayList<Entity> entities = new ArrayList<Entity>();
+	public ArrayList<Entity> addList = new ArrayList<Entity>();
+	public ArrayList<Entity> deleteList = new ArrayList<Entity>();
+	
 	public View view;
 	public GameMode mode;
 	
@@ -34,36 +35,21 @@ public class Game {
 	
 	public Game(Vector2D startpos) {
 		u = new Unit(startpos, this);
+		entities.add(u);
 	}
 	
 	public void step(double dt) {
 		this.dt = dt;
 		processInput(dt);
 		
-		u.process(dt);
-		ArrayList<Projectile> delList = new ArrayList<Projectile>();
-		for (int i=0;i<projectiles.size();i++) {
-			
-			Projectile proj = projectiles.get(i);
-			proj.process(dt);
-
-			if(collisionSystem.collide(proj) != null) {
-				for (int j = 0;j<=200;j++)
-					particles.add(new Particle(proj.pos, Vector2D.fromAngle(j*1.8, 1), Math.random()/2+0.1, Math.random()*5, this));
-				delList.add(proj);
-			}
+		for(Entity e : entities) {
+			e.process(dt);
 		}
-		projectiles.removeAll(delList);
-		for (int i=0;i<particles.size();i++) {
-			Particle part = particles.get(i);
-			part.process(dt);
-			if(part.destroyed)
-				particles.remove(i);
-		}
-		for (int i=0;i<towers.size();i++) {
-			Tower tow = towers.get(i);
-			tow.process(dt);
-		}
+		entities.removeAll(deleteList);
+		deleteList.clear();
+		entities.addAll(addList);
+		addList.clear();
+		
 		view.process(dt);
 	}
 	
@@ -77,6 +63,11 @@ public class Game {
 			view.unfollow();
 			break;
 		}
+	}
+	
+	public void particleExplosion(Vector2D pos, int n) {
+		for (int j = 0;j<=n;j++)
+			addList.add(new Particle(pos, Vector2D.fromAngle(j*1.8, 1), Math.random()/2+0.1, Math.random()*5, this));
 	}
 	
 	public void toggleMode() {
@@ -96,7 +87,7 @@ public class Game {
 		}
 		
 		if((input.mouseButtonPressed[2] && GlobalInfo.time - lastShot > 0.3)) {
-			projectiles.add(
+			addList.add(
 					new Projectile(u.pos, input.getCursorPos().subtract(u.pos),this));
 			lastShot = GlobalInfo.time;
 		}
@@ -143,8 +134,8 @@ public class Game {
 	}
 	
 	public void emitShot(Vector2D start, Vector2D direction) {
-		projectiles.add(
-				new Projectile(start, direction, this));
+		Projectile p = new Projectile(start, direction, this);
+		addList.add(p);
 	}
 	
 }

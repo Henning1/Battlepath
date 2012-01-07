@@ -29,9 +29,11 @@ public class Particle extends Entity {
 			life += dt;
 		}
 		
-		if(destroyed == false) {
+		if(!destroyed) {
 			pos = pos.add(direction.scalar(speed*dt));
 			speed += acceleration*dt;
+		} else {
+			game.deleteList.add(this);
 		}
 	}
 

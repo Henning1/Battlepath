@@ -47,7 +47,7 @@ public class Battlepath {
 		game.collisionSystem = new CollisionSystem(f,game);
 		game.view = new View(paneSize, tileSize, game);
 		game.setMode(GameMode.ACTION);
-		game.towers.addAll(randomTowers(f, fieldWidth*fieldHeight/200, game));
+		game.entities.addAll(randomTowers(f, fieldWidth*fieldHeight/200, game));
 		
 		MainLoop.startLoop(renderer, game);
 	}

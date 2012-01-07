@@ -20,7 +20,15 @@ public class Projectile extends Entity {
 		velocity = direction.scalar(speed);
 		Move move = new Move(this,dt);
 		move.move();
-		move.apply();
+		
+		if(game.collisionSystem.collide(this) != null) {
+			game.particleExplosion(pos, 200);
+			game.deleteList.add(this);
+		} else {
+			move.apply();
+		}
+		
+		
 	}
 
 	@Override

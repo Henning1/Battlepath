@@ -1,10 +1,12 @@
 package interaction;
 
 import engine.MainLoop;
+import game.Entity;
 import game.Game;
 import game.Particle;
 import game.Projectile;
 import game.Tower;
+import game.Unit;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -81,81 +83,84 @@ public class Renderer {
     		}
     	}
     }
-    
-    //Path
-    ArrayList<Vector2D> path = game.u.path;
-    g2d.setColor(new Color(0,255,0));
-    if(path != null) {
-    	if(path.size() > 0) {
-    		line(game.u.pos,path.get(0));
-    	}
-    	for(int i=0;i<path.size()-1;i++) {
-    		line(path.get(i),path.get(i+1));
-    	}
-    }
-    
-    //Unit
-    circle(game.u.pos,game.u.getRadius(),true);
-    
-    //Towers
-    g2d.setColor(new Color(0,0,255));
-    for (int i=0;i<game.towers.size();i++) {
-		Tower tow = game.towers.get(i);
-		block(tow.pos);
-		line(tow.pos, tow.pos.subtract(tow.aim.scalar(2)));
-    }
 
-    //Projectiles
-    g2d.setColor(new Color(100,100,255));
-    for (int i=0;i<game.projectiles.size();i++) {
-		Projectile proj = game.projectiles.get(i);
-		if(proj.pos.distance(game.u.pos) > 1.5)
-			line(proj.pos, proj.pos.subtract(proj.direction.scalar(1.5)));
-		else 
-			line(proj.pos, game.u.pos);
-    }
-    
-    //Particles;
-    for (int i=0;i<game.particles.size();i++) {
-		Particle part = game.particles.get(i);
-		if(!part.destroyed) {
-			int c = 350 -(int) (part.life/part.lifetime*255);
-			c = c % 256;
-			//g2d.setColor(new Color(255,255,255,c));
-			g2d.setColor(new Color(255,255,255));
-			line(part.pos, part.pos.subtract(part.direction.scalar(0.1)));
-		}
-    }
-    
-    //**************CURSOR*******************
-    Point cursor = game.input.viewCursorPos;
-    g2d.setColor(new Color(0,255,0));
-   
-    graphics.draw(new Ellipse2D.Double(
-			cursor.x-0.5*tileSize,
-			cursor.y-0.5*tileSize,
-			0.5*tileSize*2,0.5*tileSize*2));
-
-    g2d.drawLine((int)(cursor.x), 
-    			 (int)(cursor.y-(tileSize/2)-5), 
-    			 (int)(cursor.x), 
-    			 (int)(cursor.y+(tileSize/2)+5));
-    
-    g2d.drawLine((int)(cursor.x-(tileSize/2)-5), 
-			 	 (int)(cursor.y), 
-			 	 (int)(cursor.x+(tileSize/2)+5),
-			 	 (int)(cursor.y));
-    
-   
-    g2d.setColor(new Color(255,255,0));
-    
-    String fps = Double.toString(MainLoop.framerate);
-    int dot = fps.indexOf(".");
-    g2d.drawString(fps.substring(0, dot+2) + " fps", 5.0f,15.0f);
+    drawEntities();
+    drawHUD();
     
     Graphics2D g2dpanel = (Graphics2D)g;
     g2dpanel.drawImage(back,null, 0,0);
   }
+  
+    private void drawHUD() {
+        //**************CURSOR*******************
+        Point cursor = game.input.viewCursorPos;
+        graphics.setColor(new Color(0,255,0));
+       
+        graphics.draw(new Ellipse2D.Double(
+    			cursor.x-0.5*tileSize,
+    			cursor.y-0.5*tileSize,
+    			0.5*tileSize*2,0.5*tileSize*2));
+
+        graphics.drawLine((int)(cursor.x), 
+        			 (int)(cursor.y-(tileSize/2)-5), 
+        			 (int)(cursor.x), 
+        			 (int)(cursor.y+(tileSize/2)+5));
+        
+        graphics.drawLine((int)(cursor.x-(tileSize/2)-5), 
+    			 	 (int)(cursor.y), 
+    			 	 (int)(cursor.x+(tileSize/2)+5),
+    			 	 (int)(cursor.y));
+        
+       
+        graphics.setColor(new Color(255,255,0));
+        
+        String fps = Double.toString(MainLoop.framerate);
+        int dot = fps.indexOf(".");
+        graphics.drawString(fps.substring(0, dot+2) + " fps", 5.0f,15.0f);
+    }
+    
+    private void drawEntities() {
+        for(Entity e : game.entities) {
+        	if(e instanceof Tower) {
+        		graphics.setColor(new Color(0,0,255));
+    			Tower tow = (Tower)e;
+    			block(tow.pos);
+    			line(tow.pos, tow.pos.subtract(tow.aim.scalar(2)));	
+        	}
+        	else if(e instanceof Projectile) {
+        		graphics.setColor(new Color(100,100,255));
+        		Projectile proj = (Projectile)e;
+        		if(proj.pos.distance(game.u.pos) > 1.5)
+        			line(proj.pos, proj.pos.subtract(proj.direction.scalar(1.5)));
+        		else 
+        			line(proj.pos, game.u.pos);
+        	}
+        	else if(e instanceof Particle) {
+        		Particle part = (Particle)e;
+        		int c = 350 -(int) (part.life/part.lifetime*255);
+    			if(c>255) c=255;
+    			graphics.setColor(new Color(c,c,c));
+    			
+    			line(part.pos, part.pos.subtract(part.direction.scalar(0.1)));
+        	}
+        	else if(e instanceof Unit) {
+        		Unit u = (Unit)e;
+        		graphics.setColor(new Color(0,255,0));
+        		circle(u.pos,u.getRadius(),true);
+        	    //Path
+        	    ArrayList<Vector2D> path = u.path;
+        	    graphics.setColor(new Color(0,255,0));
+        	    if(path != null) {
+        	    	if(path.size() > 0) {
+        	    		line(u.pos,path.get(0));
+        	    	}
+        	    	for(int i=0;i<path.size()-1;i++) {
+        	    		line(path.get(i),path.get(i+1));
+        	    	}
+        	    }
+        	}
+        }
+    }
   
     private void line(Vector2D a, Vector2D b) {
     	graphics.drawLine(
