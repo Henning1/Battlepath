@@ -124,16 +124,17 @@ public class Renderer {
         	if(e instanceof Tower) {
         		graphics.setColor(new Color(0,0,255));
     			Tower tow = (Tower)e;
-    			block(tow.pos);
-    			line(tow.pos, tow.pos.subtract(tow.aim.scalar(2)));	
+    			diamond(tow.pos);
+    			line(tow.pos, tow.pos.add(tow.aim.scalar(1.4)));
         	}
         	else if(e instanceof Projectile) {
         		graphics.setColor(new Color(100,100,255));
         		Projectile proj = (Projectile)e;
-        		if(proj.pos.distance(game.u.pos) > 1.5)
-        			line(proj.pos, proj.pos.subtract(proj.direction.scalar(1.5)));
-        		else 
-        			line(proj.pos, game.u.pos);
+        		double length;
+        		if(proj.pos.distance(proj.origin) < proj.length) 
+        			length = proj.pos.distance(proj.origin);
+        		else length = proj.length;
+        		line(proj.pos, proj.pos.subtract(proj.direction.scalar(length)));
         	}
         	else if(e instanceof Particle) {
         		Particle part = (Particle)e;

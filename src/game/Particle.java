@@ -10,14 +10,15 @@ public class Particle extends Entity {
 	public double speed;
 	public double lifetime;
 	public double life = 0;
-	public double acceleration = 10;
+	public double acceleration;
 	public boolean destroyed = false;
 	
-	public Particle(Vector2D position, Vector2D direction, double lifetime, double speed, Game game) {
+	public Particle(Vector2D position, Vector2D direction, double lifetime, double speed, double accel, Game game) {
 		super(position,game);
 		this.direction = direction.normalize();
 		this.lifetime = lifetime;
 		this.speed = speed;
+		acceleration = accel;
 	}
 	
 	@Override

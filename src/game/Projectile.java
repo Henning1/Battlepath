@@ -8,11 +8,14 @@ public class Projectile extends Entity {
 
 
 	public Vector2D direction;
+	public Vector2D origin;
+	public double length = 1.3;
 	double speed = 50;
 	
 	public Projectile(Vector2D position, Vector2D direction, Game game) {
 		super(position,game);
 		this.direction = direction.normalize();
+		this.origin = position;
 	}
 	
 	@Override

@@ -13,9 +13,9 @@ public class Tower extends Entity {
 
 	@Override
 	public void process(double dt) {
-		aim = pos.subtract(game.u.pos).normalize();
+		aim = game.u.pos.subtract(pos).normalize();
 		if(pos.distance(game.u.pos) < 10 && GlobalInfo.time-lastShot > 0.3) {
-			game.emitShot(pos, aim.negate());
+			game.emitShot(pos.add(aim.scalar(getRadius())), aim);
 			lastShot = GlobalInfo.time;
 		}
 	}

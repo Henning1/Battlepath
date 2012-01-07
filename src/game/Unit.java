@@ -44,6 +44,10 @@ public class Unit extends Entity {
 		return health;
 	}
 	
+	public void shoot(Vector2D direction) {
+		game.addList.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, game));
+	}
+	
 	public Vector2D velocityDt() {
 		return velocity.scalar(game.dt);
 	}

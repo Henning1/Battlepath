@@ -67,7 +67,7 @@ public class Game {
 	
 	public void particleExplosion(Vector2D pos, int n) {
 		for (int j = 0;j<=n;j++)
-			addList.add(new Particle(pos, Vector2D.fromAngle(j*1.8, 1), Math.random()/2+0.1, Math.random()*5, this));
+			addList.add(new Particle(pos, Vector2D.fromAngle(j*1.8, 1), Math.random()/4+0.1, Math.random()*10, 20, this));
 	}
 	
 	public void toggleMode() {
@@ -87,8 +87,7 @@ public class Game {
 		}
 		
 		if((input.mouseButtonPressed[2] && GlobalInfo.time - lastShot > 0.3)) {
-			addList.add(
-					new Projectile(u.pos, input.getCursorPos().subtract(u.pos),this));
+			u.shoot(input.getCursorPos().subtract(u.pos).normalize());
 			lastShot = GlobalInfo.time;
 		}
 		
