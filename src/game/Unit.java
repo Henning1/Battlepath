@@ -22,7 +22,6 @@ public class Unit extends Entity {
 	
 	public Unit(Vector2D position, Game game) {
 		super(position,game);
-		this.game = game;
 		health = 100;
 	}
 	

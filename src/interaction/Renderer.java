@@ -4,10 +4,12 @@ import engine.MainLoop;
 import game.Game;
 import game.Particle;
 import game.Projectile;
+import game.Tower;
 
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Polygon;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
@@ -63,6 +65,7 @@ public class Renderer {
     g2d.setColor(new Color(0,0,0));
     g2d.fillRect(0, 0, (int)width, (int)height);
     
+    //Tiles
     for(int x=0; x < game.field.tilesX; x++) {
     	for(int y=0; y < game.field.tilesY; y++) {
     		Color colx = new Color(200,x,y);
@@ -79,6 +82,7 @@ public class Renderer {
     	}
     }
     
+    //Path
     ArrayList<Vector2D> path = game.u.path;
     g2d.setColor(new Color(0,255,0));
     if(path != null) {
@@ -90,7 +94,15 @@ public class Renderer {
     	}
     }
     
+    //Unit
     circle(game.u.pos,game.u.getRadius(),true);
+    
+    //Towers
+    g2d.setColor(new Color(0,0,255));
+    for (int i=0;i<game.towers.size();i++) {
+		Tower tow = game.towers.get(i);
+		diamond(tow.pos);
+    }
 
     //Projectiles
     g2d.setColor(new Color(100,100,255));
@@ -152,6 +164,23 @@ public class Renderer {
     
     private void line(Line2D l) {
     	line(l.a, l.b);
+    }
+    
+    private void diamond(Vector2D pos) {
+    	double scale = scaleFactor();
+    	int[] xpoints = new int[4];
+    	int[] ypoints = new int[4];
+    	
+    	xpoints[0] = (int)((pos.x-0.5+offset.x)*scale);
+    	ypoints[0] = (int)((pos.y+offset.y)*scale);
+    	xpoints[1] = (int)((pos.x+offset.x)*scale);
+    	ypoints[1] = (int)((pos.y-0.5+offset.y)*scale);
+    	xpoints[2] = (int)((pos.x+0.5+offset.x)*scale);
+    	ypoints[2] = ypoints[0];
+    	xpoints[3] = xpoints[1];
+    	ypoints[3] = (int)((pos.y+0.5+offset.y)*scale);
+    	
+    	graphics.fillPolygon(new Polygon(xpoints, ypoints, 4));
     }
     
     private void circle(Vector2D pos, double r, boolean filled) {

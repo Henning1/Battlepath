@@ -20,8 +20,10 @@ public class Game {
 	public CollisionSystem collisionSystem;
 	public Input input;
 	public Unit u;
+	//TODO: Merge these
 	public ArrayList<Projectile> projectiles = new ArrayList<Projectile>();
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
+	public ArrayList<Tower> towers = new ArrayList<Tower>();
 	public View view;
 	public GameMode mode;
 	

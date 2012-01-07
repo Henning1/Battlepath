@@ -1,6 +1,7 @@
 package main;
 import game.Game;
 import game.GameMode;
+import game.Tower;
 import game.View;
 import interaction.Input;
 import interaction.Renderer;
@@ -8,6 +9,7 @@ import interaction.WindowUtilities;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JFrame;
@@ -45,6 +47,7 @@ public class Battlepath {
 		game.collisionSystem = new CollisionSystem(f,game);
 		game.view = new View(paneSize, tileSize, game);
 		game.setMode(GameMode.ACTION);
+		game.towers.addAll(randomTowers(f, fieldWidth*fieldHeight/200, game));
 		
 		MainLoop.startLoop(renderer, game);
 	}
@@ -60,5 +63,16 @@ public class Battlepath {
 		for(int i=0; i<n; i++) {
 			f.createCricle(new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY), rand.nextDouble()*maxr);
 		}
+	}
+	
+	public static ArrayList<Tower> randomTowers(Field f, int n, Game g) {
+		ArrayList<Tower> list = new ArrayList<Tower>();
+		for(int i=0; i<n;i++) {
+			Point tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
+			while(f.tiles[tower.x][tower.y].getType() == 1)
+				tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
+			list.add(new Tower(f.getWorldPos(tower).subtract(new Vector2D(0.5, 0.5)), g));
+		}
+		return list;
 	}
 }
