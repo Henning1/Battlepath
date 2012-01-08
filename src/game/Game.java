@@ -151,8 +151,11 @@ public class Game {
 					toggleMode();
 					break;
 				case 'r':
-					u = new Unit(Battlepath.findStartPos(field), this);
-					entities.add(u);
+					if(u.getHealth() == 0) {
+						u = new Unit(Battlepath.findStartPos(field), this);
+						entities.add(u);
+						view.follow(u);
+					}
 					break;
 			}
 		}
