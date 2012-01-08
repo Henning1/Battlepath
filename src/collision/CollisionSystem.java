@@ -3,8 +3,9 @@ package collision;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import Entities.Entity;
+
 import engine.Field;
-import game.Entity;
 import game.Game;
 
 import util.Line2D;

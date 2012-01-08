@@ -14,9 +14,6 @@ public class MainLoop {
     private static int frames = 0;
     public static double framerate = 0.0;
     
-    
-    
-    
     public static void startLoop(Renderer r, Game g) {
     	
     	currentTime = (double)System.currentTimeMillis() / 1000.0;

@@ -1,28 +1,27 @@
-package game;
+package Entities;
 
 
 import java.util.ArrayList;
 
 import collision.CollisionSystem;
-import collision.Move;
 
 import util.Vector2D;
 
 import engine.GlobalInfo;
+import game.Game;
 
 
-public class Unit extends Entity {
+public class Unit extends HealthEntity {
 
 	public ArrayList<Vector2D> path;
 	public Vector2D direction = new Vector2D(0,0);
 	double speed = 4;
 	public boolean actionmode = true;
-	//Unit health, 0-100
-	int health = 0;
+
 	
 	public Unit(Vector2D position, Game game) {
 		super(position,game);
-		health = 100;
+		health = 500;
 	}
 	
 	public void moveTo(Vector2D dest) {
@@ -38,10 +37,6 @@ public class Unit extends Entity {
 		}
 		
 		health = h;
-	}
-	
-	public int getHealth() {
-		return health;
 	}
 	
 	public void shoot(Vector2D direction) {
@@ -69,14 +64,17 @@ public class Unit extends Entity {
 			
 		}
 		
-		Move move = cs.collideAndSlide(this);
-		move.apply();
-		
+		move = cs.collideAndSlide(this);
 	}
 
 	@Override
 	public double getRadius() {
 		return 0.49;
+	}
+
+	@Override
+	public void collide(CollisionEntity e) {
+		
 	}
 
 }

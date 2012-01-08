@@ -5,7 +5,15 @@ import interaction.KeyBindings;
 
 import java.util.ArrayList;
 
+import main.Battlepath;
+
+import Entities.CollisionEntity;
+import Entities.Entity;
+import Entities.Projectile;
+import Entities.Unit;
+
 import collision.CollisionSystem;
+import collision.MovementSystem;
 
 import util.Vector2D;
 
@@ -18,6 +26,7 @@ public class Game {
 	public Field field;
 	public Pathplanner pathPlanner;
 	public CollisionSystem collisionSystem;
+	public MovementSystem movementSystem;
 	public Input input;
 	public Unit u;
 	//TODO: Merge these
@@ -34,6 +43,7 @@ public class Game {
 	public double dt;
 	
 	public Game(Vector2D startpos) {
+		movementSystem = new MovementSystem(this);
 		u = new Unit(startpos, this);
 		entities.add(u);
 	}
@@ -45,6 +55,9 @@ public class Game {
 		for(Entity e : entities) {
 			e.process(dt);
 		}
+		
+		movementSystem.process(getCollisionEntities());
+		
 		entities.removeAll(deleteList);
 		deleteList.clear();
 		entities.addAll(addList);
@@ -63,6 +76,16 @@ public class Game {
 			view.unfollow();
 			break;
 		}
+	}
+	
+	public ArrayList<CollisionEntity> getCollisionEntities() {
+		ArrayList<CollisionEntity> es = new ArrayList<CollisionEntity>();
+		for(Entity e : entities) {
+			if(e instanceof CollisionEntity) {
+				es.add((CollisionEntity) e);
+			}
+		}
+		return es;
 	}
 	
 	public void particleExplosion(Vector2D pos, int n) {
@@ -126,6 +149,10 @@ public class Game {
 					break;
 				case 't':
 					toggleMode();
+					break;
+				case 'r':
+					u = new Unit(Battlepath.findStartPos(field), this);
+					entities.add(u);
 					break;
 			}
 		}

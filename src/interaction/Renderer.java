@@ -1,12 +1,8 @@
 package interaction;
 
 import engine.MainLoop;
-import game.Entity;
 import game.Game;
 import game.Particle;
-import game.Projectile;
-import game.Tower;
-import game.Unit;
 
 import java.awt.Color;
 import java.awt.Graphics;
@@ -20,6 +16,11 @@ import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+
+import Entities.Entity;
+import Entities.Projectile;
+import Entities.Tower;
+import Entities.Unit;
 
 import util.Line2D;
 import util.Vector2D;

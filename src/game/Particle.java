@@ -1,5 +1,6 @@
 package game;
 
+import Entities.Entity;
 import util.Vector2D;
 
 

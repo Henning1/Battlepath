@@ -1,9 +1,9 @@
 package collision;
 
+import Entities.Entity;
 import engine.GlobalInfo;
 import util.Line2D;
 import util.Vector2D;
-import game.Entity;
 
 public class Move {
 	Entity e;
@@ -19,7 +19,7 @@ public class Move {
 	
 	// returns new velocity
 	protected void slide(Collision closestCollision) {
-		// *** Collision occured ***
+		// *** Collision occurred ***
 		// The original destination point
 		Vector2D destinationPoint = basepoint.add(v);
 		Vector2D newBasePoint = basepoint;

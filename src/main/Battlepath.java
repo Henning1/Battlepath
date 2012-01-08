@@ -1,7 +1,6 @@
 package main;
 import game.Game;
 import game.GameMode;
-import game.Tower;
 import game.View;
 import interaction.Input;
 import interaction.Renderer;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import javax.swing.JFrame;
+
+import Entities.Tower;
 
 import collision.CollisionSystem;
 
@@ -28,8 +29,8 @@ public class Battlepath {
 	
 	public static void main(String[] args) {
 		int tileSize = 20;
-		int fieldWidth = 200;
-		int fieldHeight = 200;
+		int fieldWidth = 100;
+		int fieldHeight = 100;
 		Dimension windowSize = new Dimension(1000,800);
 		Field f = new Field(fieldWidth, fieldHeight);
 		randomCircles(f, fieldWidth*fieldHeight/50, 3);
