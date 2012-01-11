@@ -49,12 +49,12 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	HashMap<Integer, Remover> pressedKeys;
 	Timer timer;
 	
-	public Input(JFrame frame, Game g) {
+	public Input(BFrame frame, Game g) {
 		
 		this.g = g;
-		frame.getContentPane().addMouseMotionListener(this);
-		frame.getContentPane().addMouseListener(this);
-		frame.addKeyListener(this);
+		frame.canvas.addMouseMotionListener(this);
+		frame.canvas.addMouseListener(this);
+		frame.canvas.addKeyListener(this);
 		size = new Dimension();
 		size.width = ((JPanel)frame.getContentPane()).getWidth();
 		size.height = ((JPanel)frame.getContentPane()).getHeight();

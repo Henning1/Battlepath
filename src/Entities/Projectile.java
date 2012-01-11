@@ -34,7 +34,7 @@ public class Projectile extends CollisionEntity {
 	
 	public void collide(CollisionEntity c) {
 		game.deleteList.add(this);
-		game.particleExplosion(pos, 200);
+		game.particleExplosion(pos, 300);
 		
 		if(c instanceof HealthEntity) {
 			HealthEntity h = (HealthEntity)c;

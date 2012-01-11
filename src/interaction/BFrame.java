@@ -14,7 +14,8 @@ public class BFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
 	
-	private GLCanvas canvas;
+	public GLCanvas canvas;
+	
 	
 	public BFrame(Dimension size, OpenGLRenderer r) {
 		super("Battlepath");
@@ -36,11 +37,5 @@ public class BFrame extends JFrame {
 		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
 				cursorImg, new Point(0, 0), "blank cursor");
 		canvas.setCursor(blankCursor);
-	}
-	
-	public void startAnimation() {
-		FPSAnimator animator = new FPSAnimator(canvas, 60);
-        animator.add(canvas);
-        animator.start();
 	}
 }

@@ -29,7 +29,6 @@ public class Game {
 	public MovementSystem movementSystem;
 	public Input input;
 	public Unit u;
-	//TODO: Merge these
 	public ArrayList<Entity> entities = new ArrayList<Entity>();
 	public ArrayList<Entity> addList = new ArrayList<Entity>();
 	public ArrayList<Entity> deleteList = new ArrayList<Entity>();

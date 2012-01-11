@@ -32,6 +32,39 @@ public class OpenGLRenderer implements GLEventListener {
 		game = g;
 		tileSize = tS;
 	}
+	
+	private void drawEntities(GL2 gl) {
+		for(Entity e : game.entities) {
+        	if(e instanceof Tower) {
+        		Tower tower = (Tower)e;
+        		gl.glColor3d(0,0,1);
+        		rhombus(gl, tower.pos);
+        		line(gl, tower.pos, tower.pos.add(tower.aim.scalar(1.4)), 1);
+        	}
+        	else if(e instanceof Projectile) {
+        		Projectile proj = (Projectile)e;
+        		
+        		double length;
+        		if(proj.pos.distance(proj.origin) < proj.length) 
+        			length = proj.pos.distance(proj.origin);
+        		else length = proj.length;
+        		gl.glColor3d(0.5,0.5,1);
+        		line(gl, proj.pos, proj.pos.subtract(proj.direction.scalar(length)), 2);
+        	}
+        	else if(e instanceof Particle) {
+        		Particle part = (Particle)e;
+        		double c = part.life/part.lifetime;
+    			gl.glColor4d(0.6,0.6,0.6,c);
+    			line(gl, part.pos, part.pos.subtract(part.direction.scalar(0.1)), 1);
+        	}
+        	else if(e instanceof Unit) {
+        		Unit u = (Unit)e;
+        		gl.glColor3d(0,1,0);
+        		circle(gl, u.pos, u.getRadius());
+        	}
+
+        }
+	}
 
 	private void drawField(GL2 gl) {
 		gl.glBegin(GL2.GL_QUADS);
@@ -55,10 +88,40 @@ public class OpenGLRenderer implements GLEventListener {
 	private void drawHUD(GL2 gl) {
 		//Cursor
 		Point cursor = game.input.viewCursorPos;
+		gl.glLineWidth(2);
 		gl.glBegin(GL2.GL_LINES);
 		gl.glColor3d(0,1,0);
-		gl.glVertex2d(cursor.x, cursor.y-10);
-		gl.glVertex2d(cursor.x, cursor.y+10);
+		gl.glVertex2d(cursor.x, game.view.windowSize.height-cursor.y-10);
+		gl.glVertex2d(cursor.x, game.view.windowSize.height-cursor.y+10);
+		gl.glVertex2d(cursor.x-10, game.view.windowSize.height-cursor.y);
+		gl.glVertex2d(cursor.x+10, game.view.windowSize.height-cursor.y);
+		gl.glEnd();
+	}
+	
+	private void circle(GL2 gl, Vector2D pos, double radius) {
+		double angle;
+		gl.glBegin(GL2.GL_POLYGON);
+	    for(int i = 100; i > 1; i--) {
+	        angle = i*2*Math.PI/100;
+	        gl.glVertex2d(pos.x + (Math.cos(angle) * radius), pos.y + (Math.sin(angle) * radius));
+	    }
+	    gl.glEnd();
+	}
+	
+	private void line(GL2 gl, Vector2D a, Vector2D b, float width) {
+		gl.glLineWidth(width);
+		gl.glBegin(GL2.GL_LINES);
+		gl.glVertex2d((a.x()+offset.x)*scaleFactor, (a.y()+offset.y)*scaleFactor);
+		gl.glVertex2d((b.x()+offset.x)*scaleFactor, ((b.y()+offset.y)*scaleFactor));
+		gl.glEnd();
+	}
+	
+	private void rhombus(GL2 gl, Vector2D pos) {
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex2d((pos.x-0.5+offset.x)*scaleFactor, (pos.y+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x+0.5+offset.x)*scaleFactor, (pos.y+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x+offset.x)*scaleFactor, (pos.y+0.5+offset.y)*scaleFactor);
 		gl.glEnd();
 	}
 	
@@ -78,8 +141,10 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		
 		drawField(gl);
+		drawEntities(gl);
 		drawHUD(gl);
 	}
+	
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
 		//Clean up

@@ -1,8 +1,9 @@
 package engine;
 
+import javax.media.opengl.GLAutoDrawable;
+
 import interaction.BFrame;
 import interaction.OpenGLRenderer;
-import interaction.Renderer;
 import game.Game;
 
 public class MainLoop {
@@ -20,8 +21,6 @@ public class MainLoop {
     	
     	currentTime = (double)System.currentTimeMillis() / 1000.0;
     	fpsStart = currentTime;
-    	
-    	frame.startAnimation();
     	
     	while (engine.GlobalInfo.running)
         {
@@ -53,8 +52,10 @@ public class MainLoop {
                   accumulator -= dt;
                   GlobalInfo.time += dt;
              }
-
-             //r.display();
+             
+             //Render
+             frame.canvas.display();
+             
              frames++;
         }
     }
