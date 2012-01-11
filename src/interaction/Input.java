@@ -40,7 +40,6 @@ class Remover extends TimerTask {
 public class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
 	Game g;
-	Renderer r;
 	public Dimension size=null;
 	
 	public boolean[] mouseButtonPressed = new boolean[3];
@@ -50,9 +49,8 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 	HashMap<Integer, Remover> pressedKeys;
 	Timer timer;
 	
-	public Input(JFrame frame, Renderer r, Game g) {
+	public Input(JFrame frame, Game g) {
 		
-		this.r = r;
 		this.g = g;
 		frame.getContentPane().addMouseMotionListener(this);
 		frame.getContentPane().addMouseListener(this);

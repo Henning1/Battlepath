@@ -9,7 +9,7 @@ import util.Util;
 import util.Vector2D;
 
 public class View {
-	Dimension windowSize;
+	public Dimension windowSize;
 	Game game;
 	int tileSize;
 	public double zoom = 1;
@@ -71,7 +71,7 @@ public class View {
 			setOffset(followedEntity.pos.negate().add(viewSize().scalar(0.5)));
 		}
 		else {
-			setOffset(offset.add(velocity.scalar(dt)));
+			setOffset(offset.subtract(velocity.scalar(dt)));
 		}
 	}
 

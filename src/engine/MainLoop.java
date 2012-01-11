@@ -1,5 +1,7 @@
 package engine;
 
+import interaction.BFrame;
+import interaction.OpenGLRenderer;
 import interaction.Renderer;
 import game.Game;
 
@@ -14,10 +16,12 @@ public class MainLoop {
     private static int frames = 0;
     public static double framerate = 0.0;
     
-    public static void startLoop(Renderer r, Game g) {
+    public static void startLoop(Game g, OpenGLRenderer r, BFrame frame) {
     	
     	currentTime = (double)System.currentTimeMillis() / 1000.0;
     	fpsStart = currentTime;
+    	
+    	frame.startAnimation();
     	
     	while (engine.GlobalInfo.running)
         {
@@ -50,7 +54,7 @@ public class MainLoop {
                   GlobalInfo.time += dt;
              }
 
-             r.render();
+             //r.display();
              frames++;
         }
     }

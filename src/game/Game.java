@@ -129,8 +129,8 @@ public class Game {
 		if(u.velocity.length() > 0)
 			u.velocity = u.velocity.normalize().scalar(10);
 		
-		if(input.isPressed(KeyBindings.SCROLL_LEFT)) view.velocity.x = 20;
-		else if(input.isPressed(KeyBindings.SCROLL_RIGHT)) view.velocity.x = -20;
+		if(input.isPressed(KeyBindings.SCROLL_LEFT)) view.velocity.x = -20;
+		else if(input.isPressed(KeyBindings.SCROLL_RIGHT)) view.velocity.x = 20;
 		else view.velocity.x = 0;
 		
 		if(input.isPressed(KeyBindings.SCROLL_UP)) view.velocity.y = 20;

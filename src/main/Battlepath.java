@@ -3,8 +3,8 @@ import game.Game;
 import game.GameMode;
 import game.View;
 import interaction.Input;
-import interaction.Renderer;
-import interaction.WindowUtilities;
+import interaction.OpenGLRenderer;
+import interaction.BFrame;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -36,21 +36,22 @@ public class Battlepath {
 		randomCircles(f, fieldWidth*fieldHeight/50, 3);
 		Vector2D start = findStartPos(f);
 		
-		JFrame frame = WindowUtilities.openFrame(windowSize);
-		Dimension paneSize = frame.getContentPane().getSize();
 
 		Game game = new Game(start);
-		Renderer renderer = new Renderer(game,tileSize,frame);
+		OpenGLRenderer renderer = new OpenGLRenderer(game,tileSize);
+		
+		BFrame frame = new BFrame(windowSize, renderer);
+		Dimension paneSize = frame.getContentPane().getSize();
 		
 		game.field = f;
-		game.input = new Input(frame, renderer, game);
+		game.input = new Input(frame, game);
 		game.pathPlanner =  new Pathplanner(f);
 		game.collisionSystem = new CollisionSystem(f,game);
 		game.view = new View(paneSize, tileSize, game);
 		game.setMode(GameMode.ACTION);
 		game.entities.addAll(randomTowers(f, fieldWidth*fieldHeight/200, game));
 		
-		MainLoop.startLoop(renderer, game);
+		MainLoop.startLoop(game, renderer, frame);
 	}
 	
 	public static Vector2D findStartPos(Field f) {
