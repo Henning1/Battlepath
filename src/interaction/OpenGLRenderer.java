@@ -102,8 +102,9 @@ public class OpenGLRenderer implements GLEventListener {
 		double angle;
 		gl.glBegin(GL2.GL_POLYGON);
 	    for(int i = 100; i > 1; i--) {
-	        angle = i*2*Math.PI/100;
-	        gl.glVertex2d(pos.x + (Math.cos(angle) * radius), pos.y + (Math.sin(angle) * radius));
+	        angle = i * 2 * Math.PI / 100;
+	        gl.glVertex2d((offset.x + pos.x + (Math.cos(angle) * radius)) * scaleFactor, 
+	        		(offset.y + pos.y + (Math.sin(angle) * radius)) * scaleFactor);
 	    }
 	    gl.glEnd();
 	}

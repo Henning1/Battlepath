@@ -31,7 +31,8 @@ public class View {
 	}
 	
 	public Vector2D viewToWorld(Point viewPos) {
-		Vector2D v = new Vector2D(viewPos.x/((double)tileSize*zoom), viewPos.y/((double)tileSize*zoom));
+		Vector2D v = new Vector2D(viewPos.x/((double)tileSize*zoom),
+				(windowSize.height-viewPos.y)/((double)tileSize*zoom));
 		return v.subtract(offset);
 	}
 	

@@ -121,8 +121,8 @@ public class Game {
 		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -1;
 		else u.velocity.x = 0;
 		
-		if(input.isPressed(KeyBindings.MOVE_DOWN)) u.velocity.y = 1;
-		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = -1;
+		if(input.isPressed(KeyBindings.MOVE_DOWN)) u.velocity.y = -1;
+		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = 1;
 		else u.velocity.y = 0;
 		
 		if(u.velocity.length() > 0)
