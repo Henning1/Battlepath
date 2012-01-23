@@ -1,4 +1,4 @@
-package Entities;
+package entities;
 
 import collision.Move;
 import game.Game;

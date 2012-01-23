@@ -1,4 +1,4 @@
-package Entities;
+package entities;
 
 import engine.GlobalInfo;
 import game.Game;

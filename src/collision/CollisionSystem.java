@@ -3,9 +3,9 @@ package collision;
 import java.awt.Point;
 import java.util.ArrayList;
 
-import Entities.Entity;
 
 import engine.Field;
+import entities.Entity;
 import game.Game;
 
 import util.Line2D;
@@ -40,6 +40,14 @@ public class CollisionSystem {
 		movePointIntoIndexBounds(a);
 		movePointIntoIndexBounds(b);
 		ArrayList<Line2D> collModel = new ArrayList<Line2D>();
+		
+		double sx = field.tilesX;
+		double sy = field.tilesY;
+		
+		collModel.add(new Line2D(new Vector2D(0,sy), new Vector2D(0,0)));
+		collModel.add(new Line2D(new Vector2D(0,0), new Vector2D(sx,0)));
+		collModel.add(new Line2D(new Vector2D(sx,0), new Vector2D(sx,sy)));
+		collModel.add(new Line2D(new Vector2D(sx,sy), new Vector2D(0,sy)));
 		
 		for(int x=a.x; x<=b.x;x++) {
 			for(int y=a.y; y<=b.y; y++) {

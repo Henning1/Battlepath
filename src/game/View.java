@@ -3,7 +3,8 @@ package game;
 import java.awt.Dimension;
 import java.awt.Point;
 
-import Entities.Entity;
+import entities.Entity;
+
 
 import util.Util;
 import util.Vector2D;

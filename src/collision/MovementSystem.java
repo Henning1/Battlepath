@@ -1,10 +1,10 @@
 package collision;
 
+import entities.CollisionEntity;
 import game.Game;
 
 import java.util.ArrayList;
 
-import Entities.CollisionEntity;
 
 
 public class MovementSystem {

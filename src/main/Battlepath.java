@@ -13,7 +13,6 @@ import java.util.Random;
 
 import javax.swing.JFrame;
 
-import Entities.Tower;
 
 import collision.CollisionSystem;
 
@@ -22,6 +21,7 @@ import util.Vector2D;
 import engine.Field;
 import engine.MainLoop;
 import engine.Pathplanner;
+import entities.Tower;
 
 
 public class Battlepath {
@@ -49,7 +49,7 @@ public class Battlepath {
 		game.collisionSystem = new CollisionSystem(f,game);
 		game.view = new View(paneSize, tileSize, game);
 		game.setMode(GameMode.ACTION);
-		game.entities.addAll(randomTowers(f, fieldWidth*fieldHeight/200, game));
+		game.entities.addAll(randomTowers(f, 20, game));
 		
 		MainLoop.startLoop(game, renderer, frame);
 	}

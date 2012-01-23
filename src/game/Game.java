@@ -7,10 +7,6 @@ import java.util.ArrayList;
 
 import main.Battlepath;
 
-import Entities.CollisionEntity;
-import Entities.Entity;
-import Entities.Projectile;
-import Entities.Unit;
 
 import collision.CollisionSystem;
 import collision.MovementSystem;
@@ -20,6 +16,10 @@ import util.Vector2D;
 import engine.Field;
 import engine.GlobalInfo;
 import engine.Pathplanner;
+import entities.CollisionEntity;
+import entities.Entity;
+import entities.Projectile;
+import entities.Unit;
 
 public class Game {
 	
@@ -27,6 +27,7 @@ public class Game {
 	public Pathplanner pathPlanner;
 	public CollisionSystem collisionSystem;
 	public MovementSystem movementSystem;
+	public ParticleSystem particleSystem;
 	public Input input;
 	public Unit u;
 	public ArrayList<Entity> entities = new ArrayList<Entity>();
@@ -43,6 +44,7 @@ public class Game {
 	
 	public Game(Vector2D startpos) {
 		movementSystem = new MovementSystem(this);
+		particleSystem = new ParticleSystem();
 		u = new Unit(startpos, this);
 		entities.add(u);
 	}
@@ -56,12 +58,12 @@ public class Game {
 		}
 		
 		movementSystem.process(getCollisionEntities());
+		particleSystem.process(dt);
 		
 		entities.removeAll(deleteList);
 		deleteList.clear();
 		entities.addAll(addList);
 		addList.clear();
-		
 		view.process(dt);
 	}
 	
@@ -85,11 +87,6 @@ public class Game {
 			}
 		}
 		return es;
-	}
-	
-	public void particleExplosion(Vector2D pos, int n) {
-		for (int j = 0;j<=n;j++)
-			addList.add(new Particle(pos, Vector2D.fromAngle(j*1.8, 1), Math.random()/4+0.1, Math.random()*10, 20, this));
 	}
 	
 	public void toggleMode() {

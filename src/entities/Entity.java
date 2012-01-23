@@ -1,4 +1,4 @@
-package Entities;
+package entities;
 
 import game.Game;
 import util.Vector2D;

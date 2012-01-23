@@ -1,7 +1,7 @@
 package collision;
 
-import Entities.Entity;
 import engine.GlobalInfo;
+import entities.Entity;
 import util.Line2D;
 import util.Vector2D;
 

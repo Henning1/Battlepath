@@ -1,6 +1,10 @@
 package interaction;
 
 import engine.MainLoop;
+import entities.Entity;
+import entities.Projectile;
+import entities.Tower;
+import entities.Unit;
 import game.Game;
 import game.Particle;
 
@@ -13,10 +17,8 @@ import javax.media.opengl.glu.*;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import Entities.Entity;
-import Entities.Projectile;
-import Entities.Tower;
-import Entities.Unit;
+import com.jogamp.opengl.util.texture.Texture;
+
 
 import util.Line2D;
 import util.Vector2D;
@@ -31,6 +33,23 @@ public class OpenGLRenderer implements GLEventListener {
 	public OpenGLRenderer(Game g, int tS) {
 		game = g;
 		tileSize = tS;
+	}
+	
+	private void drawParticles(GL2 gl) {
+		ArrayList<Particle> particles = game.particleSystem.particles;
+		
+		gl.glPointSize((float)(1*scaleFactor));
+		gl.glBegin(GL.GL_POINTS);
+		
+		if(particles.size()>0)
+		System.out.println(particles.size());
+		
+		for(Particle p : particles) {
+			gl.glColor4d(0.2, Math.random()*0.2, 0.01, 0.5);
+			particle(gl, p.pos);
+		}
+		
+		gl.glEnd();
 	}
 	
 	private void drawEntities(GL2 gl) {
@@ -51,12 +70,13 @@ public class OpenGLRenderer implements GLEventListener {
         		gl.glColor3d(0.5,0.5,1);
         		line(gl, proj.pos, proj.pos.subtract(proj.direction.scalar(length)), 2);
         	}
-        	else if(e instanceof Particle) {
+        	/*else if(e instanceof Particle) {
         		Particle part = (Particle)e;
-        		double c = part.life/part.lifetime;
-    			gl.glColor4d(0.6,0.6,0.6,c);
-    			line(gl, part.pos, part.pos.subtract(part.direction.scalar(0.1)), 1);
-        	}
+        		//double c = part.life/part.lifetime;
+    			gl.glColor4d(0.2, Math.random() * 0.2, 0.01, 0.5);
+    			point(gl, part.pos, 1);
+    			
+        	}*/
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
         		gl.glColor3d(0,1,0);
@@ -72,7 +92,7 @@ public class OpenGLRenderer implements GLEventListener {
 		for(int x=0; x < game.field.tilesX; x++) {
 			for(int y=0; y < game.field.tilesY; y++) {
 				
-				gl.glColor3d(1, (double)x/game.field.tilesX, (double)y/game.field.tilesY);
+				gl.glColor3d((double)x/game.field.tilesX-0.2, (double)x/game.field.tilesX-0.2, (double)y/game.field.tilesY-0.2);
 				
 				switch(game.field.tiles[x][y].getType()) {
 				case 1:
@@ -109,12 +129,17 @@ public class OpenGLRenderer implements GLEventListener {
 	    gl.glEnd();
 	}
 	
+	private void particle(GL2 gl, Vector2D pos) {
+		gl.glVertex2d(scaleFactor * (offset.x + pos.x), scaleFactor * (pos.y + offset.y));
+	}
+	
 	private void line(GL2 gl, Vector2D a, Vector2D b, float width) {
 		gl.glLineWidth(width);
 		gl.glBegin(GL2.GL_LINES);
 		gl.glVertex2d((a.x()+offset.x)*scaleFactor, (a.y()+offset.y)*scaleFactor);
 		gl.glVertex2d((b.x()+offset.x)*scaleFactor, ((b.y()+offset.y)*scaleFactor));
 		gl.glEnd();
+		
 	}
 	
 	private void rhombus(GL2 gl, Vector2D pos) {
@@ -143,6 +168,7 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		drawField(gl);
 		drawEntities(gl);
+		drawParticles(gl);
 		drawHUD(gl);
 	}
 	
@@ -159,6 +185,9 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
+		
+		gl.glEnable (GL2.GL_BLEND);
+		gl.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE);
 	}
 
 	@Override
@@ -172,6 +201,7 @@ public class OpenGLRenderer implements GLEventListener {
 		game.view.windowSize = new Dimension(width, height);
 	}
 
-
+    private void loadGLTextures(GL gl) {	
+    }
 
 }

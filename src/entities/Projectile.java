@@ -1,4 +1,4 @@
-package Entities;
+package entities;
 
 import game.Game;
 import collision.Move;
@@ -25,6 +25,7 @@ public class Projectile extends CollisionEntity {
 		velocity = direction.scalar(speed);
 		move = new Move(this,dt);
 		move.move();
+		game.particleSystem.explosion(pos, 5, 0.1);
 	}
 
 	@Override
@@ -34,11 +35,14 @@ public class Projectile extends CollisionEntity {
 	
 	public void collide(CollisionEntity c) {
 		game.deleteList.add(this);
-		game.particleExplosion(pos, 300);
 		
 		if(c instanceof HealthEntity) {
 			HealthEntity h = (HealthEntity)c;
 			h.damage(power);
+			game.particleSystem.explosion(pos, 500, 1);
+		}
+		else {
+			game.particleSystem.explosion(pos, 100, 1);
 		}
 	}
 	
