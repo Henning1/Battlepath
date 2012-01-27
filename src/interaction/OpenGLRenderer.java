@@ -9,6 +9,7 @@ import fx.FxEntity;
 import fx.Particle;
 import fx.Shockwave;
 import game.Game;
+import game.GameMode;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -60,9 +61,12 @@ public class OpenGLRenderer implements GLEventListener {
 		gl = drawable.getGL().getGL2();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		
+		
 		drawField();
 		drawEntities();
+		gl.glEnable(GL2.GL_BLEND);
 		drawParticles();
+		gl.glDisable(GL2.GL_BLEND);
 		drawEffects();
 		drawHUD();
 	}
@@ -151,7 +155,7 @@ public class OpenGLRenderer implements GLEventListener {
         	if(e instanceof Tower) {
         		Tower tower = (Tower)e;
         		gl.glColor3d(0,0,1);
-        		rhombus(tower.pos);
+        		rhombus(tower.pos, 1);
         		line(tower.pos, tower.pos.add(tower.aim.scalar(1.4)), 1);
         	}
         	else if(e instanceof Projectile) {
@@ -164,19 +168,19 @@ public class OpenGLRenderer implements GLEventListener {
         		gl.glColor3d(0.5,0.5,1);
         		line(proj.pos, proj.pos.subtract(proj.direction.scalar(length)), 2);
         	}
-        	/*else if(e instanceof Particle) {
-        		Particle part = (Particle)e;
-        		//double c = part.life/part.lifetime;
-    			gl.glColor4d(0.2, Math.random() * 0.2, 0.01, 0.5);
-    			point(gl, part.pos, 1);
-    			
-        	}*/
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
         		
-        		if(u == game.selectedUnit) {
+        		if(u == game.selectedUnit && game.mode == GameMode.ACTION) {
         			gl.glColor3d(1,0,0);
-        			circle(u.pos, u.getRadius()+0.5);
+        			circle(u.pos, u.getRadius()+0.2);
+        		}
+        		else if(u == game.selectedUnit && game.mode == GameMode.STRATEGY) {
+        			gl.glColor3d(1, 0, 0);
+        			line(u.pos, u.pos.add(new Vector2D(u.getRadius(), u.getRadius())), 1);
+        			line(u.pos, u.pos.add(new Vector2D(-u.getRadius(), u.getRadius())), 1);
+        			line(u.pos, u.pos.add(new Vector2D(u.getRadius(), -u.getRadius())), 1);
+        			line(u.pos, u.pos.add(new Vector2D(-u.getRadius(), -u.getRadius())), 1);
         		}
         			
         		gl.glColor3d(0,1,0);
@@ -242,12 +246,23 @@ public class OpenGLRenderer implements GLEventListener {
 		
 	}
 	
-	private void rhombus(Vector2D pos) {
+	private void rhombus(Vector2D pos, double edgeLength) {
+		edgeLength /= 2;
 		gl.glBegin(GL2.GL_QUADS);
-		gl.glVertex2d((pos.x-0.5+offset.x)*scaleFactor, (pos.y+offset.y)*scaleFactor);
-		gl.glVertex2d((pos.x+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
-		gl.glVertex2d((pos.x+0.5+offset.x)*scaleFactor, (pos.y+offset.y)*scaleFactor);
-		gl.glVertex2d((pos.x+offset.x)*scaleFactor, (pos.y+0.5+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x-edgeLength+offset.x)*scaleFactor, (pos.y+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x+offset.x)*scaleFactor, (pos.y-edgeLength+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x+edgeLength+offset.x)*scaleFactor, (pos.y+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x+offset.x)*scaleFactor, (pos.y+edgeLength+offset.y)*scaleFactor);
+		gl.glEnd();
+	}
+	
+	private void square(Vector2D pos, double edgeLength) {
+		edgeLength /= 2;
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex2d((pos.x-edgeLength+offset.x)*scaleFactor, (pos.y+edgeLength+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x+edgeLength+offset.x)*scaleFactor, (pos.y+edgeLength+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x+edgeLength+offset.x)*scaleFactor, (pos.y-edgeLength+offset.y)*scaleFactor);
+		gl.glVertex2d((pos.x-edgeLength+offset.x)*scaleFactor, (pos.y-edgeLength+offset.y)*scaleFactor);
 		gl.glEnd();
 	}
 	
@@ -274,7 +289,6 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		
-		gl.glEnable (GL2.GL_BLEND);
 		gl.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE);
 		
 		setupShaders(gl);
