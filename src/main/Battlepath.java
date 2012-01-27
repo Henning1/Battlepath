@@ -50,7 +50,7 @@ public class Battlepath {
 		game.pathPlanner =  new Pathplanner(f);
 		game.collisionSystem = new CollisionSystem(f,game);
 		game.view = new View(paneSize, tileSize, game);
-		game.setMode(GameMode.ACTION);
+		game.setMode(GameMode.STRATEGY);
 		game.entities.addAll(randomTowers(f, 20, game));
 		game.entities.applyChanges();
 		

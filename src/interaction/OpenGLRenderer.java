@@ -159,6 +159,12 @@ public class OpenGLRenderer implements GLEventListener {
         	}*/
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
+        		
+        		if(u == game.selectedUnit) {
+        			gl.glColor3d(1,0,0);
+        			circle(u.pos, u.getRadius()+0.5);
+        		}
+        			
         		gl.glColor3d(0,1,0);
         		circle(u.pos, u.getRadius());
         	}

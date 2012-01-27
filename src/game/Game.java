@@ -31,8 +31,9 @@ public class Game {
 	public MovementSystem movementSystem;
 	public EffectsSystem particleSystem;
 	public Input input;
-	public Unit u;
+	//private Unit u;
 	public SafeList<Entity> entities = new SafeList<Entity>();
+	public Unit selectedUnit;
 	
 	public View view;
 	public GameMode mode;
@@ -45,11 +46,11 @@ public class Game {
 	public Game(Vector2D startpos) {
 		movementSystem = new MovementSystem(this);
 		particleSystem = new EffectsSystem();
-		u = new Unit(startpos, this);
-		entities.add(u);
+		entities.add(new Unit(startpos, this));
 	}
 	
 	public void step(double dt) {
+		//System.out.println(mode);
 		this.dt = dt;
 		processInput(dt);
 		
@@ -68,7 +69,8 @@ public class Game {
 		mode = gm;
 		switch(mode) {
 		case ACTION:
-			view.follow(u);
+			if(selectedUnit != null)
+				view.follow(selectedUnit);
 			break;
 		case STRATEGY:
 			view.unfollow();
@@ -98,12 +100,25 @@ public class Game {
 	public void processInput(double dt) {
 		//Mouse
 		
-		if(input.mouseButtonPressed[0] && !lastMouseState[0]) {
-			u.moveTo(input.getCursorPos());
+		if(input.mouseButtonPressed[0] && mode == GameMode.STRATEGY && !lastMouseState[0]) {
+			boolean found = false;
+			for(Entity e : entities) {
+				if(e instanceof Unit && input.getCursorPos().distance(e.pos) < e.getRadius()) {
+					selectedUnit = (Unit)e;
+					found = true;
+					System.out.println("selected");
+				}
+			}
+			if(!found)
+				selectedUnit = null;
 		}
 		
-		if((input.mouseButtonPressed[2] && GlobalInfo.time - lastShot > 0.3)) {
-			u.shoot(input.getCursorPos().subtract(u.pos).normalize());
+		if(input.mouseButtonPressed[2] && mode == GameMode.STRATEGY && !lastMouseState[0] && selectedUnit != null) {
+			selectedUnit.moveTo(input.getCursorPos());
+		}
+		
+		if((input.mouseButtonPressed[0] && mode == GameMode.ACTION && GlobalInfo.time - lastShot > 0.3)) {
+			selectedUnit.shoot(input.getCursorPos().subtract(selectedUnit.pos).normalize());
 			lastShot = GlobalInfo.time;
 		}
 		
@@ -111,24 +126,28 @@ public class Game {
 		
 		//Keyboard part one (input.isPressed)
 		
-		if(input.isPressed(KeyBindings.MOVE_LEFT)) u.velocity.x = 1;
-		else if(input.isPressed(KeyBindings.MOVE_RIGHT)) u.velocity.x = -1;
-		else u.velocity.x = 0;
+		if(selectedUnit != null & mode == GameMode.ACTION) {
+			if(input.isPressed(KeyBindings.MOVE_LEFT)) selectedUnit.velocity.x = 1;
+			else if(input.isPressed(KeyBindings.MOVE_RIGHT)) selectedUnit.velocity.x = -1;
+			else selectedUnit.velocity.x = 0;
+			
+			if(input.isPressed(KeyBindings.MOVE_DOWN)) selectedUnit.velocity.y = -1;
+			else if(input.isPressed(KeyBindings.MOVE_UP)) selectedUnit.velocity.y = 1;
+			else selectedUnit.velocity.y = 0;
+			
+			if(selectedUnit.velocity.length() > 0)
+				selectedUnit.velocity = selectedUnit.velocity.normalize().scalar(10);
+		}
 		
-		if(input.isPressed(KeyBindings.MOVE_DOWN)) u.velocity.y = -1;
-		else if(input.isPressed(KeyBindings.MOVE_UP)) u.velocity.y = 1;
-		else u.velocity.y = 0;
-		
-		if(u.velocity.length() > 0)
-			u.velocity = u.velocity.normalize().scalar(10);
-		
-		if(input.isPressed(KeyBindings.SCROLL_LEFT)) view.velocity.x = -20;
-		else if(input.isPressed(KeyBindings.SCROLL_RIGHT)) view.velocity.x = 20;
-		else view.velocity.x = 0;
-		
-		if(input.isPressed(KeyBindings.SCROLL_UP)) view.velocity.y = 20;
-		else if(input.isPressed(KeyBindings.SCROLL_DOWN)) view.velocity.y = -20;
-		else view.velocity.y = 0;
+		if(mode == GameMode.STRATEGY) {
+			if(input.isPressed(KeyBindings.SCROLL_LEFT)) view.velocity.x = -20;
+			else if(input.isPressed(KeyBindings.SCROLL_RIGHT)) view.velocity.x = 20;
+			else view.velocity.x = 0;
+			
+			if(input.isPressed(KeyBindings.SCROLL_UP)) view.velocity.y = 20;
+			else if(input.isPressed(KeyBindings.SCROLL_DOWN)) view.velocity.y = -20;
+			else view.velocity.y = 0;
+		}
 		
 		//Keyboard part two (input.getKeyBuffer)
 		
@@ -140,15 +159,12 @@ public class Game {
 				case KeyBindings.ZOOM_OUT:
 					view.setZoom(view.zoom-0.1);
 					break;
+				/*DEBUGGING KEYS*/
 				case 't':
 					toggleMode();
 					break;
 				case 'r':
-					if(u.getHealth() == 0) {
-						u = new Unit(Battlepath.findStartPos(field), this);
-						entities.add(u);
-						view.follow(u);
-					}
+					entities.add(new Unit(Battlepath.findStartPos(field), this));
 					break;
 			}
 		}

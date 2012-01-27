@@ -15,11 +15,11 @@ public class Tower extends HealthEntity {
 
 	@Override
 	public void process(double dt) {
-		aim = game.u.pos.subtract(pos).normalize();
+		/*aim = game.u.pos.subtract(pos).normalize();
 		if(pos.distance(game.u.pos) < 20 && GlobalInfo.time-lastShot > 1) {
 			game.emitShot(pos.add(aim.scalar(getRadius())), aim);
 			lastShot = GlobalInfo.time;
-		}
+		}*/
 	}
 
 	@Override
