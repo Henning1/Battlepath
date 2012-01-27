@@ -74,6 +74,9 @@ public class Game {
 			break;
 		case STRATEGY:
 			view.unfollow();
+			if(selectedUnit != null){
+				selectedUnit.velocity = new Vector2D(0,0);
+			}
 			break;
 		}
 	}
@@ -121,7 +124,7 @@ public class Game {
 			selectedUnit.moveTo(input.getCursorPos());
 		}
 		
-		if((input.mouseButtonPressed[0] && mode == GameMode.ACTION && GlobalInfo.time - lastShot > 0.3)) {
+		if((input.mouseButtonPressed[0] && mode == GameMode.ACTION && selectedUnit != null && GlobalInfo.time - lastShot > 0.3)) {
 			selectedUnit.shoot(input.getCursorPos().subtract(selectedUnit.pos).normalize());
 			lastShot = GlobalInfo.time;
 		}
