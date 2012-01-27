@@ -17,7 +17,7 @@ public class BFrame extends JFrame {
 	public GLCanvas canvas;
 	
 	
-	public BFrame(Dimension size, OpenGLRenderer r) {
+	public BFrame(Dimension size) {
 		super("Battlepath");
 		
 		//OpenGL initialization
@@ -25,7 +25,6 @@ public class BFrame extends JFrame {
 		GLProfile.initSingleton();
 		GLCapabilities caps = new GLCapabilities(glp);
 		canvas = new GLCanvas(caps);
-		canvas.addGLEventListener(r);
 
 		setSize(size.width, size.height);
 		add(canvas);
@@ -37,5 +36,6 @@ public class BFrame extends JFrame {
 		Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(
 				cursorImg, new Point(0, 0), "blank cursor");
 		canvas.setCursor(blankCursor);
+		
 	}
 }

@@ -21,6 +21,7 @@ import util.Vector2D;
 import engine.Field;
 import engine.MainLoop;
 import engine.Pathplanner;
+import entities.Entity;
 import entities.Tower;
 
 
@@ -38,11 +39,12 @@ public class Battlepath {
 		
 
 		Game game = new Game(start);
-		OpenGLRenderer renderer = new OpenGLRenderer(game,tileSize);
 		
-		BFrame frame = new BFrame(windowSize, renderer);
+		
+		BFrame frame = new BFrame(windowSize);
 		Dimension paneSize = frame.getContentPane().getSize();
 		
+		OpenGLRenderer renderer = new OpenGLRenderer(game,tileSize,frame);
 		game.field = f;
 		game.input = new Input(frame, game);
 		game.pathPlanner =  new Pathplanner(f);
@@ -50,6 +52,7 @@ public class Battlepath {
 		game.view = new View(paneSize, tileSize, game);
 		game.setMode(GameMode.ACTION);
 		game.entities.addAll(randomTowers(f, 20, game));
+		game.entities.applyChanges();
 		
 		MainLoop.startLoop(game, renderer, frame);
 	}
@@ -67,8 +70,8 @@ public class Battlepath {
 		}
 	}
 	
-	public static ArrayList<Tower> randomTowers(Field f, int n, Game g) {
-		ArrayList<Tower> list = new ArrayList<Tower>();
+	public static ArrayList<Entity> randomTowers(Field f, int n, Game g) {
+		ArrayList<Entity> list = new ArrayList<Entity>();
 		for(int i=0; i<n;i++) {
 			Point tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
 			while(f.tiles[tower.x][tower.y].getType() == 1)

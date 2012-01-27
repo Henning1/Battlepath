@@ -18,7 +18,7 @@ public abstract class HealthEntity extends CollisionEntity{
 	public void damage(double d) {
 		health -= d;
 		if(health <= 0) {
-			game.deleteList.add(this);
+			game.entities.remove(this);
 		}
 	}
 	

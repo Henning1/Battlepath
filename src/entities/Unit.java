@@ -40,7 +40,7 @@ public class Unit extends HealthEntity {
 	}
 	
 	public void shoot(Vector2D direction) {
-		game.addList.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, game));
+		game.entities.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, game));
 	}
 	
 	public Vector2D velocityDt() {

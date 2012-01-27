@@ -11,6 +11,7 @@ import main.Battlepath;
 import collision.CollisionSystem;
 import collision.MovementSystem;
 
+import util.SafeList;
 import util.Vector2D;
 
 import engine.Field;
@@ -20,6 +21,7 @@ import entities.CollisionEntity;
 import entities.Entity;
 import entities.Projectile;
 import entities.Unit;
+import fx.EffectsSystem;
 
 public class Game {
 	
@@ -27,12 +29,10 @@ public class Game {
 	public Pathplanner pathPlanner;
 	public CollisionSystem collisionSystem;
 	public MovementSystem movementSystem;
-	public ParticleSystem particleSystem;
+	public EffectsSystem particleSystem;
 	public Input input;
 	public Unit u;
-	public ArrayList<Entity> entities = new ArrayList<Entity>();
-	public ArrayList<Entity> addList = new ArrayList<Entity>();
-	public ArrayList<Entity> deleteList = new ArrayList<Entity>();
+	public SafeList<Entity> entities = new SafeList<Entity>();
 	
 	public View view;
 	public GameMode mode;
@@ -44,7 +44,7 @@ public class Game {
 	
 	public Game(Vector2D startpos) {
 		movementSystem = new MovementSystem(this);
-		particleSystem = new ParticleSystem();
+		particleSystem = new EffectsSystem();
 		u = new Unit(startpos, this);
 		entities.add(u);
 	}
@@ -60,10 +60,7 @@ public class Game {
 		movementSystem.process(getCollisionEntities());
 		particleSystem.process(dt);
 		
-		entities.removeAll(deleteList);
-		deleteList.clear();
-		entities.addAll(addList);
-		addList.clear();
+		entities.applyChanges();
 		view.process(dt);
 	}
 	
@@ -160,7 +157,7 @@ public class Game {
 	
 	public void emitShot(Vector2D start, Vector2D direction) {
 		Projectile p = new Projectile(start, direction, this);
-		addList.add(p);
+		entities.add(p);
 	}
 	
 }

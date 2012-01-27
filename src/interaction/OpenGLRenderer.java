@@ -5,12 +5,17 @@ import entities.Entity;
 import entities.Projectile;
 import entities.Tower;
 import entities.Unit;
+import fx.FxEntity;
+import fx.Particle;
 import game.Game;
-import game.Particle;
 
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
@@ -21,6 +26,7 @@ import com.jogamp.opengl.util.texture.Texture;
 
 
 import util.Line2D;
+import util.SafeList;
 import util.Vector2D;
 
 public class OpenGLRenderer implements GLEventListener {
@@ -30,13 +36,86 @@ public class OpenGLRenderer implements GLEventListener {
 	private double scaleFactor;
 	private Vector2D offset;
 
-	public OpenGLRenderer(Game g, int tS) {
+	//only valid while display is running
+	private GL2 gl;
+	
+	public OpenGLRenderer(Game g, int tS, BFrame frame) {
 		game = g;
 		tileSize = tS;
+		frame.canvas.addGLEventListener(this);
 	}
 	
-	private void drawParticles(GL2 gl) {
-		ArrayList<Particle> particles = game.particleSystem.particles;
+	@Override
+	public void display(GLAutoDrawable drawable) {
+		//Draw
+		scaleFactor = tileSize * game.view.zoom;
+		offset = game.view.offset;
+		gl = drawable.getGL().getGL2();
+		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
+		
+		drawField();
+		drawEntities();
+		drawParticles();
+		drawHUD();
+	}
+	
+	private void setupShaders(GL2 gl) {
+		//int v = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
+		int f = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
+
+		/*
+		BufferedReader brv = new BufferedReader(new FileReader("vertexshader.glsl"));
+		String vsrc = "";
+		String line;
+		while ((line=brv.readLine()) != null) {
+		  vsrc += line + "\n";
+		}
+		gl.glShaderSource(v, 1, vsrc, null);
+		gl.glCompileShader(v);
+		*/
+		
+		BufferedReader brf = null;
+		try {
+			brf = new BufferedReader(new FileReader("fragmentshader.glsl"));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return;
+		}
+		String[] fsrc = {""};
+		String line;
+		try {
+			while ((line=brf.readLine()) != null) {
+			  fsrc[0] += line + "\n";
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+			return;
+		}
+		
+		int len[] = new int[1];
+		len[0] = fsrc[0].length();
+		
+		gl.glShaderSource(f, 1, fsrc, len, 0);
+		gl.glCompileShader(f);
+
+		int shaderprogram = gl.glCreateProgram();
+		//gl.glAttachShader(shaderprogram, v);
+		gl.glAttachShader(shaderprogram, f);
+		gl.glLinkProgram(shaderprogram);
+		gl.glValidateProgram(shaderprogram);
+
+		gl.glUseProgram(shaderprogram);
+		
+		int radiusUniform = gl.glGetUniformLocation(shaderprogram, "radius");
+		int posUniform = gl.glGetUniformLocation(shaderprogram, "pos");
+		gl.glUniform1f(radiusUniform, 100.0f);
+		gl.glUniform2f(posUniform, 100, 100);
+		//gl.glUniform
+		
+	}
+	
+	private void drawParticles() {
+		SafeList<Particle> particles = game.particleSystem.particles;
 		
 		gl.glPointSize((float)(1*scaleFactor));
 		gl.glBegin(GL.GL_POINTS);
@@ -44,21 +123,22 @@ public class OpenGLRenderer implements GLEventListener {
 		if(particles.size()>0)
 		System.out.println(particles.size());
 		
-		for(Particle p : particles) {
+		for(FxEntity fe : particles) {
+			Particle p = (Particle)fe;
 			gl.glColor4d(0.2, Math.random()*0.2, 0.01, 0.5);
-			particle(gl, p.pos);
+			particle(p.pos);
 		}
 		
 		gl.glEnd();
 	}
 	
-	private void drawEntities(GL2 gl) {
+	private void drawEntities() {
 		for(Entity e : game.entities) {
         	if(e instanceof Tower) {
         		Tower tower = (Tower)e;
         		gl.glColor3d(0,0,1);
-        		rhombus(gl, tower.pos);
-        		line(gl, tower.pos, tower.pos.add(tower.aim.scalar(1.4)), 1);
+        		rhombus(tower.pos);
+        		line(tower.pos, tower.pos.add(tower.aim.scalar(1.4)), 1);
         	}
         	else if(e instanceof Projectile) {
         		Projectile proj = (Projectile)e;
@@ -68,7 +148,7 @@ public class OpenGLRenderer implements GLEventListener {
         			length = proj.pos.distance(proj.origin);
         		else length = proj.length;
         		gl.glColor3d(0.5,0.5,1);
-        		line(gl, proj.pos, proj.pos.subtract(proj.direction.scalar(length)), 2);
+        		line(proj.pos, proj.pos.subtract(proj.direction.scalar(length)), 2);
         	}
         	/*else if(e instanceof Particle) {
         		Particle part = (Particle)e;
@@ -80,13 +160,13 @@ public class OpenGLRenderer implements GLEventListener {
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
         		gl.glColor3d(0,1,0);
-        		circle(gl, u.pos, u.getRadius());
+        		circle(u.pos, u.getRadius());
         	}
 
         }
 	}
 
-	private void drawField(GL2 gl) {
+	private void drawField() {
 		gl.glBegin(GL2.GL_QUADS);
 		
 		for(int x=0; x < game.field.tilesX; x++) {
@@ -96,7 +176,7 @@ public class OpenGLRenderer implements GLEventListener {
 				
 				switch(game.field.tiles[x][y].getType()) {
 				case 1:
-					tile(gl, new Vector2D(x+0.5,y+0.5));
+					tile(new Vector2D(x+0.5,y+0.5));
 					break;
 				}
 			}
@@ -105,7 +185,7 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glEnd();
 	}
 	
-	private void drawHUD(GL2 gl) {
+	private void drawHUD() {
 		//Cursor
 		Point cursor = game.input.viewCursorPos;
 		gl.glLineWidth(2);
@@ -118,7 +198,7 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glEnd();
 	}
 	
-	private void circle(GL2 gl, Vector2D pos, double radius) {
+	private void circle(Vector2D pos, double radius) {
 		double angle;
 		gl.glBegin(GL2.GL_POLYGON);
 	    for(int i = 100; i > 1; i--) {
@@ -129,11 +209,11 @@ public class OpenGLRenderer implements GLEventListener {
 	    gl.glEnd();
 	}
 	
-	private void particle(GL2 gl, Vector2D pos) {
+	private void particle(Vector2D pos) {
 		gl.glVertex2d(scaleFactor * (offset.x + pos.x), scaleFactor * (pos.y + offset.y));
 	}
 	
-	private void line(GL2 gl, Vector2D a, Vector2D b, float width) {
+	private void line(Vector2D a, Vector2D b, float width) {
 		gl.glLineWidth(width);
 		gl.glBegin(GL2.GL_LINES);
 		gl.glVertex2d((a.x()+offset.x)*scaleFactor, (a.y()+offset.y)*scaleFactor);
@@ -142,7 +222,7 @@ public class OpenGLRenderer implements GLEventListener {
 		
 	}
 	
-	private void rhombus(GL2 gl, Vector2D pos) {
+	private void rhombus(Vector2D pos) {
 		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex2d((pos.x-0.5+offset.x)*scaleFactor, (pos.y+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
@@ -151,26 +231,14 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glEnd();
 	}
 	
-	private void tile(GL2 gl, Vector2D pos) {
+	private void tile(Vector2D pos) {
 		gl.glVertex2d((pos.x-0.5+offset.x)*scaleFactor, (pos.y+0.5+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x+0.5+offset.x)*scaleFactor, (pos.y+0.5+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x+0.5+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x-0.5+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
 	}
 
-	@Override
-	public void display(GLAutoDrawable drawable) {
-		//Draw
-		scaleFactor = tileSize * game.view.zoom;
-		offset = game.view.offset;
-		GL2 gl = drawable.getGL().getGL2();
-		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
-		
-		drawField(gl);
-		drawEntities(gl);
-		drawParticles(gl);
-		drawHUD(gl);
-	}
+
 	
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
@@ -188,6 +256,8 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		gl.glEnable (GL2.GL_BLEND);
 		gl.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE);
+		
+		setupShaders(gl);
 	}
 
 	@Override
