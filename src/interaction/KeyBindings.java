@@ -7,10 +7,10 @@ public class KeyBindings {
 	public static int MOVE_RIGHT = KeyEvent.VK_A;
 	public static int MOVE_UP = KeyEvent.VK_W;
 	public static int MOVE_DOWN = KeyEvent.VK_S;
-	public static int SCROLL_RIGHT = KeyEvent.VK_RIGHT;
-	public static int SCROLL_LEFT = KeyEvent.VK_LEFT;
-	public static int SCROLL_UP = KeyEvent.VK_UP;
-	public static int SCROLL_DOWN = KeyEvent.VK_DOWN;
+	public static int SCROLL_RIGHT = KeyEvent.VK_D;
+	public static int SCROLL_LEFT = KeyEvent.VK_A;
+	public static int SCROLL_UP = KeyEvent.VK_W;
+	public static int SCROLL_DOWN = KeyEvent.VK_S;
 	public static final char ZOOM_IN = '+';
 	public static final char ZOOM_OUT = '-';
 }
