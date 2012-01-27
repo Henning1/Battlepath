@@ -128,21 +128,26 @@ public class OpenGLRenderer implements GLEventListener {
 		SafeList<FxEntity> fxs = game.particleSystem.fxEntities;
 		
 		float swPositions[] = new float[20];
-		float radiuses[] = new float[10];
+		float swRadiuses[] = new float[10];
 		int shockwaves = 0;
 		
 		for(FxEntity e : fxs) {
 			if(e instanceof Shockwave) {
 				Shockwave sw = (Shockwave)e;
-				swPositions[shockwaves*2] = (float) sw.pos.x;
-				swPositions[shockwaves*2+1] = (float) sw.pos.y;
-				radiuses[shockwaves] = (float) sw.radius;
+				
+				Point screenPos = game.view.worldToView(sw.pos);
+				
+				
+				swPositions[shockwaves*2] = (float) screenPos.x;
+				swPositions[shockwaves*2+1] = (float) screenPos.y;
+				swRadiuses[shockwaves] = (float) (sw.radius*scaleFactor);
 				shockwaves++;
 			}
 		}
 		
-		//gl.glUniform1i(arg0, arg1)
-		//gl.glUniform2f(posUniform, 100, 100);
+		gl.glUniform1i(numberUniform, shockwaves);
+		gl.glUniform2fv(posUniform, swPositions.length, swPositions, 0);
+		gl.glUniform1fv(radiusUniform, swRadiuses.length, swRadiuses, 0);
 		
 	}
 	
@@ -164,13 +169,6 @@ public class OpenGLRenderer implements GLEventListener {
         		gl.glColor3d(0.5,0.5,1);
         		line(proj.pos, proj.pos.subtract(proj.direction.scalar(length)), 2);
         	}
-        	/*else if(e instanceof Particle) {
-        		Particle part = (Particle)e;
-        		//double c = part.life/part.lifetime;
-    			gl.glColor4d(0.2, Math.random() * 0.2, 0.01, 0.5);
-    			point(gl, part.pos, 1);
-    			
-        	}*/
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
         		

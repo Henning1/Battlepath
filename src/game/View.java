@@ -37,6 +37,14 @@ public class View {
 		return v.subtract(offset);
 	}
 	
+	public Point worldToView(Vector2D worldPos) {
+		Vector2D viewpos = worldPos.add(offset).scalar(tileSize*zoom);
+		
+		
+		
+		return new Point((int)viewpos.x,windowSize.height-(int)viewpos.y);
+	}
+	
 	private void setOffset(Vector2D pOffset) {
 		double maxOffsX = -game.field.tilesX+(viewSize().x);
 		double maxOffsY = -game.field.tilesY+(viewSize().y);

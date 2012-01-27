@@ -100,6 +100,10 @@ public class Game {
 	public void processInput(double dt) {
 		//Mouse
 		
+		if(input.mouseButtonPressed[0]) {
+			System.out.println(view.worldToView(input.getCursorPos()));
+		}
+		
 		if(input.mouseButtonPressed[0] && mode == GameMode.STRATEGY && !lastMouseState[0]) {
 			boolean found = false;
 			for(Entity e : entities) {
