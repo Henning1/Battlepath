@@ -9,10 +9,11 @@ public class Shockwave extends FxEntity {
 	
 	public Shockwave(EffectsSystem fxSystem, double lifetime, Vector2D pos, double speed) {
 		super(fxSystem, lifetime, pos);
+		this.speed = speed;
 	}
 	
 	public void process(double dt) {
 		super.process(dt);
-		radius += speed;
+		radius += speed*dt;
 	}
 }

@@ -104,7 +104,7 @@ public class Game {
 		//Mouse
 		
 		if(input.mouseButtonPressed[0]) {
-			System.out.println(view.worldToView(input.getCursorPos()));
+			System.out.println(view.worldToViewShader(input.getCursorPos()));
 		}
 		
 		if(input.mouseButtonPressed[0] && mode == GameMode.STRATEGY && !lastMouseState[0]) {

@@ -19,7 +19,7 @@ public class EffectsSystem {
 	
 	public void explosion(Vector2D pos) {
 		particleSpray(pos, 600, 1);
-		fxEntities.add(new Shockwave(this,2,pos,5));
+		fxEntities.add(new Shockwave(this,1,pos,10));
 	}
 	
 	public void process(double dt) {

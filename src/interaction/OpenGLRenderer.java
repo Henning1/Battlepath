@@ -18,6 +18,9 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
@@ -68,6 +71,14 @@ public class OpenGLRenderer implements GLEventListener {
 		drawParticles();
 		gl.glDisable(GL2.GL_BLEND);
 		drawEffects();
+		
+		
+		/*
+		gl.glGenFramebuffersEXT
+		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, myFBO);
+		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, myTexture, 0);
+		*/
+		
 		drawHUD();
 	}
 	
@@ -97,6 +108,12 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		gl.glShaderSource(f, 1, fsrc, len, 0);
 		gl.glCompileShader(f);
+		
+		checkLogInfo(gl, f);
+		
+		
+		
+		
 
 		int shaderprogram = gl.glCreateProgram();
 		gl.glAttachShader(shaderprogram, f);
@@ -105,10 +122,32 @@ public class OpenGLRenderer implements GLEventListener {
 
 		gl.glUseProgram(shaderprogram);
 		
-		int radiusUniform = gl.glGetUniformLocation(shaderprogram, "radius");
-		int posUniform = gl.glGetUniformLocation(shaderprogram, "pos");
-		int numberUniform = gl.glGetUniformLocation(shaderprogram, "number");		
+		radiusUniform = gl.glGetUniformLocation(shaderprogram, "radius");
+		posUniform = gl.glGetUniformLocation(shaderprogram, "pos");
+		numberUniform = gl.glGetUniformLocation(shaderprogram, "number");		
 	}
+	
+	private void checkLogInfo(GL2 gl, int programObject) {
+        IntBuffer intValue = IntBuffer.allocate(1);
+        gl.glGetObjectParameterivARB(programObject, GL2.GL_OBJECT_INFO_LOG_LENGTH_ARB, intValue);
+        
+        int lengthWithNull = intValue.get();
+
+        if (lengthWithNull <= 1) {
+            return;
+        }
+
+        ByteBuffer infoLog = ByteBuffer.allocate(lengthWithNull);
+
+        intValue.flip();
+        gl.glGetInfoLogARB(programObject, lengthWithNull, intValue, infoLog);
+
+        int actualLength = intValue.get();
+
+        byte[] infoBytes = new byte[actualLength];
+        infoLog.get(infoBytes);
+        System.out.println("GLSL Validation >> " + new String(infoBytes));
+    }
 	
 	private void drawParticles() {
 		SafeList<Particle> particles = game.particleSystem.particles;
@@ -139,20 +178,21 @@ public class OpenGLRenderer implements GLEventListener {
 			if(e instanceof Shockwave) {
 				Shockwave sw = (Shockwave)e;
 				
-				Point screenPos = game.view.worldToView(sw.pos);
-				
-				
-				swPositions[shockwaves*2] = (float) screenPos.x;
-				swPositions[shockwaves*2+1] = (float) screenPos.y;
+				Point screenPos = game.view.worldToViewShader(sw.pos);
+
+				swPositions[shockwaves*2] = screenPos.x;
+				swPositions[shockwaves*2+1] = screenPos.y;
+
 				swRadiuses[shockwaves] = (float) (sw.radius*scaleFactor);
 				shockwaves++;
+				
+				System.out.println("SW: " + screenPos + ", " + sw.radius*scaleFactor);
 			}
-		}
+		}	
 		
 		gl.glUniform1i(numberUniform, shockwaves);
-		gl.glUniform2fv(posUniform, swPositions.length, swPositions, 0);
 		gl.glUniform1fv(radiusUniform, swRadiuses.length, swRadiuses, 0);
-		
+		gl.glUniform2fv(posUniform, swPositions.length, swPositions, 0);
 	}
 	
 	private void drawEntities() {

@@ -37,12 +37,10 @@ public class View {
 		return v.subtract(offset);
 	}
 	
-	public Point worldToView(Vector2D worldPos) {
+	public Point worldToViewShader(Vector2D worldPos) {
 		Vector2D viewpos = worldPos.add(offset).scalar(tileSize*zoom);
 		
-		
-		
-		return new Point((int)viewpos.x,windowSize.height-(int)viewpos.y);
+		return new Point((int)viewpos.x,(int)viewpos.y);
 	}
 	
 	private void setOffset(Vector2D pOffset) {
