@@ -25,7 +25,7 @@ public class Projectile extends CollisionEntity {
 		velocity = direction.scalar(speed);
 		move = new Move(this,dt);
 		move.move();
-		game.particleSystem.explosion(pos, 5, 0.1);
+		game.particleSystem.particleSpray(pos, 5, 0.1);
 	}
 
 	@Override
@@ -39,10 +39,10 @@ public class Projectile extends CollisionEntity {
 		if(c instanceof HealthEntity) {
 			HealthEntity h = (HealthEntity)c;
 			h.damage(power);
-			game.particleSystem.explosion(pos, 500, 1);
+			game.particleSystem.particleSpray(pos, 500, 1);
 		}
 		else {
-			game.particleSystem.explosion(pos, 100, 1);
+			game.particleSystem.particleSpray(pos, 100, 1);
 		}
 	}
 	

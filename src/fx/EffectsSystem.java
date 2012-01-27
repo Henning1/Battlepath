@@ -11,9 +11,15 @@ public class EffectsSystem {
 	public EffectsSystem() {
 	}
 	
-	public void explosion(Vector2D pos, int n, double lifetime) {
+	public void particleSpray(Vector2D pos, int n, double lifetime) {
 		for (int j = 0;j<n;j++)
 			particles.add(new Particle(pos, Vector2D.fromAngle(j*1.8, 1), (lifetime-0.2)*Math.random()+0.2, Math.random()*10, -10, this));
+	}
+	
+	
+	public void explosion(Vector2D pos) {
+		particleSpray(pos, 600, 1);
+		fxEntities.add(new Shockwave(this,2,pos,5));
 	}
 	
 	public void process(double dt) {

@@ -7,6 +7,7 @@ import entities.Tower;
 import entities.Unit;
 import fx.FxEntity;
 import fx.Particle;
+import fx.Shockwave;
 import game.Game;
 
 import java.awt.Color;
@@ -36,6 +37,12 @@ public class OpenGLRenderer implements GLEventListener {
 	private double scaleFactor;
 	private Vector2D offset;
 
+	
+	//shockwave shader
+	int radiusUniform;
+	int posUniform;
+	int numberUniform;		
+	
 	//only valid while display is running
 	private GL2 gl;
 	
@@ -56,23 +63,12 @@ public class OpenGLRenderer implements GLEventListener {
 		drawField();
 		drawEntities();
 		drawParticles();
+		drawEffects();
 		drawHUD();
 	}
 	
 	private void setupShaders(GL2 gl) {
-		//int v = gl.glCreateShader(GL2.GL_VERTEX_SHADER);
 		int f = gl.glCreateShader(GL2.GL_FRAGMENT_SHADER);
-
-		/*
-		BufferedReader brv = new BufferedReader(new FileReader("vertexshader.glsl"));
-		String vsrc = "";
-		String line;
-		while ((line=brv.readLine()) != null) {
-		  vsrc += line + "\n";
-		}
-		gl.glShaderSource(v, 1, vsrc, null);
-		gl.glCompileShader(v);
-		*/
 		
 		BufferedReader brf = null;
 		try {
@@ -99,7 +95,6 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glCompileShader(f);
 
 		int shaderprogram = gl.glCreateProgram();
-		//gl.glAttachShader(shaderprogram, v);
 		gl.glAttachShader(shaderprogram, f);
 		gl.glLinkProgram(shaderprogram);
 		gl.glValidateProgram(shaderprogram);
@@ -108,10 +103,7 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		int radiusUniform = gl.glGetUniformLocation(shaderprogram, "radius");
 		int posUniform = gl.glGetUniformLocation(shaderprogram, "pos");
-		gl.glUniform1f(radiusUniform, 100.0f);
-		gl.glUniform2f(posUniform, 100, 100);
-		//gl.glUniform
-		
+		int numberUniform = gl.glGetUniformLocation(shaderprogram, "number");		
 	}
 	
 	private void drawParticles() {
@@ -130,6 +122,28 @@ public class OpenGLRenderer implements GLEventListener {
 		}
 		
 		gl.glEnd();
+	}
+	
+	private void drawEffects() {
+		SafeList<FxEntity> fxs = game.particleSystem.fxEntities;
+		
+		float swPositions[] = new float[20];
+		float radiuses[] = new float[10];
+		int shockwaves = 0;
+		
+		for(FxEntity e : fxs) {
+			if(e instanceof Shockwave) {
+				Shockwave sw = (Shockwave)e;
+				swPositions[shockwaves*2] = (float) sw.pos.x;
+				swPositions[shockwaves*2+1] = (float) sw.pos.y;
+				radiuses[shockwaves] = (float) sw.radius;
+				shockwaves++;
+			}
+		}
+		
+		//gl.glUniform1i(arg0, arg1)
+		//gl.glUniform2f(posUniform, 100, 100);
+		
 	}
 	
 	private void drawEntities() {

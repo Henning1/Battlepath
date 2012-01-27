@@ -13,8 +13,6 @@ public class Shockwave extends FxEntity {
 	
 	public void process(double dt) {
 		super.process(dt);
-		
-		
+		radius += speed;
 	}
-
 }
