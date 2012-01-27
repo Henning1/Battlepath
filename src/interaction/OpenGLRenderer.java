@@ -201,7 +201,7 @@ public class OpenGLRenderer implements GLEventListener {
         		Tower tower = (Tower)e;
         		gl.glColor3d(0,0,1);
         		rhombus(tower.pos, 1);
-        		line(tower.pos, tower.pos.add(tower.aim.scalar(1.4)), 1);
+        		line(tower.pos, tower.pos.add(tower.aim.scalar(1.4)), 0.05f);
         	}
         	else if(e instanceof Projectile) {
         		Projectile proj = (Projectile)e;
@@ -211,7 +211,7 @@ public class OpenGLRenderer implements GLEventListener {
         			length = proj.pos.distance(proj.origin);
         		else length = proj.length;
         		gl.glColor3d(0.5,0.5,1);
-        		line(proj.pos, proj.pos.subtract(proj.direction.scalar(length)), 2);
+        		line(proj.pos, proj.pos.subtract(proj.direction.scalar(length)), 0.1f);
         	}
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
@@ -222,10 +222,16 @@ public class OpenGLRenderer implements GLEventListener {
         		}
         		else if(u == game.selectedUnit && game.mode == GameMode.STRATEGY) {
         			gl.glColor3d(1, 0, 0);
-        			line(u.pos, u.pos.add(new Vector2D(u.getRadius(), u.getRadius())), 1);
-        			line(u.pos, u.pos.add(new Vector2D(-u.getRadius(), u.getRadius())), 1);
-        			line(u.pos, u.pos.add(new Vector2D(u.getRadius(), -u.getRadius())), 1);
-        			line(u.pos, u.pos.add(new Vector2D(-u.getRadius(), -u.getRadius())), 1);
+        			line(u.pos, u.pos.add(new Vector2D(u.getRadius(), u.getRadius())), 0.1f);
+        			line(u.pos, u.pos.add(new Vector2D(-u.getRadius(), u.getRadius())), 0.1f);
+        			line(u.pos, u.pos.add(new Vector2D(u.getRadius(), -u.getRadius())), 0.1f);
+        			line(u.pos, u.pos.add(new Vector2D(-u.getRadius(), -u.getRadius())), 0.1f);
+        		}
+        		if(u.path != null && u.path.size() > 3) {
+        			gl.glEnable(GL2.GL_BLEND);
+        			gl.glColor3d(0,.2,0);
+        			line(u.pos, u.path.get(u.path.size()-1), 10f);
+        			gl.glDisable(GL2.GL_BLEND);
         		}
         			
         		gl.glColor3d(0,1,0);
@@ -283,12 +289,11 @@ public class OpenGLRenderer implements GLEventListener {
 	}
 	
 	private void line(Vector2D a, Vector2D b, float width) {
-		gl.glLineWidth(width);
+		gl.glLineWidth(width*(float)scaleFactor);
 		gl.glBegin(GL2.GL_LINES);
 		gl.glVertex2d((a.x()+offset.x)*scaleFactor, (a.y()+offset.y)*scaleFactor);
 		gl.glVertex2d((b.x()+offset.x)*scaleFactor, ((b.y()+offset.y)*scaleFactor));
 		gl.glEnd();
-		
 	}
 	
 	private void rhombus(Vector2D pos, double edgeLength) {
