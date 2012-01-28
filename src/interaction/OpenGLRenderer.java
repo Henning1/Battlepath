@@ -1,6 +1,7 @@
 package interaction;
 
 import engine.MainLoop;
+import engine.Tile;
 import entities.Entity;
 import entities.Projectile;
 import entities.Tower;
@@ -72,6 +73,17 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glDisable(GL2.GL_BLEND);
 		drawEffects();
 		
+		Line2D line = new Line2D(new Vector2D(11.4,7), new Vector2D(76,1));
+		ArrayList<Tile> tilesOnLine = game.collisionSystem.getTilesOn(line);
+		System.out.println(tilesOnLine.size());
+		
+		gl.glEnable(GL2.GL_BLEND);
+		gl.glColor4d(0.0,0.3,0.3, 0.5);
+		for(Tile t : tilesOnLine) {
+			square(t.center,1);
+		}
+		line(line.a,line.b,1);
+		gl.glDisable(GL2.GL_BLEND);
 		
 		/*
 		gl.glGenFramebuffersEXT

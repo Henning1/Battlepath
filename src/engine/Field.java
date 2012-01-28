@@ -3,6 +3,7 @@ package engine;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import util.Util;
 import util.Vector2D;
 
 /*
@@ -24,8 +25,7 @@ public class Field {
 		
 		for(int x=0;x<tilesX;x++) {
 			for(int y=0;y<tilesY;y++) {
-				tiles[x][y] = new Tile(
-						new Vector2D(x,y), new Vector2D(x+1,y+1),0);
+				tiles[x][y] = new Tile(new Point(x,y),0);
 			}
 		}
 	}
@@ -39,6 +39,8 @@ public class Field {
 			}
 		}
 	}
+	
+
 	
 	//Returns the position of the center of a Tile
 	public Vector2D getWorldPos(Point pos) {
@@ -56,6 +58,23 @@ public class Field {
 		return new Point(
 				(int)(pos.x()),
 				(int)(pos.y()));
+	}
+	
+	public Tile tileAt(Vector2D pos) {
+		Point p = tileIndexAt(pos);
+		return tiles[p.x][p.y];
+	}
+	
+	public Tile tileAt(Point index) {
+		if(Util.isValueInBounds(0, index.x, tilesX) &&
+			Util.isValueInBounds(0, index.y, tilesY)) {
+			return tiles[index.x][index.y];
+		}
+		else return null;	
+	}
+	
+	public Tile tileAt(int x,int y) {
+		return tileAt(new Point(x,y));
 	}
 	
 	public int tileValueAt(Vector2D pos) {

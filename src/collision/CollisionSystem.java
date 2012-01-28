@@ -5,18 +5,18 @@ import java.util.ArrayList;
 
 
 import engine.Field;
+import engine.Tile;
 import entities.Entity;
 import game.Game;
 
 import util.Line2D;
+import util.Util;
 import util.Vector2D;
 
 public class CollisionSystem {
 	
 	Field field;
 	Game game;
-	
-	
 	
 	public CollisionSystem(Field field, Game game) {
 		this.field = field;
@@ -57,6 +57,46 @@ public class CollisionSystem {
 		
 		return collModel;
 	}
+	
+	public ArrayList<Tile> getTilesOn(Line2D l) {
+		
+		ArrayList<Tile> result = new ArrayList<Tile>();
+		
+		//normalize line from left to right
+		Line2D line = l;
+		if(l.a.x > l.b.x) {
+			line = new Line2D(l.b,l.a);
+		}
+		
+		Tile current = field.tileAt(line.a);
+		Tile destination = field.tileAt(line.b);
+		
+		while(current != destination && current != null) {
+			result.add(current);
+			//line penetrates right edge
+			double y = line.yAt(current.bottomright.x);
+			if(Util.isValueInBounds(current.topleft.y, y, current.bottomright.y)) {
+				current = field.tileAt(current.index.x+1,current.index.y);
+			} else {
+				//line penetrates top edge
+				if(line.a.y > line.b.y) {
+					current = field.tileAt(current.index.x,current.index.y-1);
+				} 
+				//line penetrates bottom edge
+				else {
+					current = field.tileAt(current.index.x,current.index.y+1);
+				}
+			}
+			
+			
+		}
+		
+		
+		
+		return result;
+		
+	}
+	
 	
 	private void movePointIntoIndexBounds(Point p) {
 		if(p.x >= field.tilesX) p.x = field.tilesX-1;

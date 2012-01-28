@@ -41,4 +41,16 @@ public class Util {
 		else if (value > max) return max;
 		else return value;
 	}
+	
+	public static boolean isValueInBounds(double min, double value, double max) {
+		if(value < min) return false;
+		if(value > max) return false;
+		return true;
+	}
+	
+	public static boolean isValueInBounds(int min, int value, int max) {
+		if(value < min) return false;
+		if(value > max) return false;
+		return true;
+	}
 }
