@@ -75,7 +75,7 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		Line2D line = new Line2D(new Vector2D(11.4,7), new Vector2D(76,99));
 		ArrayList<Tile> tilesOnLine = game.collisionSystem.getTilesOn(line);
-		System.out.println(tilesOnLine.size());
+		//System.out.println(tilesOnLine.size());
 		
 		gl.glEnable(GL2.GL_BLEND);
 		gl.glColor4d(0.0,0.3,0.3, 0.5);
@@ -223,11 +223,11 @@ public class OpenGLRenderer implements GLEventListener {
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
         		
-        		if(u == game.selectedUnit && game.mode == GameMode.ACTION) {
+        		if(u.isSelected && game.mode == GameMode.ACTION) {
         			gl.glColor3d(1,0,0);
         			circle(u.pos, u.getRadius()+0.2);
         		}
-        		else if(u == game.selectedUnit && game.mode == GameMode.STRATEGY) {
+        		else if(u.isSelected && game.mode == GameMode.STRATEGY) {
         			gl.glColor3d(1, 0, 0);
         			line(u.pos, u.pos.add(new Vector2D(u.getRadius(), u.getRadius())), 0.1f);
         			line(u.pos, u.pos.add(new Vector2D(-u.getRadius(), u.getRadius())), 0.1f);

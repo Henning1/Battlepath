@@ -1,7 +1,6 @@
 package util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Iterator;
 
 public class SafeList<T> implements Iterable<T> {

@@ -28,4 +28,8 @@ public class Rectangle2D {
 		return Util.isValueInBounds(topleft.x, p.x, bottomright.x) &&
 				Util.isValueInBounds(bottomright.y, p.y, topleft.y);
 	}
+	
+	public String toString() {
+		return "top: "+top()+" right: "+right()+"bottom: "+bottom()+" left:" +left();
+	}
 }
