@@ -83,7 +83,6 @@ public class OpenGLRenderer implements GLEventListener {
 			square(t.center,1);
 		}
 		line(line.a,line.b,1);
-		gl.glDisable(GL2.GL_BLEND);
 		
 		/*
 		gl.glGenFramebuffersEXT
