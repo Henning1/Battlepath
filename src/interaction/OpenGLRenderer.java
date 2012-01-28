@@ -32,6 +32,7 @@ import com.jogamp.opengl.util.texture.Texture;
 
 
 import util.Line2D;
+import util.Rectangle2D;
 import util.SafeList;
 import util.Vector2D;
 
@@ -70,7 +71,6 @@ public class OpenGLRenderer implements GLEventListener {
 		drawEntities();
 		gl.glEnable(GL2.GL_BLEND);
 		drawParticles();
-		gl.glDisable(GL2.GL_BLEND);
 		drawEffects();
 		
 		Line2D line = new Line2D(new Vector2D(11.4,7), new Vector2D(76,1));
@@ -92,6 +92,7 @@ public class OpenGLRenderer implements GLEventListener {
 		*/
 		
 		drawHUD();
+		gl.glDisable(GL2.GL_BLEND);
 	}
 	
 	private void setupShaders(GL2 gl) {
@@ -283,6 +284,13 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glVertex2d(cursor.x-10, game.view.windowSize.height-cursor.y);
 		gl.glVertex2d(cursor.x+10, game.view.windowSize.height-cursor.y);
 		gl.glEnd();
+		
+		//Selection Rectangle
+		if(game.selectionRect != null) {
+			Rectangle2D sel = game.selectionRect;
+			gl.glColor3d(0.2,0.2,0.3);
+			rectangle(sel.topleft, sel.bottomright);
+		}
 	}
 	
 	private void circle(Vector2D pos, double radius) {
@@ -325,6 +333,15 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glVertex2d((pos.x+edgeLength+offset.x)*scaleFactor, (pos.y+edgeLength+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x+edgeLength+offset.x)*scaleFactor, (pos.y-edgeLength+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x-edgeLength+offset.x)*scaleFactor, (pos.y-edgeLength+offset.y)*scaleFactor);
+		gl.glEnd();
+	}
+	
+	private void rectangle(Vector2D topleft, Vector2D bottomright) {
+		gl.glBegin(GL2.GL_QUADS);
+		gl.glVertex2d((topleft.x+offset.x)*scaleFactor, (topleft.y+offset.y)*scaleFactor);
+		gl.glVertex2d((topleft.x+offset.x)*scaleFactor, (bottomright.y+offset.y)*scaleFactor);
+		gl.glVertex2d((bottomright.x+offset.x)*scaleFactor, (bottomright.y+offset.y)*scaleFactor);
+		gl.glVertex2d((bottomright.x+offset.x)*scaleFactor, (topleft.y+offset.y)*scaleFactor);
 		gl.glEnd();
 	}
 	

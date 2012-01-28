@@ -11,6 +11,7 @@ import main.Battlepath;
 import collision.CollisionSystem;
 import collision.MovementSystem;
 
+import util.Rectangle2D;
 import util.SafeList;
 import util.Vector2D;
 
@@ -34,6 +35,7 @@ public class Game {
 	//private Unit u;
 	public SafeList<Entity> entities = new SafeList<Entity>();
 	public Unit selectedUnit;
+	public Rectangle2D selectionRect;
 	
 	public View view;
 	public GameMode mode;
@@ -66,13 +68,15 @@ public class Game {
 	}
 	
 	public void setMode(GameMode gm) {
-		mode = gm;
-		switch(mode) {
+		switch(gm) {
 		case ACTION:
-			if(selectedUnit != null)
+			if(selectedUnit != null) {
+				mode = gm;
 				view.follow(selectedUnit);
+			}
 			break;
 		case STRATEGY:
+			mode = gm;
 			view.unfollow();
 			if(selectedUnit != null){
 				selectedUnit.velocity = new Vector2D(0,0);
@@ -101,32 +105,40 @@ public class Game {
 	}
 	
 	public void processInput(double dt) {
-		//Mouse
-		
-		if(input.mouseButtonPressed[0]) {
-			System.out.println(view.worldToViewShader(input.getCursorPos()));
-		}
-		
-		if(input.mouseButtonPressed[0] && mode == GameMode.STRATEGY && !lastMouseState[0]) {
-			boolean found = false;
-			for(Entity e : entities) {
-				if(e instanceof Unit && input.getCursorPos().distance(e.pos) < e.getRadius()) {
-					selectedUnit = (Unit)e;
-					found = true;
-					System.out.println("selected");
+		//Mouse		
+		if(mode == GameMode.STRATEGY) {
+			if(input.mouseButtonPressed[0]  && !lastMouseState[0]) {
+				boolean found = false;
+				for(Entity e : entities) {
+					if(e instanceof Unit && input.getCursorPos().distance(e.pos) < e.getRadius()) {
+						selectedUnit = (Unit)e;
+						found = true;
+					}
 				}
+				if(!found)
+					selectedUnit = null;
+				
+				selectionRect = new Rectangle2D(input.getCursorPos(), input.getCursorPos());
 			}
-			if(!found)
-				selectedUnit = null;
+			
+			if(!input.mouseButtonPressed[0]) {
+				selectionRect = null;
+			}
+			
+			if(input.mouseButtonPressed[0]  && lastMouseState[0]) {
+				selectionRect.bottomright = input.getCursorPos();
+			}
+			
+			if(input.mouseButtonPressed[2] && !lastMouseState[0] && selectedUnit != null) {
+				selectedUnit.moveTo(input.getCursorPos());
+			}
 		}
 		
-		if(input.mouseButtonPressed[2] && mode == GameMode.STRATEGY && !lastMouseState[0] && selectedUnit != null) {
-			selectedUnit.moveTo(input.getCursorPos());
-		}
-		
-		if((input.mouseButtonPressed[0] && mode == GameMode.ACTION && selectedUnit != null && GlobalInfo.time - lastShot > 0.3)) {
-			selectedUnit.shoot(input.getCursorPos().subtract(selectedUnit.pos).normalize());
-			lastShot = GlobalInfo.time;
+		if(mode == GameMode.ACTION) {
+			if((input.mouseButtonPressed[0] && selectedUnit != null && GlobalInfo.time - lastShot > 0.3)) {
+				selectedUnit.shoot(input.getCursorPos().subtract(selectedUnit.pos).normalize());
+				lastShot = GlobalInfo.time;
+			}
 		}
 		
 		System.arraycopy(input.mouseButtonPressed, 0, lastMouseState, 0, input.mouseButtonPressed.length);
