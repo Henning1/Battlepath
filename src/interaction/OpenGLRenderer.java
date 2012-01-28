@@ -73,7 +73,7 @@ public class OpenGLRenderer implements GLEventListener {
 		drawParticles();
 		drawEffects();
 		
-		Line2D line = new Line2D(new Vector2D(11.4,7), new Vector2D(76,1));
+		Line2D line = new Line2D(new Vector2D(11.4,7), new Vector2D(76,99));
 		ArrayList<Tile> tilesOnLine = game.collisionSystem.getTilesOn(line);
 		System.out.println(tilesOnLine.size());
 		
@@ -84,12 +84,7 @@ public class OpenGLRenderer implements GLEventListener {
 		}
 		line(line.a,line.b,1);
 		
-		/*
-		gl.glGenFramebuffersEXT
-		glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, myFBO);
-		glFramebufferTexture2DEXT(GL_FRAMEBUFFER_EXT, GL_COLOR_ATTACHMENT0_EXT, GL_TEXTURE_2D, myTexture, 0);
-		*/
-		
+
 		drawHUD();
 		gl.glDisable(GL2.GL_BLEND);
 	}

@@ -36,6 +36,7 @@ public class Util {
 		return -1;
 	}
 	
+	
 	public static double valueInBounds(double min, double value, double max) {
 		if(value < min) return min;
 		else if (value > max) return max;
@@ -47,6 +48,7 @@ public class Util {
 		if(value > max) return false;
 		return true;
 	}
+	
 	
 	public static boolean isValueInBounds(int min, int value, int max) {
 		if(value < min) return false;
