@@ -87,7 +87,7 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		BufferedReader brf = null;
 		try {
-			brf = new BufferedReader(new FileReader("fragmentshader.glsl"));
+			brf = new BufferedReader(new FileReader("src/shader/shockwave.glsl"));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 			return;
@@ -355,7 +355,5 @@ public class OpenGLRenderer implements GLEventListener {
 		game.view.windowSize = new Dimension(width, height);
 	}
 
-    private void loadGLTextures(GL gl) {	
-    }
 
 }
