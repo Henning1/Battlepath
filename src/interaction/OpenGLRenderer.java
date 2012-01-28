@@ -43,6 +43,7 @@ public class OpenGLRenderer implements GLEventListener {
 	private double scaleFactor;
 	private Vector2D offset;
 
+
 	
 	//shockwave shader
 	int radiusUniform;
@@ -72,13 +73,17 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glEnable(GL2.GL_BLEND);
 		drawParticles();
 		drawEffects();
+
 		
-		Line2D line = new Line2D(new Vector2D(11.4,7), new Vector2D(76,99));
+		Line2D line = new Line2D(new Vector2D(50.5,50.5), game.input.getCursorPos());
 		ArrayList<Tile> tilesOnLine = game.collisionSystem.getTilesOn(line);
-		System.out.println(tilesOnLine.size());
-		
+
 		gl.glEnable(GL2.GL_BLEND);
-		gl.glColor4d(0.0,0.3,0.3, 0.5);
+		
+		if(game.collisionSystem.collideWithLevel(line))	
+			gl.glColor4d(0.3,0.0,0.0, 0.5);
+		else gl.glColor4d(0.3,0.3,0.0, 0.5);
+		
 		for(Tile t : tilesOnLine) {
 			square(t.center,1);
 		}
@@ -255,6 +260,7 @@ public class OpenGLRenderer implements GLEventListener {
 			for(int y=0; y < game.field.tilesY; y++) {
 				
 				gl.glColor3d((double)x/game.field.tilesX-0.2, (double)x/game.field.tilesX-0.2, (double)y/game.field.tilesY-0.2);
+				gl.glColor3d(0.5,0.5,0.5);
 				
 				switch(game.field.tiles[x][y].getType()) {
 				case 1:

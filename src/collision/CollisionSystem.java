@@ -58,6 +58,24 @@ public class CollisionSystem {
 		return collModel;
 	}
 	
+	public boolean collideWithLevel(Line2D l) {
+		ArrayList<Tile> rTiles = getTilesOn(l);
+		
+		for(Tile t : rTiles) {
+			ArrayList<Line2D> model = t.collisionModel;
+			for(Line2D edge : model) {
+				Vector2D i = l.intersectionPoint(edge);
+				if(l.pointInSegment(i) && edge.pointInSegment(i))
+					return true;
+			}
+		}
+
+		return false;
+	}
+	
+
+	
+	
 	public ArrayList<Tile> getTilesOn(Line2D l) {
 		
 		ArrayList<Tile> result = new ArrayList<Tile>();
@@ -87,8 +105,6 @@ public class CollisionSystem {
 					current = field.tileAt(current.index.x,current.index.y+1);
 				}
 			}
-			
-			
 		}
 		
 		

@@ -66,8 +66,8 @@ public class Field {
 	}
 	
 	public Tile tileAt(Point index) {
-		if(Util.isValueInBounds(0, index.x, tilesX) &&
-			Util.isValueInBounds(0, index.y, tilesY)) {
+		if(Util.isValueInBounds(0, index.x, tilesX-1) &&
+			Util.isValueInBounds(0, index.y, tilesY-1)) {
 			return tiles[index.x][index.y];
 		}
 		else return null;	
