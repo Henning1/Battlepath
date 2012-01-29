@@ -176,7 +176,7 @@ public class OpenGLRenderer implements GLEventListener {
     }
 	
 	private void drawParticles() {
-		SafeList<Particle> particles = game.particleSystem.particles;
+		ArrayList<Particle> particles = game.particleSystem.particles;
 		
 		gl.glPointSize((float)(1*scaleFactor));
 		gl.glBegin(GL.GL_POINTS);
@@ -264,6 +264,10 @@ public class OpenGLRenderer implements GLEventListener {
 
 	private void drawField() {
 		gl.glBegin(GL2.GL_QUADS);
+		
+		int left,top;
+		
+		
 		
 		for(int x=0; x < game.field.tilesX; x++) {
 			for(int y=0; y < game.field.tilesY; y++) {

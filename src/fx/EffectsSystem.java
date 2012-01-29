@@ -1,11 +1,16 @@
 package fx;
 
+import java.util.ArrayList;
+
+import engine.GlobalInfo;
+
+import util.ParticleList;
 import util.SafeList;
 import util.Vector2D;
 
 public class EffectsSystem {
 
-	public SafeList<Particle> particles = new SafeList<Particle>();
+	public ArrayList<Particle> particles = new ArrayList<Particle>();
 	public SafeList<FxEntity> fxEntities = new SafeList<FxEntity>();
 	
 	public EffectsSystem() {
@@ -26,17 +31,23 @@ public class EffectsSystem {
 		for(FxEntity p : fxEntities) {
 			p.process(dt);
 		}
-		for(Particle p : particles) {
-			p.process(dt);
+		for(int i=0; i<particles.size(); i++) {
+			Particle p = particles.get(i);
+			if(GlobalInfo.time > p.deathtime) {
+				particles.remove(i);
+				i--;
+			} else {
+				p.process(dt);
+			}
 		}
-		
-		particles.applyChanges();
+
 		fxEntities.applyChanges();
+		
+		System.out.println(particles.size());
 	}
 	
 	public void removeEntity(FxEntity e) {
-		if(e instanceof Particle)
-			particles.remove((Particle)e);
+		if(e instanceof Particle) return;
 		else fxEntities.remove(e);
 	}
 	

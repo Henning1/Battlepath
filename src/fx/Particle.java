@@ -4,7 +4,7 @@ import engine.GlobalInfo;
 import util.Vector2D;
 
 
-public class Particle extends FxEntity{
+public class Particle extends FxEntity {
 
 	public Vector2D direction;
 	public double acceleration;
@@ -23,4 +23,6 @@ public class Particle extends FxEntity{
 		pos = pos.add(direction.scalar(speed*dt));
 		speed += acceleration*dt;
 	}
+
+
 }

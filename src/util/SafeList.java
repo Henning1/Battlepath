@@ -6,9 +6,9 @@ import java.util.Iterator;
 public class SafeList<T> implements Iterable<T> {
 
 	int index = 0;
-	private ArrayList<T> list = new ArrayList<T>();
-	private ArrayList<T> addList = new ArrayList<T>();
-	private ArrayList<T> deleteList = new ArrayList<T>();
+	protected ArrayList<T> list = new ArrayList<T>();
+	protected ArrayList<T> addList = new ArrayList<T>();
+	protected ArrayList<T> deleteList = new ArrayList<T>();
 	
 	public SafeList() {
 
@@ -21,11 +21,10 @@ public class SafeList<T> implements Iterable<T> {
 		success = success & list.addAll(addList);
 		addList.clear();
 		return success;
-		
 	}
 	
 	public boolean add(T e) {
-		return addList.add(e);
+		return addList.add(e);	
 	}
 	
 	public boolean addAll(ArrayList<T> es) {
