@@ -35,19 +35,13 @@ public class CollisionSystem {
 		
 		Point a = field.tileIndexAt(topleft);
 		Point b = field.tileIndexAt(bottomright);
-		
 
-		movePointIntoIndexBounds(a);
-		movePointIntoIndexBounds(b);
+		field.movePointIntoIndexBounds(a);
+		field.movePointIntoIndexBounds(b);
+		
 		ArrayList<Line2D> collModel = new ArrayList<Line2D>();
 		
-		double sx = field.tilesX;
-		double sy = field.tilesY;
-		
-		collModel.add(new Line2D(new Vector2D(0,sy), new Vector2D(0,0)));
-		collModel.add(new Line2D(new Vector2D(0,0), new Vector2D(sx,0)));
-		collModel.add(new Line2D(new Vector2D(sx,0), new Vector2D(sx,sy)));
-		collModel.add(new Line2D(new Vector2D(sx,sy), new Vector2D(0,sy)));
+		collModel.addAll(field.getBoundingFrame());
 		
 		for(int x=a.x; x<=b.x;x++) {
 			for(int y=a.y; y<=b.y; y++) {
@@ -125,14 +119,6 @@ public class CollisionSystem {
 		
 		return result;
 		
-	}
-	
-	
-	private void movePointIntoIndexBounds(Point p) {
-		if(p.x >= field.tilesX) p.x = field.tilesX-1;
-		if(p.x < 0) p.x = 0;
-		if(p.y >= field.tilesY) p.y = field.tilesY-1;
-		if(p.y < 0) p.y = 0;
 	}
 	
 	public Move collideAndSlide(Entity e) {

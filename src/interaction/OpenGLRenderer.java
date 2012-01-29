@@ -73,26 +73,36 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glEnable(GL2.GL_BLEND);
 		drawParticles();
 		drawEffects();
-
 		
+		
+		// Unit Range selection
+		/*
+		gl.glColor4d(0.8,0.0,0.0, 0.5);
+		if(game.selectedUnits.size() > 0) {
+			ArrayList<Entity> es = game.entitySystem.getEntitiesInRange(game.selectedUnits.get(0).pos, 5);
+			if(es != null) {
+				for(Entity e : es) {
+					square(e.pos, 0.5);
+				}
+			}
+		}*/
+		
+		
+		// Collision Data selection
+		/*gl.glColor4d(0.3,0.0,0.0, 0.5);
+		if(game.selectedUnits.size() > 0) {
+			ArrayList<Line2D> cls = game.collisionSystem.relevantData(game.selectedUnits.get(0));
+			for(Line2D l : cls) {
+				line(l,1);
+			}
+		}*/
+		
+		
+		// Line Level intersection
 		/*Line2D line = new Line2D(new Vector2D(50.5,50.5), game.input.getCursorPos());
 		ArrayList<Tile> tilesOnLine = game.collisionSystem.getTilesOn(line);
 		
 		gl.glEnable(GL2.GL_BLEND);
-		
-		Vector2D pos = new Vector2D(60.5,60.5);
-		
-		game.field.setTile(pos, 1);
-		ArrayList<Vector2D> intersections = game.collisionSystem.collisionsWithTile(line, game.field.tileAt(pos));
-		
-		gl.glColor4d(0.3,0.0,0.0, 0.5);
-		for(Vector2D v : intersections) {
-			square(v,0.2);
-		}
-		square(game.field.tileAt(pos).center,1);
-		line(line.a,line.b,1);
-		
-		
 		
 		if(game.collisionSystem.collideWithLevel(line))	
 			gl.glColor4d(0.3,0.0,0.0, 0.5);
@@ -137,10 +147,6 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		checkLogInfo(gl, f);
 		
-		
-		
-		
-
 		int shaderprogram = gl.glCreateProgram();
 		gl.glAttachShader(shaderprogram, f);
 		gl.glLinkProgram(shaderprogram);
@@ -276,14 +282,10 @@ public class OpenGLRenderer implements GLEventListener {
 		Point topleft = game.field.tileIndexAt(screen.topleft);
 		Point bottomright = game.field.tileIndexAt(screen.bottomright);
 		
-		if(topleft.x < 0) topleft.x=0;
-		if(topleft.x >= game.field.tilesX) topleft.x = game.field.tilesX-1;
-		if(topleft.y < 0) topleft.y=0;
-		if(topleft.y >= game.field.tilesY) topleft.y = game.field.tilesY-1;
-		if(bottomright.x < 0) bottomright.x=0;
-		if(bottomright.x >= game.field.tilesX) bottomright.x = game.field.tilesX-1;
-		if(bottomright.y < 0) bottomright.y=0;
-		if(bottomright.y >= game.field.tilesY) bottomright.y = game.field.tilesY-1;
+		
+		
+		game.field.movePointIntoIndexBounds(topleft);
+		game.field.movePointIntoIndexBounds(bottomright);
 		
 		for(int x=topleft.x; x <= bottomright.x; x++) {
 			for(int y=bottomright.y; y <= topleft.y; y++) {
@@ -341,6 +343,10 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glVertex2d((a.x()+offset.x)*scaleFactor, (a.y()+offset.y)*scaleFactor);
 		gl.glVertex2d((b.x()+offset.x)*scaleFactor, ((b.y()+offset.y)*scaleFactor));
 		gl.glEnd();
+	}
+	
+	private void line(Line2D line, float width) {
+		line(line.a,line.b,width);
 	}
 	
 	private void rhombus(Vector2D pos, double edgeLength) {

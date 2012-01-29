@@ -20,6 +20,7 @@ import engine.GlobalInfo;
 import engine.Pathplanner;
 import entities.CollisionEntity;
 import entities.Entity;
+import entities.EntitySystem;
 import entities.Projectile;
 import entities.Unit;
 import fx.EffectsSystem;
@@ -32,7 +33,7 @@ public class Game {
 	public MovementSystem movementSystem;
 	public EffectsSystem particleSystem;
 	public Input input;
-	//private Unit u;
+	public EntitySystem entitySystem = new EntitySystem();
 	public SafeList<Entity> entities = new SafeList<Entity>();
 	public ArrayList<Unit> selectedUnits = new ArrayList<Unit>();
 	public Rectangle2D selectionRect;
@@ -48,7 +49,7 @@ public class Game {
 	
 	public Game(Vector2D startpos) {
 		movementSystem = new MovementSystem(this);
-		particleSystem = new EffectsSystem();
+		particleSystem = new EffectsSystem(this);
 		entities.add(new Unit(startpos, this));
 	}
 	
@@ -56,12 +57,10 @@ public class Game {
 		this.dt = dt;
 		processInput(dt);
 		
+		entitySystem.arrange(entities);
 		
 		for(Entity e : entities) {
 			e.process(dt);
-			
-			
-			
 			
 			if(e instanceof Unit) {
 				if(selectionRect != null && !(found)) {
