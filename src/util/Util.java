@@ -77,4 +77,11 @@ public class Util {
 		if(value > limit2) return false;
 		return true;
 	}
+	
+	public static double easeInOut(double time, double startValue, double destValue, double duration) {
+		time /= duration/2;
+		if (time < 1) return destValue/2*time*time + startValue;
+		time--;
+		return -destValue/2 * (time*(time-2) - 1) + startValue;
+	}
 }

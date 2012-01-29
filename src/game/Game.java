@@ -218,10 +218,10 @@ public class Game {
 		for(int key : input.getKeyBuffer()) {
 			switch(key) {
 				case KeyBindings.ZOOM_IN:
-					view.setZoom(view.zoom+0.1);
+					view.setZoom(0.1, true);
 					break;
 				case KeyBindings.ZOOM_OUT:
-					view.setZoom(view.zoom-0.1);
+					view.setZoom(-0.1, true);
 					break;
 				/*DEBUGGING KEYS*/
 				case 't':

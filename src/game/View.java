@@ -3,6 +3,7 @@ package game;
 import java.awt.Dimension;
 import java.awt.Point;
 
+import engine.GlobalInfo;
 import entities.Entity;
 
 
@@ -18,6 +19,10 @@ public class View {
 	public Vector2D velocity = new Vector2D(0,0);
 	boolean autonomous = false;
 	Entity followedEntity;
+	
+	double oldZoom = 1;
+	double targetZoom = 1;
+	double zoomSetTime;
 	
 	public Vector2D offset;
 	
@@ -74,8 +79,17 @@ public class View {
 		return new Rectangle2D(viewToWorld(0,0), viewToWorld(windowSize.width,windowSize.height));
 	}
 	
-	public void setZoom(double z) {
-		zoom = Util.valueInBounds(0.2, z, 3);
+	public void setZoom(double deltaZoom, boolean smooth) {
+		if(smooth) {
+			targetZoom = Util.valueInBounds(0.2, targetZoom+deltaZoom, 3);
+			zoomSetTime = GlobalInfo.time;
+			oldZoom = zoom;
+		}
+		else {
+			zoom += deltaZoom;
+			targetZoom = zoom;
+		}
+		
 	}
 	
 	public void follow(Entity entity) {
@@ -89,6 +103,11 @@ public class View {
 	}	
 	
 	public void process(double dt) {
+		
+		if((targetZoom > oldZoom && zoom < targetZoom) || (targetZoom < oldZoom && zoom > targetZoom))
+			zoom = Util.easeInOut(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 1);
+		
+		//System.out.println(targetZoom + " " + zoom);
 		if(autonomous) {
 			setOffset(followedEntity.pos.negate().add(viewSize().scalar(0.5)));
 		}
