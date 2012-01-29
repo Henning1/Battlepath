@@ -75,12 +75,11 @@ public class OpenGLRenderer implements GLEventListener {
 		drawEffects();
 
 		
-		Line2D line = new Line2D(new Vector2D(50.5,50.5), game.input.getCursorPos());
+		/*Line2D line = new Line2D(new Vector2D(50.5,50.5), game.input.getCursorPos());
 		ArrayList<Tile> tilesOnLine = game.collisionSystem.getTilesOn(line);
-		System.out.println(tilesOnLine.size());
 		
 		gl.glEnable(GL2.GL_BLEND);
-		/*
+		
 		Vector2D pos = new Vector2D(60.5,60.5);
 		
 		game.field.setTile(pos, 1);
@@ -92,7 +91,7 @@ public class OpenGLRenderer implements GLEventListener {
 		}
 		square(game.field.tileAt(pos).center,1);
 		line(line.a,line.b,1);
-		*/
+		
 		
 		
 		if(game.collisionSystem.collideWithLevel(line))	
@@ -102,7 +101,7 @@ public class OpenGLRenderer implements GLEventListener {
 		for(Tile t : tilesOnLine) {
 			square(t.center,1);
 		}
-		line(line.a,line.b,1);
+		line(line.a,line.b,1);*/
 		
 
 		drawHUD();
@@ -182,9 +181,6 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glPointSize((float)(1*scaleFactor));
 		gl.glBegin(GL.GL_POINTS);
 		
-		if(particles.size()>0)
-		System.out.println(particles.size());
-		
 		for(FxEntity fe : particles) {
 			Particle p = (Particle)fe;
 			gl.glColor4d(0.2, Math.random()*0.2, 0.01, 0.5);
@@ -212,8 +208,6 @@ public class OpenGLRenderer implements GLEventListener {
 
 				swRadiuses[shockwaves] = (float) (sw.radius*scaleFactor);
 				shockwaves++;
-				
-				System.out.println("SW: " + screenPos + ", " + sw.radius*scaleFactor);
 			}
 		}	
 		
@@ -274,11 +268,9 @@ public class OpenGLRenderer implements GLEventListener {
 		for(int x=0; x < game.field.tilesX; x++) {
 			for(int y=0; y < game.field.tilesY; y++) {
 				
-				gl.glColor3d((double)x/game.field.tilesX-0.2, (double)x/game.field.tilesX-0.2, (double)y/game.field.tilesY-0.2);
-				gl.glColor3d(0.5,0.5,0.5);
-				
 				switch(game.field.tiles[x][y].getType()) {
 				case 1:
+					gl.glColor3d((double)x/game.field.tilesX-0.2, (double)x/game.field.tilesX-0.2, (double)y/game.field.tilesY-0.2);
 					tile(new Vector2D(x+0.5,y+0.5));
 					break;
 				}
@@ -311,8 +303,8 @@ public class OpenGLRenderer implements GLEventListener {
 	private void circle(Vector2D pos, double radius) {
 		double angle;
 		gl.glBegin(GL2.GL_POLYGON);
-	    for(int i = 100; i > 1; i--) {
-	        angle = i * 2 * Math.PI / 100;
+	    for(int i = 20; i > 1; i--) {
+	        angle = i * 2 * Math.PI / 20;
 	        gl.glVertex2d((offset.x + pos.x + (Math.cos(angle) * radius)) * scaleFactor, 
 	        		(offset.y + pos.y + (Math.sin(angle) * radius)) * scaleFactor);
 	    }

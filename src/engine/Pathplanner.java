@@ -48,7 +48,6 @@ public class Pathplanner {
 			for(Vector2D nb : neighbours) {
 				Node nnew = new Node(n, nb, h(nb, goal));
 				if(goalCheck(nnew, goal)) {
-					System.out.println("Expanded Nodes: " + expands);
 					return nnew;
 				}
 				
