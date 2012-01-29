@@ -36,6 +36,7 @@ public class Game {
 	public SafeList<Entity> entities = new SafeList<Entity>();
 	public ArrayList<Unit> selectedUnits = new ArrayList<Unit>();
 	public Rectangle2D selectionRect;
+	public boolean found = false;
 	
 	public View view;
 	public GameMode mode;
@@ -58,8 +59,12 @@ public class Game {
 		
 		for(Entity e : entities) {
 			e.process(dt);
+			
+			
+			
+			
 			if(e instanceof Unit) {
-				if(selectionRect != null) {
+				if(selectionRect != null && !(found)) {
 					if(selectionRect.inside(e.pos)) {
 						if(!((Unit) e).isSelected) {
 							selectedUnits.add((Unit)e);
@@ -126,15 +131,18 @@ public class Game {
 		
 		if(mode == GameMode.STRATEGY) {
 			if(input.mouseButtonPressed[0]  && !lastMouseState[0]) {
-				/*boolean found = false;
+				found = false;
 				for(Entity e : entities) {
-					if(e instanceof Unit && input.getCursorPos().distance(e.pos) < e.getRadius()) {
-						selectedUnit = (Unit)e;
+					if(!(e instanceof Unit)) continue;
+					Unit u = (Unit)e;
+					if(input.getCursorPos().distance(e.pos) < e.getRadius()) {
+						if(!u.isSelected) {
+							selectedUnits.add((Unit)e);
+							((Unit) e).isSelected = true;
+						}
 						found = true;
 					}
 				}
-				if(!found)
-					selectedUnit = null;*/
 				
 				selectionRect = new Rectangle2D(input.getCursorPos(), input.getCursorPos());
 			}
