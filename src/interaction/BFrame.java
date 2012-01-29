@@ -2,9 +2,6 @@ package interaction;
 import javax.swing.*;
 import javax.media.opengl.*;
 import javax.media.opengl.awt.GLCanvas;
-
-import com.jogamp.opengl.util.FPSAnimator;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 

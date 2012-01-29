@@ -1,7 +1,5 @@
 package engine;
 
-import javax.media.opengl.GLAutoDrawable;
-
 import interaction.BFrame;
 import interaction.OpenGLRenderer;
 import game.Game;
@@ -55,7 +53,7 @@ public class MainLoop {
              
              //Render
              frame.canvas.display();
-             
+             frame.setTitle("Battlepath | FPS: "+(int)framerate);
              frames++;
         }
     }
