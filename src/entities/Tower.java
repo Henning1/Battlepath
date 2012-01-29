@@ -1,7 +1,10 @@
 package entities;
 
+import java.util.ArrayList;
+
 import engine.GlobalInfo;
 import game.Game;
+import util.Line2D;
 import util.Vector2D;
 
 public class Tower extends HealthEntity {
@@ -15,11 +18,19 @@ public class Tower extends HealthEntity {
 
 	@Override
 	public void process(double dt) {
-		/*aim = game.u.pos.subtract(pos).normalize();
-		if(pos.distance(game.u.pos) < 20 && GlobalInfo.time-lastShot > 1) {
-			game.emitShot(pos.add(aim.scalar(getRadius())), aim);
-			lastShot = GlobalInfo.time;
-		}*/
+		
+		ArrayList<Unit> aims = game.getUnitsInRange(pos, 20);
+		
+		for(Unit u : aims) {
+			if(game.collisionSystem.collideWithLevel(new Line2D(pos,u.pos))) continue;
+			
+			aim = u.pos.subtract(pos).normalize();
+			if(pos.distance(u.pos) < 20 && GlobalInfo.time-lastShot > 1) {
+				game.emitShot(pos.add(aim.scalar(getRadius())), aim);
+				lastShot = GlobalInfo.time;
+			}
+			break;
+		}
 	}
 
 	@Override
@@ -29,11 +40,7 @@ public class Tower extends HealthEntity {
 
 	@Override
 	public void collide(CollisionEntity e) {
-		/*
-		if(e instanceof Projectile) {
-			Projectile p = (Projectile)e;
-			damage(p.power);
-		}*/
+
 	}
 
 }

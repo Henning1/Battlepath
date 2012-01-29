@@ -125,6 +125,23 @@ public class Game {
 		}
 	}
 	
+	public ArrayList<Unit> getUnitsInRange(Vector2D pos, double range) {
+		
+		ArrayList<Unit> result = new ArrayList<Unit>();
+		
+		for(Entity e : entities) {
+			if(!(e instanceof Unit)) continue;
+			if(e.pos.distance(pos) < range) {
+				result.add((Unit)e);
+			}
+		}
+		
+		
+		return result;
+		
+	}
+	
+	
 	public void processInput(double dt) {
 		//Mouse
 		
