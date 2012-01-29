@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import engine.GlobalInfo;
 
-import util.ParticleList;
 import util.SafeList;
 import util.Vector2D;
 
