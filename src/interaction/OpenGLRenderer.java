@@ -73,8 +73,10 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glEnable(GL2.GL_BLEND);
 		drawParticles();
 		drawEffects();
-		gl.glDisable(GL2.GL_BLEND);
+		
+		
 		// Unit Range selection
+		/*
 		gl.glColor4d(0.8,0.0,0.0, 0.5);
 		if(game.selectedUnits.size() > 0) {
 			ArrayList<Entity> es = game.entitySystem.getEntitiesInRange(game.selectedUnits.get(0).pos, 5);
@@ -83,7 +85,7 @@ public class OpenGLRenderer implements GLEventListener {
 					square(e.pos, 0.5);
 				}
 			}
-		}
+		}*/
 		
 		
 		// Collision Data selection

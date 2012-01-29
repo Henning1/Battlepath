@@ -3,6 +3,7 @@ package fx;
 import java.util.ArrayList;
 
 import engine.GlobalInfo;
+import game.Game;
 
 import util.SafeList;
 import util.Vector2D;
@@ -12,10 +13,14 @@ public class EffectsSystem {
 	public ArrayList<Particle> particles = new ArrayList<Particle>();
 	public SafeList<FxEntity> fxEntities = new SafeList<FxEntity>();
 	
-	public EffectsSystem() {
+	Game game;
+	
+	public EffectsSystem(Game game) {
+		this.game = game;
 	}
 	
 	public void particleSpray(Vector2D pos, int n, double lifetime) {
+		if(!game.view.getScreenRect().inside(pos, 10)) return;
 		for (int j = 0;j<n;j++)
 			particles.add(new Particle(pos, Vector2D.fromAngle(j*1.8, 1), (lifetime-0.2)*Math.random()+0.2, Math.random()*10, -10, this));
 	}

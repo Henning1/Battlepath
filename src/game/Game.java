@@ -49,7 +49,7 @@ public class Game {
 	
 	public Game(Vector2D startpos) {
 		movementSystem = new MovementSystem(this);
-		particleSystem = new EffectsSystem();
+		particleSystem = new EffectsSystem(this);
 		entities.add(new Unit(startpos, this));
 	}
 	
