@@ -54,6 +54,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		this.g = g;
 		frame.canvas.addMouseMotionListener(this);
 		frame.canvas.addMouseListener(this);
+		frame.canvas.addMouseWheelListener(this);
 		frame.canvas.addKeyListener(this);
 		size = new Dimension();
 		size.width = ((JPanel)frame.getContentPane()).getWidth();
@@ -136,7 +137,7 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		pressedKeys.put((Integer)c, new Remover(c, pressedKeys));
 		timer.schedule(pressedKeys.get(c), 2);
 	}
-
+	
 	@Override
 	public void keyTyped(KeyEvent arg0) {
 		keyBuffer.add(arg0.getKeyChar());
@@ -144,7 +145,6 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 
 	@Override
 	public void mouseWheelMoved(MouseWheelEvent arg0) {
-		// TODO Auto-generated method stub
-		
+		keyBuffer.add(arg0.getWheelRotation() > 0 ? (char)-1 : (char)-2);
 	}
 }
