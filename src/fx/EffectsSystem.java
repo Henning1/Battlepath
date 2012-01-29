@@ -41,8 +41,6 @@ public class EffectsSystem {
 		}
 
 		fxEntities.applyChanges();
-		
-		System.out.println(particles.size());
 	}
 	
 	public void removeEntity(FxEntity e) {

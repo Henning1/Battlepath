@@ -3,6 +3,7 @@ package engine;
 import java.awt.Point;
 import java.util.ArrayList;
 
+import util.Line2D;
 import util.Util;
 import util.Vector2D;
 
@@ -17,6 +18,7 @@ public class Field {
 	public Tile tiles[][];
 	public int tilesX=0;
 	public int tilesY=0;
+	private ArrayList<Line2D> boundingFrame = new ArrayList<Line2D>();
 	
 	public Field(int numX, int numY) {
 		tiles = new Tile[numX][numY];
@@ -28,6 +30,7 @@ public class Field {
 				tiles[x][y] = new Tile(new Point(x,y),0);
 			}
 		}
+		calcBoundingFrame();
 	}
 	
 	public void createCricle(Vector2D pos, double r) {
@@ -40,7 +43,26 @@ public class Field {
 		}
 	}
 	
+	public void movePointIntoIndexBounds(Point p) {
+		if(p.x >= tilesX) p.x = tilesX-1;
+		if(p.x < 0) p.x = 0;
+		if(p.y >= tilesY) p.y = tilesY-1;
+		if(p.y < 0) p.y = 0;
+	}
+	
+	private void calcBoundingFrame() {
+		boundingFrame.clear();
+		double sx = tilesX;
+		double sy = tilesY;
+		boundingFrame.add(new Line2D(new Vector2D(0,sy), new Vector2D(0,0)));
+		boundingFrame.add(new Line2D(new Vector2D(0,0), new Vector2D(sx,0)));
+		boundingFrame.add(new Line2D(new Vector2D(sx,0), new Vector2D(sx,sy)));
+		boundingFrame.add(new Line2D(new Vector2D(sx,sy), new Vector2D(0,sy)));
+	}
 
+	public ArrayList<Line2D> getBoundingFrame() {
+		return boundingFrame;
+	}
 	
 	//Returns the position of the center of a Tile
 	public Vector2D getWorldPos(Point pos) {
