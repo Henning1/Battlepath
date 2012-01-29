@@ -93,6 +93,10 @@ public class Vector2D {
 		return false;
 	}
 	
+	public Vector2D add(double a) {
+		return new Vector2D(x+a,y+a);
+	}
+	
 	public String toString() {
 		return "("+x+","+y+")";
 	}

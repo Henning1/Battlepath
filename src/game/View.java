@@ -6,6 +6,7 @@ import java.awt.Point;
 import entities.Entity;
 
 
+import util.Rectangle2D;
 import util.Util;
 import util.Vector2D;
 
@@ -37,10 +38,19 @@ public class View {
 		return v.subtract(offset);
 	}
 	
+	public Vector2D viewToWorld(int x, int y) {
+		return viewToWorld(new Point(x,y));
+	}
+	
 	public Point worldToViewShader(Vector2D worldPos) {
 		Vector2D viewpos = worldPos.add(offset).scalar(tileSize*zoom);
-		
 		return new Point((int)viewpos.x,(int)viewpos.y);
+	}
+	
+	
+	public Point worldToView(Vector2D worldPos) {
+		Vector2D viewpos = worldPos.add(offset).scalar(tileSize*zoom);
+		return new Point((int)viewpos.x,windowSize.height-(int)viewpos.y);
 	}
 	
 	private void setOffset(Vector2D pOffset) {
@@ -58,6 +68,10 @@ public class View {
 		if(offset.y <= maxOffsY)
 			offset.y = maxOffsY;
 		
+	}
+	
+	public Rectangle2D getScreenRect() {
+		return new Rectangle2D(viewToWorld(0,0), viewToWorld(windowSize.width,windowSize.height));
 	}
 	
 	public void setZoom(double z) {

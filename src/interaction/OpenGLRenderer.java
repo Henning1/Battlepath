@@ -182,6 +182,9 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glBegin(GL.GL_POINTS);
 		
 		for(FxEntity fe : particles) {
+			if(!game.view.getScreenRect().inside(fe.pos, 5))
+				continue;
+			
 			Particle p = (Particle)fe;
 			gl.glColor4d(0.2, Math.random()*0.2, 0.01, 0.5);
 			particle(p.pos);
@@ -218,7 +221,11 @@ public class OpenGLRenderer implements GLEventListener {
 	
 	private void drawEntities() {
 		for(Entity e : game.entities) {
-        	if(e instanceof Tower) {
+        	
+			if(!game.view.getScreenRect().inside(e.pos, e.getRadius()))
+				continue;
+			
+			if(e instanceof Tower) {
         		Tower tower = (Tower)e;
         		gl.glColor3d(0,0,1);
         		rhombus(tower.pos, 1);
@@ -265,12 +272,21 @@ public class OpenGLRenderer implements GLEventListener {
 	private void drawField() {
 		gl.glBegin(GL2.GL_QUADS);
 		
-		int left,top;
+		Rectangle2D screen = game.view.getScreenRect();
+		Point topleft = game.field.tileIndexAt(screen.topleft);
+		Point bottomright = game.field.tileIndexAt(screen.bottomright);
 		
+		if(topleft.x < 0) topleft.x=0;
+		if(topleft.x >= game.field.tilesX) topleft.x = game.field.tilesX-1;
+		if(topleft.y < 0) topleft.y=0;
+		if(topleft.y >= game.field.tilesY) topleft.y = game.field.tilesY-1;
+		if(bottomright.x < 0) bottomright.x=0;
+		if(bottomright.x >= game.field.tilesX) bottomright.x = game.field.tilesX-1;
+		if(bottomright.y < 0) bottomright.y=0;
+		if(bottomright.y >= game.field.tilesY) bottomright.y = game.field.tilesY-1;
 		
-		
-		for(int x=0; x < game.field.tilesX; x++) {
-			for(int y=0; y < game.field.tilesY; y++) {
+		for(int x=topleft.x; x <= bottomright.x; x++) {
+			for(int y=bottomright.y; y <= topleft.y; y++) {
 				
 				switch(game.field.tiles[x][y].getType()) {
 				case 1:

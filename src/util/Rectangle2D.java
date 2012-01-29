@@ -29,6 +29,11 @@ public class Rectangle2D {
 				Util.isValueInBounds(bottomright.y, p.y, topleft.y);
 	}
 	
+	public boolean inside(Vector2D p, double tolerance) {
+		return Util.isValueInBounds(topleft.x-tolerance, p.x, bottomright.x+tolerance) &&
+				Util.isValueInBounds(bottomright.y-tolerance, p.y, topleft.y+tolerance);
+	}
+	
 	public String toString() {
 		return "top: "+top()+" right: "+right()+"bottom: "+bottom()+" left:" +left();
 	}
