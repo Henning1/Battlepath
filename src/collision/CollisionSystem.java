@@ -73,6 +73,17 @@ public class CollisionSystem {
 		return false;
 	}
 	
+	public ArrayList<Vector2D> collisionsWithTile(Line2D l, Tile t) {
+		ArrayList<Vector2D> result = new ArrayList<Vector2D>();
+		ArrayList<Line2D> model = t.collisionModel;
+		for(Line2D edge : model) {
+			Vector2D i = l.intersectionPoint(edge);
+			result.add(i);
+			
+		}
+		return result;
+	}
+	
 
 	
 	
@@ -85,6 +96,8 @@ public class CollisionSystem {
 		if(l.a.x > l.b.x) {
 			line = new Line2D(l.b,l.a);
 		}
+		
+		
 		
 		Tile current = field.tileAt(line.a);
 		Tile destination = field.tileAt(line.b);
@@ -106,6 +119,7 @@ public class CollisionSystem {
 				}
 			}
 		}
+		if(current == destination) result.add(current);
 		
 		
 		

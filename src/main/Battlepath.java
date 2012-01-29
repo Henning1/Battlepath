@@ -36,10 +36,8 @@ public class Battlepath {
 		Field f = new Field(fieldWidth, fieldHeight);
 		randomCircles(f, fieldWidth*fieldHeight/50, 3);
 		Vector2D start = findStartPos(f);
-		
 
 		Game game = new Game(start);
-		
 		
 		BFrame frame = new BFrame(windowSize);
 		Dimension paneSize = frame.getContentPane().getSize();

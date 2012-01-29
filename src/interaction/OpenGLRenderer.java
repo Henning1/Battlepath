@@ -80,6 +80,20 @@ public class OpenGLRenderer implements GLEventListener {
 		System.out.println(tilesOnLine.size());
 		
 		gl.glEnable(GL2.GL_BLEND);
+		/*
+		Vector2D pos = new Vector2D(60.5,60.5);
+		
+		game.field.setTile(pos, 1);
+		ArrayList<Vector2D> intersections = game.collisionSystem.collisionsWithTile(line, game.field.tileAt(pos));
+		
+		gl.glColor4d(0.3,0.0,0.0, 0.5);
+		for(Vector2D v : intersections) {
+			square(v,0.2);
+		}
+		square(game.field.tileAt(pos).center,1);
+		line(line.a,line.b,1);
+		*/
+		
 		
 		if(game.collisionSystem.collideWithLevel(line))	
 			gl.glColor4d(0.3,0.0,0.0, 0.5);

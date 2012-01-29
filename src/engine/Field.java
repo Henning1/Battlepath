@@ -62,7 +62,7 @@ public class Field {
 	
 	public Tile tileAt(Vector2D pos) {
 		Point p = tileIndexAt(pos);
-		return tiles[p.x][p.y];
+		return tileAt(p);
 	}
 	
 	public Tile tileAt(Point index) {

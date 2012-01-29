@@ -37,22 +37,44 @@ public class Util {
 	}
 	
 	
+	/*	|a b|e|
+	 *  |c d|f|
+	 */
+	public static Tuple<Double,Double> LES2x2(double a, double b, double c, double d, double e, double f) {
+		double y = (e*c - a*f) / (b*c - a*d);
+		double x = (e - y*b) / a;
+		
+		return new Tuple<Double,Double>(x,y);
+		
+	}
+	
+	
 	public static double valueInBounds(double min, double value, double max) {
 		if(value < min) return min;
 		else if (value > max) return max;
 		else return value;
 	}
 	
-	public static boolean isValueInBounds(double min, double value, double max) {
-		if(value < min) return false;
-		if(value > max) return false;
+	public static boolean isValueInBounds(double limit1, double value, double limit2) {
+		if(limit2 < limit1) {
+			double temp = limit2;
+			limit2 = limit1;
+			limit1 = temp;
+		}
+		if(value < limit1) return false;
+		if(value > limit2) return false;
 		return true;
 	}
 	
 	
-	public static boolean isValueInBounds(int min, int value, int max) {
-		if(value < min) return false;
-		if(value > max) return false;
+	public static boolean isValueInBounds(int limit1, int value, int limit2) {
+		if(limit2 < limit1) {
+			int temp = limit2;
+			limit2 = limit1;
+			limit1 = temp;
+		}
+		if(value < limit1) return false;
+		if(value > limit2) return false;
 		return true;
 	}
 }

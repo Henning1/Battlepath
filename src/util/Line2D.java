@@ -44,19 +44,28 @@ public class Line2D {
 	}
 	
 	public double yAxisIntercept() {
-		return b.y - (slope*b.x);
+		return a.y - (slope*a.x);
 	}
 	
 	public Vector2D intersectionPoint(Line2D line) {
+		/*
 		double n1,n2;
 		double m1,m2;
 		n1 = yAxisIntercept();
 		n2 = line.yAxisIntercept();
 		m1 = slope;
 		m2 = line.slope;
-		double x = (n1+n2)/(m1-m2);
-		double y = m1*x+n1;
+		double x = (n1-n2)/(m2-m1);
+		double y = m2*x+n2;
 		return new Vector2D(x,y);
+		*/
+		
+		Tuple<Double,Double> params = Util.LES2x2(
+				direction.x, line.direction.x, direction.y, line.direction.y,
+				line.a.x-a.x, line.a.y-a.y);
+		
+		return a.add(direction.scalar(params.a));
+		
 	}
 	
 	
