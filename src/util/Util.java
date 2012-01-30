@@ -78,10 +78,15 @@ public class Util {
 		return true;
 	}
 	
-	public static double easeInOut(double time, double startValue, double destValue, double duration) {
+	public static double easeInOut(double time, double startValue, double endValue, double duration) {
+		if(startValue > endValue) {
+			double temp = endValue;
+			endValue = startValue;
+			startValue = temp;
+		}
 		time /= duration/2;
-		if (time < 1) return destValue/2*time*time + startValue;
+		if (time < 1) return endValue/2*time*time + startValue;
 		time--;
-		return -destValue/2 * (time*(time-2) - 1) + startValue;
+		return -endValue/2 * (time*(time-2) - 1) + startValue;
 	}
 }

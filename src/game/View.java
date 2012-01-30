@@ -24,6 +24,7 @@ public class View {
 	double targetZoom = 1;
 	double zoomSetTime;
 	public Vector2D offset;
+	private boolean zoomFinished = true;
 	
 	public View(Dimension size, int tileSize, Game g) {
 		windowSize = size;
@@ -39,7 +40,7 @@ public class View {
 	
 	public Vector2D fieldSizeInView() {
 		Vector2D fieldSize = new Vector2D(game.field.tilesX, game.field.tilesY);
-		return fieldSize; //.scalar(zoom);
+		return fieldSize;
 		
 	}
 	
@@ -102,18 +103,25 @@ public class View {
 	}
 	
 
-	public void setZoom(double deltaZoom, boolean smooth) {
+	public void zoom(double deltaZoom, boolean smooth) {
+		targetZoom = Util.valueInBounds(0.2, targetZoom+deltaZoom, 3);
 		if(smooth) {
-			targetZoom = Util.valueInBounds(0.2, targetZoom+deltaZoom, 3);
-			zoomSetTime = GlobalInfo.time;
+			if(zoomFinished) zoomSetTime = GlobalInfo.time;
 			oldZoom = zoom;
+			zoomFinished = false;
 		}
 		else {
-			zoom += deltaZoom;
-			targetZoom = zoom;
+			setZoom(targetZoom);
 		}
 	}
-		
+	
+	private void setZoom(double pZoom) {
+		Vector2D center = this.viewToWorld(windowSize.width/2, windowSize.height/2);
+		zoom = pZoom;
+		center(center);
+	}
+	
+
 	
 	public void follow(Entity entity) {
 		autonomous = true;
@@ -125,14 +133,26 @@ public class View {
 		followedEntity = null;
 	}	
 	
+	public void center(Vector2D point) {
+		setOffset(point.negate().add(viewSize().scalar(0.5)));
+	}
+	
 	public void process(double dt) {
 		
-		if((targetZoom > oldZoom && zoom < targetZoom) || (targetZoom < oldZoom && zoom > targetZoom))
-			zoom = Util.easeInOut(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 1);
+		if(targetZoom > oldZoom && zoom < targetZoom)
+		{
+			setZoom(Util.easeInOut(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 5));
+		}
+		else if (targetZoom < oldZoom && zoom > targetZoom) {
+			setZoom(Util.easeInOut(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 5));
+		}
+		else {
+			zoomFinished=true;
+		}
 		
 		//System.out.println(targetZoom + " " + zoom);
 		if(autonomous) {
-			setOffset(followedEntity.pos.negate().add(viewSize().scalar(0.5)));
+			center(followedEntity.pos);
 		}
 		else {
 			setOffset(offset.subtract(velocity.scalar(dt)));
