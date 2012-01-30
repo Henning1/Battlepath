@@ -1,8 +1,6 @@
 package fx;
 
-import engine.GlobalInfo;
 import util.Vector2D;
-
 
 public class Particle extends FxEntity {
 

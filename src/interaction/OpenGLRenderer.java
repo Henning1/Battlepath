@@ -1,7 +1,5 @@
 package interaction;
 
-import engine.MainLoop;
-import engine.Tile;
 import entities.Entity;
 import entities.Projectile;
 import entities.Tower;
@@ -12,24 +10,17 @@ import fx.Shockwave;
 import game.Game;
 import game.GameMode;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.nio.Buffer;
 import java.nio.ByteBuffer;
 import java.nio.IntBuffer;
 import java.util.ArrayList;
 import javax.media.opengl.*;
 import javax.media.opengl.glu.*;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-
-import com.jogamp.opengl.util.texture.Texture;
-
 
 import util.Line2D;
 import util.Rectangle2D;
