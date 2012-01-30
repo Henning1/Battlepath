@@ -19,7 +19,7 @@ public class Tower extends HealthEntity {
 	@Override
 	public void process(double dt) {
 		//slow
-		/*ArrayList<Unit> aims = game.getUnitsInRange(pos, 20);
+		ArrayList<Unit> aims = game.getUnitsInRange(pos, 20);
 		
 		for(Unit u : aims) {
 			if(game.collisionSystem.collideWithLevel(new Line2D(pos,u.pos))) continue;
@@ -30,9 +30,9 @@ public class Tower extends HealthEntity {
 				lastShot = GlobalInfo.time;
 			}
 			break;
-		}*/
+		}
 		
-		ArrayList<Entity> aims = game.entitySystem.entitiesInRange(pos, 20);
+		/*ArrayList<Entity> aims = game.entitySystem.entitiesInRange(pos, 20);
 		
 		for(Entity u : aims) {
 			if(!(u instanceof Unit)) continue;			
@@ -44,7 +44,7 @@ public class Tower extends HealthEntity {
 				lastShot = GlobalInfo.time;
 			}
 			break;
-		}
+		}*/
 	}
 
 	@Override

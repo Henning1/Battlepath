@@ -21,11 +21,18 @@ public class View {
 	public Vector2D velocity = new Vector2D(0,0);
 	boolean autonomous = false;
 	Entity followedEntity;
+	
 	double oldZoom = 1;
 	double targetZoom = 1;
 	double zoomSetTime;
-	public Vector2D offset;
 	private boolean zoomFinished = true;
+	
+	Vector2D oldOffset;
+	Vector2D targetOffset;
+	double offsetSetTime;
+	boolean smoothOffsetFinished = true;
+	double smoothOffsetDuration;
+	public Vector2D offset;
 	
 	public View(Dimension size, int tileSize, Game g) {
 		windowSize = size;
@@ -67,8 +74,10 @@ public class View {
 	}
 	
 	private void setOffset(Vector2D pOffset) {
-		
-		
+		this.offset = getValidOffset(pOffset);
+	}
+	
+	private Vector2D getValidOffset(Vector2D pOffset) {
 		double maxOffsX = -game.field.tilesX+(viewSize().x);
 		double maxOffsY = -game.field.tilesY+(viewSize().y);
 
@@ -88,15 +97,11 @@ public class View {
 		
 		if(viewsize.x > fieldsize.x) {
 			newOffset.x = (viewsize.x-fieldsize.x)/2;
-			
 		}
 		if(viewsize.y > fieldsize.y) {
-			newOffset.y = (viewsize.y-fieldsize.y)/2;
-			
+			newOffset.y = (viewsize.y-fieldsize.y)/2;	
 		}
-		
-		this.offset = newOffset;
-		
+		return newOffset;
 	}
 	
 	public Rectangle2D getScreenRect() {
@@ -116,17 +121,26 @@ public class View {
 		}
 	}
 	
+	public void smoothOffset(Vector2D pOffset) {
+		targetOffset = getValidOffset(pOffset.negate().add(viewSize().scalar(0.5)));
+		oldOffset = offset.copy();
+		offsetSetTime = GlobalInfo.time;
+		smoothOffsetFinished = false;
+		smoothOffsetDuration = oldOffset.distance(targetOffset)/50;
+	}
+	
 	private void setZoom(double pZoom) {
 		Vector2D center = this.viewToWorld(windowSize.width/2, windowSize.height/2);
 		zoom = pZoom;
 		center(center);
 	}
 	
-
-	
 	public void follow(Entity entity) {
-		autonomous = true;
-		followedEntity = entity;
+		if(entity != followedEntity) {
+			autonomous = true;
+			followedEntity = entity;
+			smoothOffset(entity.pos);
+		}
 	}
 	
 	public void unfollow() {
@@ -144,10 +158,19 @@ public class View {
 			zoomFinished = (zoom == targetZoom);
 		}
 		
-		if(autonomous) {
+		if(!smoothOffsetFinished) {
+			offset.x = Transition.t(GlobalInfo.time-offsetSetTime, oldOffset.x, targetOffset.x, 
+					smoothOffsetDuration, Transition.type.EASEINOUT);
+			offset.y = Transition.t(GlobalInfo.time-offsetSetTime, oldOffset.y, targetOffset.y, 
+					smoothOffsetDuration, Transition.type.EASEINOUT);
+			
+			smoothOffsetFinished = (offset.x == targetOffset.x && offset.y == targetOffset.y);
+		}
+		
+		if(autonomous && smoothOffsetFinished) {
 			center(followedEntity.pos);
 		} 
-		else {
+		else if(smoothOffsetFinished){
 			setOffset(offset.subtract(velocity.scalar(dt)));
 		}
 	}

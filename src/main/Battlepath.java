@@ -11,9 +11,6 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Random;
 
-import javax.swing.JFrame;
-
-
 import collision.CollisionSystem;
 
 import util.Vector2D;
