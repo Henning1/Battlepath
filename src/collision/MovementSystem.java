@@ -39,7 +39,7 @@ public class MovementSystem {
 			
 			//collision with entities
 
-			ArrayList<CollisionEntity> cesInRange = game.entitySystem.getCollisionEntitiesInRange(c1.pos, 3.0);
+			ArrayList<CollisionEntity> cesInRange = game.entitySystem.collisionEntitiesInRange(c1.pos, 3.0);
 			
 			for(CollisionEntity c2 : cesInRange) {
 				

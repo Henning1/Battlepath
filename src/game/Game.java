@@ -35,7 +35,6 @@ public class Game {
 	public Input input;
 	public EntitySystem entitySystem = new EntitySystem();
 	public SafeList<Entity> entities = new SafeList<Entity>();
-	public ArrayList<Unit> selectedUnits = new ArrayList<Unit>();
 	public Rectangle2D selectionRect;
 	public boolean found = false;
 	
@@ -59,22 +58,23 @@ public class Game {
 		
 		entitySystem.arrange(entities);
 		
+		if(entitySystem.selected().size() == 0) {
+			this.setMode(GameMode.STRATEGY);
+		}
+		if(mode==GameMode.ACTION) {
+			view.follow(entitySystem.selected().get(0));
+		}
+		
 		for(Entity e : entities) {
 			e.process(dt);
 			
 			if(e instanceof Unit) {
 				if(selectionRect != null && !(found)) {
 					if(selectionRect.inside(e.pos)) {
-						if(!((Unit) e).isSelected) {
-							selectedUnits.add((Unit)e);
-							((Unit) e).isSelected = true;
-						}
+						((Unit) e).isSelected = true;
 					}
 					else {
-						if(((Unit) e).isSelected) {
-							selectedUnits.remove((Unit)e);
-							((Unit) e).isSelected = false;
-						}
+						((Unit) e).isSelected = false;
 					}
 				}
 			}
@@ -90,16 +90,16 @@ public class Game {
 	public void setMode(GameMode gm) {
 		switch(gm) {
 		case ACTION:
-			if(selectedUnits.size() != 0) {
+			if(entitySystem.selected().size() != 0) {
 				mode = gm;
-				view.follow(selectedUnits.get(0));
+				view.follow(entitySystem.selected().get(0));
 			}
 			break;
 		case STRATEGY:
 			mode = gm;
 			view.unfollow();
-			if(selectedUnits.size() != 0){
-				selectedUnits.get(0).velocity = new Vector2D(0,0);
+			if(entitySystem.selected().size() != 0){
+				entitySystem.selected().get(0).velocity = new Vector2D(0,0);
 			}
 			break;
 		}
@@ -134,17 +134,15 @@ public class Game {
 				result.add((Unit)e);
 			}
 		}
-		
-		
 		return result;
-		
 	}
 	
 	
 	public void processInput(double dt) {
+		
+		ArrayList<Unit> selected = entitySystem.selected();
+		
 		//Mouse
-		
-		
 		if(mode == GameMode.STRATEGY) {
 			if(input.mouseButtonPressed[0]  && !lastMouseState[0]) {
 				found = false;
@@ -153,7 +151,6 @@ public class Game {
 					Unit u = (Unit)e;
 					if(input.getCursorPos().distance(e.pos) < e.getRadius()) {
 						if(!u.isSelected) {
-							selectedUnits.add((Unit)e);
 							((Unit) e).isSelected = true;
 						}
 						found = true;
@@ -168,19 +165,21 @@ public class Game {
 			}
 			
 			if(input.mouseButtonPressed[0]  && lastMouseState[0]) {
-				selectionRect.bottomright = input.getCursorPos();
+				if(selectionRect != null)
+					selectionRect.bottomright = input.getCursorPos();
 			}
 			
-			if(input.mouseButtonPressed[2] && !lastMouseState[0] && selectedUnits.size() != 0) {
-				for(Unit u : selectedUnits) {
+			if(input.mouseButtonPressed[2] && !lastMouseState[0] && selected.size() != 0) {
+				for(Entity e : selected) {
+					Unit u = (Unit)e;
 					u.moveTo(input.getCursorPos());
 				}
 			}
 		}
 		
 		if(mode == GameMode.ACTION) {
-			if((input.mouseButtonPressed[0] && selectedUnits.size() != 0 && GlobalInfo.time - lastShot > 0.3)) {
-				selectedUnits.get(0).shoot(input.getCursorPos().subtract(selectedUnits.get(0).pos).normalize());
+			if((input.mouseButtonPressed[0] && selected.size() != 0 && GlobalInfo.time - lastShot > 0.3)) {
+				selected.get(0).shoot(input.getCursorPos().subtract(selected.get(0).pos).normalize());
 				lastShot = GlobalInfo.time;
 			}
 		}
@@ -189,17 +188,17 @@ public class Game {
 		
 		//Keyboard part one (input.isPressed)
 		
-		if(selectedUnits.size() != 0 & mode == GameMode.ACTION) {
-			if(input.isPressed(KeyBindings.MOVE_LEFT)) selectedUnits.get(0).velocity.x = 1;
-			else if(input.isPressed(KeyBindings.MOVE_RIGHT)) selectedUnits.get(0).velocity.x = -1;
-			else selectedUnits.get(0).velocity.x = 0;
+		if(selected.size() != 0 & mode == GameMode.ACTION) {
+			if(input.isPressed(KeyBindings.MOVE_LEFT)) selected.get(0).velocity.x = 1;
+			else if(input.isPressed(KeyBindings.MOVE_RIGHT)) selected.get(0).velocity.x = -1;
+			else selected.get(0).velocity.x = 0;
 			
-			if(input.isPressed(KeyBindings.MOVE_DOWN)) selectedUnits.get(0).velocity.y = -1;
-			else if(input.isPressed(KeyBindings.MOVE_UP)) selectedUnits.get(0).velocity.y = 1;
-			else selectedUnits.get(0).velocity.y = 0;
+			if(input.isPressed(KeyBindings.MOVE_DOWN)) selected.get(0).velocity.y = -1;
+			else if(input.isPressed(KeyBindings.MOVE_UP)) selected.get(0).velocity.y = 1;
+			else selected.get(0).velocity.y = 0;
 			
-			if(selectedUnits.get(0).velocity.length() > 0)
-				selectedUnits.get(0).velocity = selectedUnits.get(0).velocity.normalize().scalar(10);
+			if(selected.get(0).velocity.length() > 0)
+				selected.get(0).velocity = selected.get(0).velocity.normalize().scalar(10);
 		}
 		
 		if(mode == GameMode.STRATEGY) {

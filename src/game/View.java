@@ -146,7 +146,7 @@ public class View {
 		
 		if(autonomous) {
 			center(followedEntity.pos);
-		}
+		} 
 		else {
 			setOffset(offset.subtract(velocity.scalar(dt)));
 		}
