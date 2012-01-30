@@ -153,7 +153,7 @@ public class View {
 		//System.out.println(targetZoom + " " + zoom);
 		if(autonomous) {
 			center(followedEntity.pos);
-		}
+		} 
 		else {
 			setOffset(offset.subtract(velocity.scalar(dt)));
 		}

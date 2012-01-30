@@ -8,6 +8,7 @@ public abstract class HealthEntity extends CollisionEntity{
 	protected double health = 100;
 	public boolean isSelected = false;
 	
+	
 	public HealthEntity(Vector2D position, Game game) {
 		super(position, game);
 	}
@@ -21,6 +22,7 @@ public abstract class HealthEntity extends CollisionEntity{
 		if(health <= 0) {
 			game.particleSystem.explosion(pos);
 			game.entities.remove(this);
+			isSelected = false;
 		}
 	}
 	

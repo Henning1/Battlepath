@@ -8,22 +8,38 @@ import util.Vector2D;
 
 public class EntitySystem {
 	
-	ArrayList<EntityComparator> xOrder = new ArrayList<EntityComparator>();
-	
+	ArrayList<EntityComparator> xOrderEntities = new ArrayList<EntityComparator>();
+	ArrayList<EntityComparator> xOrderCollisionEntities = new ArrayList<EntityComparator>();
+	ArrayList<Unit> selectedUnits = new ArrayList<Unit>();
 
 	public void arrange(SafeList<Entity> entities) {
-		xOrder.clear();
+		xOrderEntities.clear();
+		xOrderCollisionEntities.clear();
+		selectedUnits.clear();
+		
 		for(Entity e : entities) {
 			EntityComparator ec = new EntityComparator(e,1);
-			int index = Collections.binarySearch(xOrder, ec);
-			if(index >= 0)
-				xOrder.add(index,ec);
-			else xOrder.add((-index)-1,ec);
+			xOrderEntities.add(ec);
+			if(e instanceof CollisionEntity) {
+				xOrderCollisionEntities.add(ec);
+			}
+			if(e instanceof Unit) {
+				if(((Unit)e).isSelected)
+					selectedUnits.add((Unit) e);
+			
+			}
 		}
+		Collections.sort(xOrderEntities);
+		Collections.sort(xOrderCollisionEntities);
 	}
 	
+	public ArrayList<Unit> selected() {
+		return selectedUnits;
+	}
+	
+	
+	
 	private EntityComparator getPivot(int dimension, double value) {
-		
 		EntityComparator pivot = null;
 		if(dimension == 1) {
 			Entity e = new Unit(new Vector2D(value,0.0), null);
@@ -51,7 +67,8 @@ public class EntitySystem {
 	}
 
 	
-	public ArrayList<Entity> getEntitiesInRange(Vector2D pos, double range) {
+	
+	private ArrayList<Entity> entitiesInRange(ArrayList<EntityComparator> xOrder, Vector2D pos, double range) {
 		int startindex = getStartIndex(xOrder,pos.x-range,1);
 		int endindex = getEndIndex(xOrder,pos.x+range,1);
 		
@@ -59,14 +76,13 @@ public class EntitySystem {
 		for(int i=startindex; i<=endindex; i++) {
 			Entity e = xOrder.get(i).e;
 			EntityComparator ec = new EntityComparator(e,2);
-			int index = Collections.binarySearch(yOrder, ec);
-			if(index >= 0) yOrder.add(index,ec);
-			else yOrder.add(-index-1,ec);
+			yOrder.add(ec);
 		}
-
-		ArrayList<Entity> result = new ArrayList<Entity>();
+		Collections.sort(yOrder);
 		
+		ArrayList<Entity> result = new ArrayList<Entity>();
 		if(yOrder.size() == 0) return result;
+		
 		startindex = getStartIndex(yOrder,pos.y-range,2);
 		endindex = getEndIndex(yOrder,pos.y+range,2);
 		
@@ -85,9 +101,13 @@ public class EntitySystem {
 		return result;
 	}
 	
-	public ArrayList<CollisionEntity> getCollisionEntitiesInRange(Vector2D pos, double range) {
+	public ArrayList<Entity> entitiesInRange(Vector2D pos, double range) {
+		return entitiesInRange(xOrderEntities, pos, range);
+	}
+	
+	public ArrayList<CollisionEntity> collisionEntitiesInRange(Vector2D pos, double range) {
 		ArrayList<CollisionEntity> ces = new ArrayList<CollisionEntity>();
-		ArrayList<Entity> es = getEntitiesInRange(pos,range);
+		ArrayList<Entity> es = entitiesInRange(xOrderCollisionEntities,pos,range);
 		for(Entity e : es) {
 			if(e instanceof CollisionEntity) ces.add((CollisionEntity)e);
 		}

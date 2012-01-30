@@ -32,7 +32,7 @@ public class Tower extends HealthEntity {
 			break;
 		}*/
 		
-		ArrayList<Entity> aims = game.entitySystem.getEntitiesInRange(pos, 20);
+		ArrayList<Entity> aims = game.entitySystem.entitiesInRange(pos, 20);
 		
 		for(Entity u : aims) {
 			if(!(u instanceof Unit)) continue;			

@@ -78,20 +78,24 @@ public class OpenGLRenderer implements GLEventListener {
 		// Unit Range selection
 		
 		gl.glColor4d(0.8,0.0,0.0, 0.5);
-		if(game.selectedUnits.size() > 0) {
-			ArrayList<Entity> es = game.entitySystem.getEntitiesInRange(game.selectedUnits.get(0).pos, 5);
+		if(game.entitySystem.selected().size() > 0) {
+			ArrayList<Entity> es = game.entitySystem.entitiesInRange(
+					game.entitySystem.selected().get(0).pos, 7);
 			if(es != null) {
 				for(Entity e : es) {
 					square(e.pos, 0.5);
 				}
 			}
+			gl.glColor4d(0.2,0.0,0.0, 0.5);
+			circle(game.entitySystem.selected().get(0).pos, 7, false);
 		}
+
 		
 		
 		//Collision Data selection
 		gl.glColor4d(0.3,0.0,0.0, 0.5);
-		if(game.selectedUnits.size() > 0) {
-			ArrayList<Line2D> cls = game.collisionSystem.relevantData(game.selectedUnits.get(0));
+		if(game.entitySystem.selected().size() > 0) {
+			ArrayList<Line2D> cls = game.collisionSystem.relevantData(game.entitySystem.selected().get(0));
 			for(Line2D l : cls) {
 				line(l,1);
 			}
@@ -318,20 +322,25 @@ public class OpenGLRenderer implements GLEventListener {
 		//Selection Rectangle
 		if(game.selectionRect != null) {
 			Rectangle2D sel = game.selectionRect;
-			gl.glColor3d(0.2,0.2,0.3);
+			gl.glColor3d(0.1,0.1,0.2);
 			rectangle(sel.topleft, sel.bottomright);
 		}
 	}
 	
-	private void circle(Vector2D pos, double radius) {
+	private void circle(Vector2D pos, double radius, boolean filled) {
 		double angle;
-		gl.glBegin(GL2.GL_POLYGON);
-	    for(int i = 20; i > 1; i--) {
+		if(filled) gl.glBegin(GL2.GL_POLYGON);
+		else gl.glBegin(GL2.GL_LINE_STRIP);
+	    for(int i = 20; i >= 0; i--) {
 	        angle = i * 2 * Math.PI / 20;
 	        gl.glVertex2d((offset.x + pos.x + (Math.cos(angle) * radius)) * scaleFactor, 
 	        		(offset.y + pos.y + (Math.sin(angle) * radius)) * scaleFactor);
 	    }
 	    gl.glEnd();
+	}
+	
+	private void circle(Vector2D pos, double radius) {
+		circle(pos,radius,true);
 	}
 	
 	private void particle(Vector2D pos) {
