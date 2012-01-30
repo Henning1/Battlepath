@@ -189,7 +189,7 @@ public class OpenGLRenderer implements GLEventListener {
 	private void drawParticles() {
 		ArrayList<Particle> particles = game.particleSystem.particles;
 		
-		gl.glPointSize((float)(1*scaleFactor));
+		gl.glPointSize((float)(0.8*scaleFactor));
 		gl.glBegin(GL.GL_POINTS);
 		
 		for(FxEntity fe : particles) {
