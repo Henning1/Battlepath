@@ -8,6 +8,7 @@ import entities.Entity;
 
 
 import util.Rectangle2D;
+import util.Transition;
 import util.Util;
 import util.Vector2D;
 
@@ -138,19 +139,11 @@ public class View {
 	}
 	
 	public void process(double dt) {
-		
-		if(targetZoom > oldZoom && zoom < targetZoom)
-		{
-			setZoom(Util.easeInOut(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 5));
-		}
-		else if (targetZoom < oldZoom && zoom > targetZoom) {
-			setZoom(Util.easeInOut(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 5));
-		}
-		else {
-			zoomFinished=true;
+		if(!zoomFinished) {
+			setZoom(Transition.t(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 0.5, Transition.type.EASEINOUT));
+			zoomFinished = (zoom == targetZoom);
 		}
 		
-		//System.out.println(targetZoom + " " + zoom);
 		if(autonomous) {
 			center(followedEntity.pos);
 		}

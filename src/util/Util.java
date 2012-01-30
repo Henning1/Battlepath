@@ -50,6 +50,11 @@ public class Util {
 	
 	
 	public static double valueInBounds(double min, double value, double max) {
+		if(max < min) {
+			double temp = max;
+			max = min;
+			min = temp;
+		}
 		if(value < min) return min;
 		else if (value > max) return max;
 		else return value;
@@ -76,17 +81,5 @@ public class Util {
 		if(value < limit1) return false;
 		if(value > limit2) return false;
 		return true;
-	}
-	
-	public static double easeInOut(double time, double startValue, double endValue, double duration) {
-		if(startValue > endValue) {
-			double temp = endValue;
-			endValue = startValue;
-			startValue = temp;
-		}
-		time /= duration/2;
-		if (time < 1) return endValue/2*time*time + startValue;
-		time--;
-		return -endValue/2 * (time*(time-2) - 1) + startValue;
 	}
 }
