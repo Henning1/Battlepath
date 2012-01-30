@@ -12,6 +12,7 @@ import util.Util;
 import util.Vector2D;
 
 public class View {
+	
 	public Dimension windowSize;
 	Game game;
 	int tileSize;
@@ -19,11 +20,9 @@ public class View {
 	public Vector2D velocity = new Vector2D(0,0);
 	boolean autonomous = false;
 	Entity followedEntity;
-	
 	double oldZoom = 1;
 	double targetZoom = 1;
 	double zoomSetTime;
-	
 	public Vector2D offset;
 	
 	public View(Dimension size, int tileSize, Game g) {
@@ -31,10 +30,17 @@ public class View {
 		offset = new Vector2D(0,0);
 		this.tileSize = tileSize;
 		game = g;
+		
 	}
 	
 	public Vector2D viewSize() {
 		return new Vector2D(windowSize.width/(tileSize*zoom), windowSize.height/(tileSize*zoom));
+	}
+	
+	public Vector2D fieldSizeInView() {
+		Vector2D fieldSize = new Vector2D(game.field.tilesX, game.field.tilesY);
+		return fieldSize; //.scalar(zoom);
+		
 	}
 	
 	public Vector2D viewToWorld(Point viewPos) {
@@ -59,19 +65,35 @@ public class View {
 	}
 	
 	private void setOffset(Vector2D pOffset) {
+		
+		
 		double maxOffsX = -game.field.tilesX+(viewSize().x);
 		double maxOffsY = -game.field.tilesY+(viewSize().y);
+
+		Vector2D newOffset = pOffset.copy();
+		if(newOffset.x >= 0)
+			newOffset.x = 0;
+		if(newOffset.x <= maxOffsX)
+			newOffset.x = maxOffsX;
 		
-		offset = pOffset.copy();
-		if(offset.x >= 0)
-			offset.x = 0;
-		if(offset.x <= maxOffsX)
-			offset.x = maxOffsX;
+		if(newOffset.y >= 0)
+			newOffset.y = 0;
+		if(newOffset.y <= maxOffsY)
+			newOffset.y = maxOffsY;
 		
-		if(offset.y >= 0)
-			offset.y = 0;
-		if(offset.y <= maxOffsY)
-			offset.y = maxOffsY;
+		Vector2D viewsize = viewSize();
+		Vector2D fieldsize = fieldSizeInView();
+		
+		if(viewsize.x > fieldsize.x) {
+			newOffset.x = (viewsize.x-fieldsize.x)/2;
+			
+		}
+		if(viewsize.y > fieldsize.y) {
+			newOffset.y = (viewsize.y-fieldsize.y)/2;
+			
+		}
+		
+		this.offset = newOffset;
 		
 	}
 	
@@ -79,6 +101,7 @@ public class View {
 		return new Rectangle2D(viewToWorld(0,0), viewToWorld(windowSize.width,windowSize.height));
 	}
 	
+
 	public void setZoom(double deltaZoom, boolean smooth) {
 		if(smooth) {
 			targetZoom = Util.valueInBounds(0.2, targetZoom+deltaZoom, 3);
@@ -89,8 +112,8 @@ public class View {
 			zoom += deltaZoom;
 			targetZoom = zoom;
 		}
-		
 	}
+		
 	
 	public void follow(Entity entity) {
 		autonomous = true;

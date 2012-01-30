@@ -76,7 +76,7 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		
 		// Unit Range selection
-		/*
+		
 		gl.glColor4d(0.8,0.0,0.0, 0.5);
 		if(game.selectedUnits.size() > 0) {
 			ArrayList<Entity> es = game.entitySystem.getEntitiesInRange(game.selectedUnits.get(0).pos, 5);
@@ -85,21 +85,22 @@ public class OpenGLRenderer implements GLEventListener {
 					square(e.pos, 0.5);
 				}
 			}
-		}*/
+		}
 		
 		
-		// Collision Data selection
-		/*gl.glColor4d(0.3,0.0,0.0, 0.5);
+		//Collision Data selection
+		gl.glColor4d(0.3,0.0,0.0, 0.5);
 		if(game.selectedUnits.size() > 0) {
 			ArrayList<Line2D> cls = game.collisionSystem.relevantData(game.selectedUnits.get(0));
 			for(Line2D l : cls) {
 				line(l,1);
 			}
-		}*/
+		}
 		
 		
 		// Line Level intersection
-		/*Line2D line = new Line2D(new Vector2D(50.5,50.5), game.input.getCursorPos());
+		/*
+		Line2D line = new Line2D(new Vector2D(50.5,50.5), game.input.getCursorPos());
 		ArrayList<Tile> tilesOnLine = game.collisionSystem.getTilesOn(line);
 		
 		gl.glEnable(GL2.GL_BLEND);
@@ -111,8 +112,8 @@ public class OpenGLRenderer implements GLEventListener {
 		for(Tile t : tilesOnLine) {
 			square(t.center,1);
 		}
-		line(line.a,line.b,1);*/
-		
+		line(line.a,line.b,1);
+		*/
 
 		drawHUD();
 		gl.glDisable(GL2.GL_BLEND);

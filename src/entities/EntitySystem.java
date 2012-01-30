@@ -63,17 +63,34 @@ public class EntitySystem {
 			if(index >= 0) yOrder.add(index,ec);
 			else yOrder.add(-index-1,ec);
 		}
+
+		ArrayList<Entity> result = new ArrayList<Entity>();
 		
+		if(yOrder.size() == 0) return result;
 		startindex = getStartIndex(yOrder,pos.y-range,2);
 		endindex = getEndIndex(yOrder,pos.y+range,2);
 		
-		ArrayList<Entity> result = new ArrayList<Entity>();
 		for(int i=startindex; i<=endindex; i++) {
 			Entity e = yOrder.get(i).e;
 			if(e.pos.distance(pos) <= range)
 				result.add(e);
 		}
 		
+		//Debug efficiency output
+		/*
+		System.out.println("count in total: " + xOrder.size());
+		System.out.println("count in xrange: " + yOrder.size());
+		System.out.println("count in yrange: " + result.size());
+		*/
 		return result;
+	}
+	
+	public ArrayList<CollisionEntity> getCollisionEntitiesInRange(Vector2D pos, double range) {
+		ArrayList<CollisionEntity> ces = new ArrayList<CollisionEntity>();
+		ArrayList<Entity> es = getEntitiesInRange(pos,range);
+		for(Entity e : es) {
+			if(e instanceof CollisionEntity) ces.add((CollisionEntity)e);
+		}
+		return ces;
 	}
 }

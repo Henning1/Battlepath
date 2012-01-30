@@ -24,6 +24,12 @@ public class MovementSystem {
 	public void process(ArrayList<CollisionEntity> ces) {
 		for(CollisionEntity c1 : ces) {
 			Move m1 = c1.getMove();
+			if(m1 != null) m1.apply();
+		}
+		
+		
+		for(CollisionEntity c1 : ces) {
+			Move m1 = c1.getMove();
 			if(m1 == null) continue;
 			
 			//collision with level
@@ -32,8 +38,13 @@ public class MovementSystem {
 			}
 			
 			//collision with entities
-			for(CollisionEntity c2 : ces) {
+
+			ArrayList<CollisionEntity> cesInRange = game.entitySystem.getCollisionEntitiesInRange(c1.pos, 3.0);
+			
+			for(CollisionEntity c2 : cesInRange) {
+				
 				if(c1 == c2) continue;
+				/*
 				Move m2 = c2.getMove();
 				
 				//static collision
@@ -46,7 +57,8 @@ public class MovementSystem {
 				}
 				
 				m1.apply();
-
+				*/
+				
 				
 				if(c1.pos.distance(c2.pos) < c1.getRadius() + c2.getRadius()) {
 					c1.collide(c2);
