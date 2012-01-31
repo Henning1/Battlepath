@@ -20,7 +20,9 @@ public class Pathplanner {
 	}
 	
 	public ArrayList<Vector2D> plan(Vector2D start, Vector2D goal) {
-		if(field.tileAt(goal).getType() == 1) return null;
+		Tile tile = field.tileAt(goal);
+		if(tile == null) return null;
+		if(tile.getType() == 1) return null;
 		fChecks = new Field(field.tilesX,field.tilesY);
 		fringe = new PriorityQueue<Node>();
 		nodes = new HashMap<Integer, Node>();

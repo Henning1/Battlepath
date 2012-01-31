@@ -92,7 +92,7 @@ public class Field {
 			Util.isValueInBounds(0, index.y, tilesY-1)) {
 			return tiles[index.x][index.y];
 		}
-		else return null;	
+		else return null;
 	}
 	
 	public Tile tileAt(int x,int y) {
