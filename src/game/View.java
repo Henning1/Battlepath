@@ -23,8 +23,9 @@ public class View {
 	Entity followedEntity;
 	
 	double oldZoom = 1;
-	double targetZoom = 1;
+	public double targetZoom = 1;
 	double zoomSetTime;
+	double zoomDuration = 0;
 	private boolean zoomFinished = true;
 	
 	Vector2D oldOffset;
@@ -109,12 +110,19 @@ public class View {
 	}
 	
 
-	public void zoom(double deltaZoom, boolean smooth) {
-		targetZoom = Util.valueInBounds(0.2, targetZoom+deltaZoom, 3);
+	public void zoom(double zoom, boolean smooth) {
+		if(!Util.isValueInBounds(0.2, zoom, 3)) return;
+		targetZoom = Util.valueInBounds(0.2, zoom, 3);
 		if(smooth) {
-			if(zoomFinished) zoomSetTime = GlobalInfo.time;
-			oldZoom = zoom;
-			zoomFinished = false;
+			if(zoomFinished) { 
+				zoomSetTime = GlobalInfo.time; 
+				zoomDuration = 1;
+				oldZoom = this.zoom;
+				zoomFinished = false;
+			}
+			if(!zoomFinished) { 
+				zoomDuration += 0.1; 
+			}
 		}
 		else {
 			setZoom(targetZoom);
@@ -154,7 +162,7 @@ public class View {
 	
 	public void process(double dt) {
 		if(!zoomFinished) {
-			setZoom(Transition.t(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 0.5, Transition.type.EASEINOUT));
+			setZoom(Transition.t(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, zoomDuration, Transition.type.EASEINOUT));
 			zoomFinished = (zoom == targetZoom);
 		}
 		
