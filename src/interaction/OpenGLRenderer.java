@@ -280,13 +280,13 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		
 		
-		game.field.movePointIntoIndexBounds(topleft);
-		game.field.movePointIntoIndexBounds(bottomright);
+		game.field.clamp(topleft);
+		game.field.clamp(bottomright);
 		
 		for(int x=topleft.x; x <= bottomright.x; x++) {
 			for(int y=bottomright.y; y <= topleft.y; y++) {
 				
-				switch(game.field.tiles[x][y].getType()) {
+				switch(game.field.tiles[x][y].getValue()) {
 				case 1:
 					gl.glColor3d((double)x/game.field.tilesX-0.2, (double)x/game.field.tilesX-0.2, (double)y/game.field.tilesY-0.2);
 					tile(new Vector2D(x+0.5,y+0.5));

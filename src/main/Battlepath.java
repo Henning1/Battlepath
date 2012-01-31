@@ -66,7 +66,7 @@ public class Battlepath {
 	 */
 	public static Vector2D findStartPos(Field f) {
 		Point start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
-		while(f.tiles[start.x][start.y].getType() == 1)
+		while(f.tiles[start.x][start.y].getValue() == 1)
 			start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
 		return f.getWorldPos(start);
 	}
@@ -79,7 +79,7 @@ public class Battlepath {
 	 */
 	public static void randomCircles(Field f, int n, double maxr) {
 		for(int i=0; i<n; i++) {
-			f.createCricle(new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY), rand.nextDouble()*maxr);
+			f.createCircle(new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY), rand.nextDouble()*maxr);
 		}
 	}
 	
@@ -94,7 +94,7 @@ public class Battlepath {
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		for(int i=0; i<n;i++) {
 			Point tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
-			while(f.tiles[tower.x][tower.y].getType() == 1)
+			while(f.tiles[tower.x][tower.y].getValue() == 1)
 				tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
 			list.add(new Tower(f.getWorldPos(tower), g));
 		}

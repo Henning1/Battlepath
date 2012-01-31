@@ -36,8 +36,8 @@ public class CollisionSystem {
 		Point a = field.tileIndexAt(topleft);
 		Point b = field.tileIndexAt(bottomright);
 
-		field.movePointIntoIndexBounds(a);
-		field.movePointIntoIndexBounds(b);
+		field.clamp(a);
+		field.clamp(b);
 		
 		ArrayList<Line2D> collModel = new ArrayList<Line2D>();
 		

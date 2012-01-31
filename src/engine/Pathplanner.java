@@ -7,22 +7,33 @@ import java.util.PriorityQueue;
 
 import util.Vector2D;
 
-
+/**
+ * Path planning class
+ */
 public class Pathplanner {
 	
-	Field field;
-	Field fChecks;
-	PriorityQueue<Node> fringe;
-	HashMap<Integer, Node> nodes;
+	private Field field;
+	private Field fChecks;
+	private PriorityQueue<Node> fringe;
+	private HashMap<Integer, Node> nodes;
 	
+	/**
+	 * @param field Field to use
+	 */
 	public Pathplanner(Field field) {
 		this.field = field;
 	}
 	
+	/**
+	 * Plans a path from a start wold position to a goal world position
+	 * @param start start position
+	 * @param goal goal position
+	 * @return list of needed moves go from start to goal
+	 */
 	public ArrayList<Vector2D> plan(Vector2D start, Vector2D goal) {
 		Tile tile = field.tileAt(goal);
 		if(tile == null) return null;
-		if(tile.getType() == 1) return null;
+		if(tile.getValue() == 1) return null;
 		fChecks = new Field(field.tilesX,field.tilesY);
 		fringe = new PriorityQueue<Node>();
 		nodes = new HashMap<Integer, Node>();
@@ -37,9 +48,7 @@ public class Pathplanner {
 		
 	}
 	
-	
-	
-	public Node astar(Vector2D goal) {
+	private Node astar(Vector2D goal) {
 		int expands=0;
 		while(!fringe.isEmpty()) {
 			Node n = fringe.remove();
@@ -77,11 +86,11 @@ public class Pathplanner {
 	}
 	
 
-	public boolean goalCheck(Node pos, Vector2D goal) {
+	private boolean goalCheck(Node pos, Vector2D goal) {
 		return field.sameTile(pos.getPos(), goal);
 	}
 	
-	public double h(Vector2D n, Vector2D goal) {
+	private double h(Vector2D n, Vector2D goal) {
 		
 		if(n.equals(goal)) return 0;
 		return n.distance(goal);
@@ -91,10 +100,8 @@ public class Pathplanner {
 		Point index = field.tileIndexAt(tile);
 		return index.y*field.tilesX + index.x;
 	}
-	
 
-	
-    public class Node implements Comparable<Object> {
+    private class Node implements Comparable<Object> {
         private ArrayList<Vector2D> moves=new ArrayList<Vector2D>();
         private double f;
         private double cost;
@@ -111,16 +118,10 @@ public class Pathplanner {
         	moves.add(pos);
         	
         	f = h + cost;
-        	
-        	
         }
         
         public ArrayList<Vector2D> getPath() {
         	return moves;        	        	
-        }
-        
-        public double getCost() {
-        	return cost;
         }
         
         public Vector2D getPos() {
