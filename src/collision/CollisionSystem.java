@@ -98,6 +98,12 @@ public class CollisionSystem {
 		
 		while(current != destination && current != null) {
 			result.add(current);
+			//vertical line
+			if(line.direction.y == 0) {
+				current = field.tileAt(current.center.add(line.direction));
+				continue;
+			}
+			
 			//line penetrates right edge
 			double y = line.yAt(current.bottomright.x);
 			if(Util.isValueInBounds(current.topleft.y, y, current.bottomright.y)) {
