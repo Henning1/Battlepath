@@ -21,10 +21,18 @@ import engine.Pathplanner;
 import entities.Entity;
 import entities.Tower;
 
-
+/**
+ * Main class of the Battlepath game.
+ * @author Battlepath team
+ * @version 0
+ */
 public class Battlepath {
 	static Random rand = new Random();
 	
+	/**
+	 * Main method
+	 * @param args Command line arguments
+	 */
 	public static void main(String[] args) {
 		int tileSize = 20;
 		int fieldWidth = 100;
@@ -51,7 +59,11 @@ public class Battlepath {
 		
 		MainLoop.startLoop(game, renderer, frame);
 	}
-	
+	/**
+	 * Finds valid start position for the Unit
+	 * @param f Used field
+	 * @return Valid position
+	 */
 	public static Vector2D findStartPos(Field f) {
 		Point start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
 		while(f.tiles[start.x][start.y].getType() == 1)
@@ -59,12 +71,25 @@ public class Battlepath {
 		return f.getWorldPos(start);
 	}
 	
+	/**
+	 * Creates random circles on a map. Currently the only map generation algorithm.
+	 * @param f Used field
+	 * @param n Number of circles
+	 * @param maxr Maximal radius of circles
+	 */
 	public static void randomCircles(Field f, int n, double maxr) {
 		for(int i=0; i<n; i++) {
 			f.createCricle(new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY), rand.nextDouble()*maxr);
 		}
 	}
 	
+	/**
+	 * Generates randomly spread towers on a map
+	 * @param f Used field
+	 * @param n Number of towers
+	 * @param g Used game
+	 * @return List of towers
+	 */
 	public static ArrayList<Entity> randomTowers(Field f, int n, Game g) {
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		for(int i=0; i<n;i++) {
