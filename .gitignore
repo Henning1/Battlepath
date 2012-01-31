@@ -1,5 +1,7 @@
 *.class
 bin/
+doc/
+javadoc.xml
 
 # Package Files #
 *.jar
