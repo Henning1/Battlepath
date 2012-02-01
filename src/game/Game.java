@@ -43,8 +43,12 @@ import entities.Projectile;
 import entities.Unit;
 import fx.EffectsSystem;
 
+/**
+ * Game class, managing all computations needed for the game
+ */
 public class Game {
 	
+	//TODO: Refactor, check whether we can/should make some of these private.
 	public Field field;
 	public Pathplanner pathPlanner;
 	public CollisionSystem collisionSystem;
@@ -64,12 +68,20 @@ public class Game {
 	
 	public double dt;
 	
+	/**
+	 * 
+	 * @param startpos Start position of the first Unit.
+	 */
 	public Game(Vector2D startpos) {
 		movementSystem = new MovementSystem(this);
 		particleSystem = new EffectsSystem(this);
 		entities.add(new Unit(startpos, this));
 	}
 	
+	/**
+	 * Method that should be called at least once for every frame, calls all process() methods of all game elements 
+	 * @param dt time step that is computed. Passed to all elements.
+	 */
 	public void step(double dt) {
 		this.dt = dt;
 		processInput(dt);
@@ -105,6 +117,10 @@ public class Game {
 		view.process(dt);
 	}
 	
+	/**
+	 * Sets the game mode. See GameMode.java for more info
+	 * @param gm new mode
+	 */
 	public void setMode(GameMode gm) {
 		switch(gm) {
 		case ACTION:
@@ -123,6 +139,10 @@ public class Game {
 		}
 	}
 	
+	/**
+	 * Gives all collision entities known to the game
+	 * @return set of collision entities
+	 */
 	public ArrayList<CollisionEntity> getCollisionEntities() {
 		ArrayList<CollisionEntity> es = new ArrayList<CollisionEntity>();
 		for(Entity e : entities) {
@@ -133,6 +153,9 @@ public class Game {
 		return es;
 	}
 	
+	/**
+	 * Switch between ACTION and STRATEGY mode.
+	 */
 	public void toggleMode() {
 		if(mode == GameMode.ACTION) {
 			setMode(GameMode.STRATEGY);
@@ -142,6 +165,12 @@ public class Game {
 		}
 	}
 	
+	/**
+	 * Gets all units in range of the provided world position position
+	 * @param pos world position
+	 * @param range range radius
+	 * @return set of units in range
+	 */
 	public ArrayList<Unit> getUnitsInRange(Vector2D pos, double range) {
 		
 		ArrayList<Unit> result = new ArrayList<Unit>();
@@ -155,7 +184,10 @@ public class Game {
 		return result;
 	}
 	
-	
+	/**
+	 * Processes all user inputs, mouse and keyboard. Gets its information about that from Input class.
+	 * @param dt time step
+	 */
 	public void processInput(double dt) {
 		
 		ArrayList<Unit> selected = entitySystem.selected();
@@ -251,6 +283,11 @@ public class Game {
 		
 	}
 	
+	/**
+	 * Produces a shot at given world position and direction
+	 * @param start world position of the shot to start
+	 * @param direction direction to shoot
+	 */
 	public void emitShot(Vector2D start, Vector2D direction) {
 		Projectile p = new Projectile(start, direction, this);
 		entities.add(p);

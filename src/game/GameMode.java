@@ -18,6 +18,9 @@
  */
 package game;
 
+/**
+ * A set of different game modes.
+ */
 public enum GameMode {
 	ACTION,
 	STRATEGY,
