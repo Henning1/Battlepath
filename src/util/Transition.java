@@ -19,36 +19,106 @@
 package util;
 
 public class Transition {
-	
 	public enum type {
 		EASEINOUT,
 		LINEAR
 	}
 	
-	public static double t(double time, double startValue, double endValue, double duration, Transition.type t) {		
-		if(time >= duration) return endValue;
-		return doMath(time, startValue, endValue, duration, t);
+	private double s, e, d;
+	private transitionMethod t;
+	
+	public Transition(double startValue, double endValue, double duration, type type) {
+		s = startValue;
+		e = endValue;
+		d = duration;
+		setType(type);
+		
 	}
 	
-	private static double doMath(double time, double startValue, double endValue, double duration, Transition.type t) {
-		switch(t) {
+	public double get(double time) {		
+		if(time >= d) return e;
+		//System.out.println("start: "+s+" end:"+e+"duration: "+d+"speed: "+getSpeed(time)+" type:"+t);
+		return doMath(time);
+	}
+
+	private double doMath(double time) {
+		return t.getValue(time, s, e, d);
+	}
+	
+	public double getSpeed(double time) {
+		return t.getDerivateValue(time, s, e, d);
+	}
+	
+	public void setType(type type) {
+		switch(type) {
 		case EASEINOUT:
-			return easeInOut(time, startValue, endValue, duration);
+			t = new easeInOut();
+			break;
 		case LINEAR:
-			return linear(time, startValue, endValue, duration);
+			t = new linear();
+			break;
 		}
-		return 0;
 	}
 	
-	private static double easeInOut(double a, double b, double c, double d) {
-		a /= d/2;
-		if (a < 1) return (c-b)/2*a*a + b;
-		a--;
-		return -(c-b)/2 * (a*(a-2) - 1) + b;
+	public void setStartValue(double startValue) {
+		s = startValue;
 	}
 	
-	private static double linear(double a, double b, double c, double d) {
-		a /= d;
-		return a * (c - b) + b;
+	public double getStartValue() {
+		return s;
+	}
+	
+	public void setEndValue(double endValue) {
+		e = endValue;
+	}
+	
+	public double getEndValue() {
+		return e;
+	}
+	
+	public void setDuration(double duration) {
+		d = duration;
+	}
+	
+	public double getDuration() {
+		return d;
+	}
+	
+	private interface transitionMethod {
+		public double getValue(double time, double startValue, double endValue, double duration);
+		public double getDerivateValue(double time, double startValue, double endValue, double duration);
+	}
+	
+	private class easeInOut implements transitionMethod {
+		@Override
+		public double getValue(double a, double b, double c, double d) {
+			a /= d/2;
+			if (a < 1) return (c-b)/2*a*a + b;
+			a--;
+			return -(c-b)/2 * (a*(a-2) - 1) + b;
+		}
+
+		@Override
+		public double getDerivateValue(double a, double b, double c, double d) {
+			a /= d/2;
+			if (a < 1) return (c-b)*a;
+			a--;
+			return (c-b) - (c-b)*a;
+		}
+	}
+	
+	private class linear implements transitionMethod {
+		@Override
+		public double getValue(double a, double b, double c, double d) {
+			a /= d;
+			return a * (c - b) + b;
+		}
+
+		@Override
+		public double getDerivateValue(double a, double b, double c, double d) {
+			a /= d;
+			return (c - b);
+		}
+		
 	}
 }

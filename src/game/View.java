@@ -40,17 +40,14 @@ public class View {
 	boolean autonomous = false;
 	Entity followedEntity;
 	
-	double oldZoom = 1;
-	public double targetZoom = 1;
-	double zoomSetTime;
-	double zoomDuration = 0;
+	Transition zoomTransition;
+	private double zoomSetTime;
 	private boolean zoomFinished = true;
 	
-	Vector2D oldOffset;
-	Vector2D targetOffset;
-	double offsetSetTime;
-	boolean smoothOffsetFinished = true;
-	double smoothOffsetDuration;
+	Transition offsetTransitionX, offsetTransitionY;
+	private double offsetSetTime;
+	private boolean smoothOffsetFinished = true;
+	
 	public Vector2D offset;
 	
 	public View(Dimension size, int tileSize, Game g) {
@@ -59,6 +56,9 @@ public class View {
 		this.tileSize = tileSize;
 		game = g;
 		
+		zoomTransition = new Transition(1, 1, 1, Transition.type.LINEAR);
+		offsetTransitionX = new Transition(0, 0, 1, Transition.type.EASEINOUT);
+		offsetTransitionY = new Transition(0, 0, 1, Transition.type.EASEINOUT);
 	}
 	
 	public Vector2D viewSize() {
@@ -130,29 +130,29 @@ public class View {
 
 	public void zoom(double zoom, boolean smooth) {
 		if(!Util.isValueInBounds(0.2, zoom, 3)) return;
-		targetZoom = Util.valueInBounds(0.2, zoom, 3);
 		if(smooth) {
 			if(zoomFinished) { 
 				zoomSetTime = GlobalInfo.time; 
-				zoomDuration = 1;
-				oldZoom = this.zoom;
+				zoomTransition.setStartValue(this.zoom);
+				zoomTransition.setEndValue(zoom);
+				zoomTransition.setDuration(1);
 				zoomFinished = false;
 			}
 			if(!zoomFinished) { 
-				zoomDuration += 0.1; 
+				zoomTransition.setEndValue(zoom);
 			}
 		}
 		else {
-			setZoom(targetZoom);
+			setZoom(zoom);
 		}
 	}
 	
 	public void smoothOffset(Vector2D pOffset) {
-		targetOffset = getValidOffset(pOffset.negate().add(viewSize().scalar(0.5)));
+		/*targetOffset = getValidOffset(pOffset.negate().add(viewSize().scalar(0.5)));
 		oldOffset = offset.copy();
 		offsetSetTime = GlobalInfo.time;
 		smoothOffsetFinished = false;
-		smoothOffsetDuration = oldOffset.distance(targetOffset)/50;
+		smoothOffsetDuration = oldOffset.distance(targetOffset)/50;*/
 	}
 	
 	private void setZoom(double pZoom) {
@@ -178,20 +178,24 @@ public class View {
 		setOffset(point.negate().add(viewSize().scalar(0.5)));
 	}
 	
+	public double getTargetZoom() {
+		return zoomTransition.getEndValue();
+	}
+	
 	public void process(double dt) {
 		if(!zoomFinished) {
-			setZoom(Transition.t(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, zoomDuration, Transition.type.EASEINOUT));
-			zoomFinished = (zoom == targetZoom);
+			setZoom(zoomTransition.get(GlobalInfo.time-zoomSetTime));
+			zoomFinished = (zoom == zoomTransition.getEndValue());
 		}
 		
-		if(!smoothOffsetFinished) {
+		/*if(!smoothOffsetFinished) {
 			offset.x = Transition.t(GlobalInfo.time-offsetSetTime, oldOffset.x, targetOffset.x, 
 					smoothOffsetDuration, Transition.type.EASEINOUT);
 			offset.y = Transition.t(GlobalInfo.time-offsetSetTime, oldOffset.y, targetOffset.y, 
 					smoothOffsetDuration, Transition.type.EASEINOUT);
 			
 			smoothOffsetFinished = (offset.x == targetOffset.x && offset.y == targetOffset.y);
-		}
+		}*/
 		
 		if(autonomous && smoothOffsetFinished) {
 			center(followedEntity.pos);
