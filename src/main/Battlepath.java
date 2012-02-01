@@ -36,6 +36,7 @@ import util.Vector2D;
 import engine.Field;
 import engine.MainLoop;
 import engine.Pathplanner;
+import engine.Tile;
 import entities.Entity;
 import entities.Tower;
 
@@ -83,9 +84,10 @@ public class Battlepath {
 	 * @return Valid position
 	 */
 	public static Vector2D findStartPos(Field f) {
-		Point start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
-		while(f.tiles[start.x][start.y].getValue() == 1)
-			start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
+		Point start = new Point(rand.nextInt(f.getTilesX()), rand.nextInt(f.getTilesY()));
+		Tile[][] tiles = f.getTiles();
+		while(tiles[start.x][start.y].getValue() == 1)
+			start = new Point(rand.nextInt(f.getTilesX()), rand.nextInt(f.getTilesY()));
 		return f.getWorldPos(start);
 	}
 	
@@ -97,7 +99,7 @@ public class Battlepath {
 	 */
 	public static void randomCircles(Field f, int n, double maxr) {
 		for(int i=0; i<n; i++) {
-			f.createCircle(new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY), rand.nextDouble()*maxr);
+			f.createCircle(new Vector2D(rand.nextDouble()*f.getTilesX(), rand.nextDouble()*f.getTilesY()), rand.nextDouble()*maxr);
 		}
 	}
 	
@@ -110,10 +112,11 @@ public class Battlepath {
 	 */
 	public static ArrayList<Entity> randomTowers(Field f, int n, Game g) {
 		ArrayList<Entity> list = new ArrayList<Entity>();
+		Tile[][] tiles = f.getTiles();
 		for(int i=0; i<n;i++) {
-			Point tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
-			while(f.tiles[tower.x][tower.y].getValue() == 1)
-				tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
+			Point tower = new Point(rand.nextInt(f.getTilesX()), rand.nextInt(f.getTilesY()));
+			while(tiles[tower.x][tower.y].getValue() == 1)
+				tower = new Point(rand.nextInt(f.getTilesX()), rand.nextInt(f.getTilesY()));
 			list.add(new Tower(f.getWorldPos(tower), g));
 		}
 		return list;

@@ -32,9 +32,9 @@ import util.Vector2D;
  * Vector2D is used for world coordinates.
  */
 public class Field {
-	public Tile tiles[][];
-	public int tilesX=0;
-	public int tilesY=0;
+	private Tile tiles[][];
+	private int tilesX=0;
+	private int tilesY=0;
 	private ArrayList<Line2D> boundingFrame = new ArrayList<Line2D>();
 	
 	/**
@@ -281,6 +281,22 @@ public class Field {
 	 */
 	public boolean sameTile(Vector2D a, Vector2D b) {
 		return this.tileIndexAt(a).equals(this.tileIndexAt(b));
+	}
+	
+	/**
+	 * Returns all Tile objects of the field
+	 * @return Array of Tile objects
+	 */
+	public Tile[][] getTiles() {
+		return tiles;
+	}
+	
+	public int getTilesX() {
+		return tilesX;
+	}
+	
+	public int getTilesY() {
+		return tilesY;
 	}
 	
 	/**

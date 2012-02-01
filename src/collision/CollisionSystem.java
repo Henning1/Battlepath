@@ -61,9 +61,11 @@ public class CollisionSystem {
 		
 		collModel.addAll(field.getBoundingFrame());
 		
+		Tile[][] tiles = field.getTiles();
+		
 		for(int x=a.x; x<=b.x;x++) {
 			for(int y=a.y; y<=b.y; y++) {
-				collModel.addAll(field.tiles[x][y].collisionModel);
+				collModel.addAll(tiles[x][y].getCollisionModel());
 			}
 		}
 		
@@ -74,7 +76,7 @@ public class CollisionSystem {
 		ArrayList<Tile> rTiles = getTilesOn(l);
 		
 		for(Tile t : rTiles) {
-			ArrayList<Line2D> model = t.collisionModel;
+			ArrayList<Line2D> model = t.getCollisionModel();
 			for(Line2D edge : model) {
 				Vector2D i = l.intersectionPoint(edge);
 				if(l.pointInSegment(i) && edge.pointInSegment(i))
@@ -87,7 +89,7 @@ public class CollisionSystem {
 	
 	public ArrayList<Vector2D> collisionsWithTile(Line2D l, Tile t) {
 		ArrayList<Vector2D> result = new ArrayList<Vector2D>();
-		ArrayList<Line2D> model = t.collisionModel;
+		ArrayList<Line2D> model = t.getCollisionModel();
 		for(Line2D edge : model) {
 			Vector2D i = l.intersectionPoint(edge);
 			result.add(i);
@@ -118,22 +120,22 @@ public class CollisionSystem {
 			result.add(current);
 			//vertical line
 			if(line.direction.y == 0) {
-				current = field.tileAt(current.center.add(line.direction));
+				current = field.tileAt(current.getCenter().add(line.direction));
 				continue;
 			}
 			
 			//line penetrates right edge
-			double y = line.yAt(current.bottomright.x);
-			if(Util.isValueInBounds(current.topleft.y, y, current.bottomright.y)) {
-				current = field.tileAt(current.index.x+1,current.index.y);
+			double y = line.yAt(current.getBottomright().x);
+			if(Util.isValueInBounds(current.getTopleft().y, y, current.getBottomright().y)) {
+				current = field.tileAt(current.getIndex().x+1,current.getIndex().y);
 			} else {
 				//line penetrates top edge
 				if(line.a.y > line.b.y) {
-					current = field.tileAt(current.index.x,current.index.y-1);
+					current = field.tileAt(current.getIndex().x,current.getIndex().y-1);
 				} 
 				//line penetrates bottom edge
 				else {
-					current = field.tileAt(current.index.x,current.index.y+1);
+					current = field.tileAt(current.getIndex().x,current.getIndex().y+1);
 				}
 			}
 		}

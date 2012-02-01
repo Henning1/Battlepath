@@ -52,7 +52,7 @@ public class Pathplanner {
 		Tile tile = field.tileAt(goal);
 		if(tile == null) return null;
 		if(tile.getValue() == 1) return null;
-		fChecks = new Field(field.tilesX,field.tilesY);
+		fChecks = new Field(field.getTilesX(),field.getTilesY());
 		fringe = new PriorityQueue<Node>();
 		nodes = new HashMap<Integer, Node>();
 	
@@ -116,7 +116,7 @@ public class Pathplanner {
 	
 	private int getIdentifier(Vector2D tile) {
 		Point index = field.tileIndexAt(tile);
-		return index.y*field.tilesX + index.x;
+		return index.y*field.getTilesX() + index.x;
 	}
 
     private class Node implements Comparable<Object> {

@@ -18,6 +18,7 @@
  */
 package interaction;
 
+import engine.Tile;
 import entities.Entity;
 import entities.Projectile;
 import entities.Tower;
@@ -295,7 +296,7 @@ public class OpenGLRenderer implements GLEventListener {
 		Rectangle2D screen = game.view.getScreenRect();
 		Point topleft = game.field.tileIndexAt(screen.topleft);
 		Point bottomright = game.field.tileIndexAt(screen.bottomright);
-		
+		Tile[][] tiles = game.field.getTiles();
 		
 		
 		game.field.clamp(topleft);
@@ -304,9 +305,9 @@ public class OpenGLRenderer implements GLEventListener {
 		for(int x=topleft.x; x <= bottomright.x; x++) {
 			for(int y=bottomright.y; y <= topleft.y; y++) {
 				
-				switch(game.field.tiles[x][y].getValue()) {
+				switch(tiles[x][y].getValue()) {
 				case 1:
-					gl.glColor3d((double)x/game.field.tilesX-0.2, (double)x/game.field.tilesX-0.2, (double)y/game.field.tilesY-0.2);
+					gl.glColor3d((double)x/game.field.getTilesX()-0.2, (double)x/game.field.getTilesX()-0.2, (double)y/game.field.getTilesY()-0.2);
 					tile(new Vector2D(x+0.5,y+0.5));
 					break;
 				}

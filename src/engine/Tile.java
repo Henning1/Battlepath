@@ -29,10 +29,10 @@ import util.Vector2D;
  */
 public class Tile {
 	
-	public ArrayList<Line2D> collisionModel = new ArrayList<Line2D>();
+	private ArrayList<Line2D> collisionModel = new ArrayList<Line2D>();
 	//bounding box
-	public Vector2D topleft, bottomright, center;
-	public Point index;
+	private Vector2D topleft, bottomright, center;
+	private Point index;
 	private int value;
 	
 	/**
@@ -70,5 +70,25 @@ public class Tile {
 	
 	public String toString() {
 		return Integer.toString(value);
+	}
+
+	public Vector2D getCenter() {
+		return center;
+	}
+
+	public Point getIndex() {
+		return index;
+	}
+
+	public Vector2D getTopleft() {
+		return topleft;
+	}
+
+	public Vector2D getBottomright() {
+		return bottomright;
+	}
+
+	public ArrayList<Line2D> getCollisionModel() {
+		return collisionModel;
 	}
 }

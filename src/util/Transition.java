@@ -21,16 +21,18 @@ package util;
 public class Transition {
 	public enum type {
 		EASEINOUT,
+		INTERMEDIARY,
 		LINEAR
 	}
 	
-	private double s, e, d;
+	private double s, e, d, i;
 	private transitionMethod t;
 	
-	public Transition(double startValue, double endValue, double duration, type type) {
+	public Transition(double startValue, double endValue, double duration, double startSpeed, type type) {
 		s = startValue;
 		e = endValue;
 		d = duration;
+		i = startSpeed;
 		setType(type);
 		
 	}
@@ -42,17 +44,20 @@ public class Transition {
 	}
 
 	private double doMath(double time) {
-		return t.getValue(time, s, e, d);
+		return t.getValue(time, s, e, d, i);
 	}
 	
 	public double getSpeed(double time) {
-		return t.getDerivateValue(time, s, e, d);
+		return t.getDerivateValue(time, s, e, d, i);
 	}
 	
 	public void setType(type type) {
 		switch(type) {
 		case EASEINOUT:
 			t = new easeInOut();
+			break;
+		case INTERMEDIARY:
+			t = new intermediary();
 			break;
 		case LINEAR:
 			t = new linear();
@@ -84,14 +89,18 @@ public class Transition {
 		return d;
 	}
 	
+	public void setStartSpeed(double startSpeed) {
+		i = startSpeed;
+	}
+	
 	private interface transitionMethod {
-		public double getValue(double time, double startValue, double endValue, double duration);
-		public double getDerivateValue(double time, double startValue, double endValue, double duration);
+		public double getValue(double time, double startValue, double endValue, double duration, double startSpeed);
+		public double getDerivateValue(double time, double startValue, double endValue, double duration, double startSpeed);
 	}
 	
 	private class easeInOut implements transitionMethod {
 		@Override
-		public double getValue(double a, double b, double c, double d) {
+		public double getValue(double a, double b, double c, double d, double e) {
 			a /= d/2;
 			if (a < 1) return (c-b)/2*a*a + b;
 			a--;
@@ -99,7 +108,7 @@ public class Transition {
 		}
 
 		@Override
-		public double getDerivateValue(double a, double b, double c, double d) {
+		public double getDerivateValue(double a, double b, double c, double d, double e) {
 			a /= d/2;
 			if (a < 1) return (c-b)*a;
 			a--;
@@ -109,16 +118,30 @@ public class Transition {
 	
 	private class linear implements transitionMethod {
 		@Override
-		public double getValue(double a, double b, double c, double d) {
+		public double getValue(double a, double b, double c, double d, double e) {
 			a /= d;
 			return a * (c - b) + b;
 		}
 
 		@Override
-		public double getDerivateValue(double a, double b, double c, double d) {
+		public double getDerivateValue(double a, double b, double c, double d, double e) {
 			a /= d;
 			return (c - b);
 		}
 		
+	}
+	
+	private class intermediary implements transitionMethod {
+		@Override
+		public double getValue(double a, double b, double c, double d, double e) {
+			a /= d;
+			return (e+2*b)*a*a*a + (0.5*c-2*e-3*b)*a*a + e*a + b;
+		}
+		
+		@Override
+		public double getDerivateValue(double a, double b, double c, double d, double e) {
+			a /= d/2;
+			return 3*(e+2*b)*a*a + 2*(0.5*c-2*e-3*b)*a + e;
+		}
 	}
 }
