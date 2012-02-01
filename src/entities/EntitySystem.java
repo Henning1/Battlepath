@@ -74,13 +74,26 @@ public class EntitySystem {
 	private int getStartIndex(ArrayList<EntityComparator> list, double value, int dimension) {
 		int startindex = Collections.binarySearch(list, getPivot(dimension,value));
 		if(startindex<0) startindex = -startindex-1;
+		
+		while(startindex>0 && (dimVal(list.get(startindex-1).e,dimension) >= value))
+			startindex--;
+		
 		return startindex;
 	}
 	
+	private double dimVal(Entity e, int dimension) {
+		if(dimension ==1) return e.pos.x;
+		if(dimension ==2) return e.pos.y;
+		return 0;
+	}
 	private int getEndIndex(ArrayList<EntityComparator> list, double value, int dimension) {
 		int endindex = Collections.binarySearch(list, getPivot(dimension,value));
 		if(endindex<0) endindex = (-endindex)-2;
 		if(endindex < 0) endindex = 0;
+		
+		while((endindex<list.size()-1) && (dimVal(list.get(endindex+1).e,dimension) <= value))
+			endindex++;
+		
 		return endindex;
 	}
 
