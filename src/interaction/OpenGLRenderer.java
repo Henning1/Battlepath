@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2011-2012 Henning Funke.
+ * 
+ * This file is part of Battlepath.
+ *
+ * Battlepath is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * Battlepath is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package interaction;
 
 import entities.Entity;
@@ -280,13 +298,13 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		
 		
-		game.field.movePointIntoIndexBounds(topleft);
-		game.field.movePointIntoIndexBounds(bottomright);
+		game.field.clamp(topleft);
+		game.field.clamp(bottomright);
 		
 		for(int x=topleft.x; x <= bottomright.x; x++) {
 			for(int y=bottomright.y; y <= topleft.y; y++) {
 				
-				switch(game.field.tiles[x][y].getType()) {
+				switch(game.field.tiles[x][y].getValue()) {
 				case 1:
 					gl.glColor3d((double)x/game.field.tilesX-0.2, (double)x/game.field.tilesX-0.2, (double)y/game.field.tilesY-0.2);
 					tile(new Vector2D(x+0.5,y+0.5));

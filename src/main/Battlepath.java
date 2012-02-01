@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2011-2012 Henning Funke.
+ * 
+ * This file is part of Battlepath.
+ *
+ * Battlepath is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * Battlepath is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package main;
 import game.Game;
 import game.GameMode;
@@ -21,10 +39,18 @@ import engine.Pathplanner;
 import entities.Entity;
 import entities.Tower;
 
-
+/**
+ * Main class of the Battlepath game.
+ * @author Battlepath team
+ * @version 0
+ */
 public class Battlepath {
 	static Random rand = new Random();
 	
+	/**
+	 * Main method
+	 * @param args Command line arguments
+	 */
 	public static void main(String[] args) {
 		int tileSize = 20;
 		int fieldWidth = 100;
@@ -51,25 +77,42 @@ public class Battlepath {
 		
 		MainLoop.startLoop(game, renderer, frame);
 	}
-	
+	/**
+	 * Finds valid start position for the Unit
+	 * @param f Used field
+	 * @return Valid position
+	 */
 	public static Vector2D findStartPos(Field f) {
 		Point start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
-		while(f.tiles[start.x][start.y].getType() == 1)
+		while(f.tiles[start.x][start.y].getValue() == 1)
 			start = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
 		return f.getWorldPos(start);
 	}
 	
+	/**
+	 * Creates random circles on a map. Currently the only map generation algorithm.
+	 * @param f Used field
+	 * @param n Number of circles
+	 * @param maxr Maximal radius of circles
+	 */
 	public static void randomCircles(Field f, int n, double maxr) {
 		for(int i=0; i<n; i++) {
-			f.createCricle(new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY), rand.nextDouble()*maxr);
+			f.createCircle(new Vector2D(rand.nextDouble()*f.tilesX, rand.nextDouble()*f.tilesY), rand.nextDouble()*maxr);
 		}
 	}
 	
+	/**
+	 * Generates randomly spread towers on a map
+	 * @param f Used field
+	 * @param n Number of towers
+	 * @param g Used game
+	 * @return List of towers
+	 */
 	public static ArrayList<Entity> randomTowers(Field f, int n, Game g) {
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		for(int i=0; i<n;i++) {
 			Point tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
-			while(f.tiles[tower.x][tower.y].getType() == 1)
+			while(f.tiles[tower.x][tower.y].getValue() == 1)
 				tower = new Point(rand.nextInt(f.tilesX), rand.nextInt(f.tilesY));
 			list.add(new Tower(f.getWorldPos(tower), g));
 		}

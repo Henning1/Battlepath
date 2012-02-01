@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2011-2012 Henning Funke.
+ * 
+ * This file is part of Battlepath.
+ *
+ * Battlepath is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * Battlepath is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package engine;
 
 import java.awt.Point;
@@ -7,20 +25,33 @@ import java.util.PriorityQueue;
 
 import util.Vector2D;
 
-
+/**
+ * Path planning class
+ */
 public class Pathplanner {
 	
-	Field field;
-	Field fChecks;
-	PriorityQueue<Node> fringe;
-	HashMap<Integer, Node> nodes;
+	private Field field;
+	private Field fChecks;
+	private PriorityQueue<Node> fringe;
+	private HashMap<Integer, Node> nodes;
 	
+	/**
+	 * @param field Field to use
+	 */
 	public Pathplanner(Field field) {
 		this.field = field;
 	}
 	
+	/**
+	 * Plans a path from a start wold position to a goal world position
+	 * @param start start position
+	 * @param goal goal position
+	 * @return list of needed moves go from start to goal
+	 */
 	public ArrayList<Vector2D> plan(Vector2D start, Vector2D goal) {
-		if(field.tileAt(goal).getType() == 1) return null;
+		Tile tile = field.tileAt(goal);
+		if(tile == null) return null;
+		if(tile.getValue() == 1) return null;
 		fChecks = new Field(field.tilesX,field.tilesY);
 		fringe = new PriorityQueue<Node>();
 		nodes = new HashMap<Integer, Node>();
@@ -35,9 +66,7 @@ public class Pathplanner {
 		
 	}
 	
-	
-	
-	public Node astar(Vector2D goal) {
+	private Node astar(Vector2D goal) {
 		int expands=0;
 		while(!fringe.isEmpty()) {
 			Node n = fringe.remove();
@@ -75,11 +104,11 @@ public class Pathplanner {
 	}
 	
 
-	public boolean goalCheck(Node pos, Vector2D goal) {
+	private boolean goalCheck(Node pos, Vector2D goal) {
 		return field.sameTile(pos.getPos(), goal);
 	}
 	
-	public double h(Vector2D n, Vector2D goal) {
+	private double h(Vector2D n, Vector2D goal) {
 		
 		if(n.equals(goal)) return 0;
 		return n.distance(goal);
@@ -89,10 +118,8 @@ public class Pathplanner {
 		Point index = field.tileIndexAt(tile);
 		return index.y*field.tilesX + index.x;
 	}
-	
 
-	
-    public class Node implements Comparable<Object> {
+    private class Node implements Comparable<Object> {
         private ArrayList<Vector2D> moves=new ArrayList<Vector2D>();
         private double f;
         private double cost;
@@ -109,16 +136,10 @@ public class Pathplanner {
         	moves.add(pos);
         	
         	f = h + cost;
-        	
-        	
         }
         
         public ArrayList<Vector2D> getPath() {
         	return moves;        	        	
-        }
-        
-        public double getCost() {
-        	return cost;
         }
         
         public Vector2D getPos() {

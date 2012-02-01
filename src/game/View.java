@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2011-2012 Henning Funke.
+ * 
+ * This file is part of Battlepath.
+ *
+ * Battlepath is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * Battlepath is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package game;
 
 import java.awt.Dimension;
@@ -23,8 +41,9 @@ public class View {
 	Entity followedEntity;
 	
 	double oldZoom = 1;
-	double targetZoom = 1;
+	public double targetZoom = 1;
 	double zoomSetTime;
+	double zoomDuration = 0;
 	private boolean zoomFinished = true;
 	
 	Vector2D oldOffset;
@@ -109,12 +128,19 @@ public class View {
 	}
 	
 
-	public void zoom(double deltaZoom, boolean smooth) {
-		targetZoom = Util.valueInBounds(0.2, targetZoom+deltaZoom, 3);
+	public void zoom(double zoom, boolean smooth) {
+		if(!Util.isValueInBounds(0.2, zoom, 3)) return;
+		targetZoom = Util.valueInBounds(0.2, zoom, 3);
 		if(smooth) {
-			if(zoomFinished) zoomSetTime = GlobalInfo.time;
-			oldZoom = zoom;
-			zoomFinished = false;
+			if(zoomFinished) { 
+				zoomSetTime = GlobalInfo.time; 
+				zoomDuration = 1;
+				oldZoom = this.zoom;
+				zoomFinished = false;
+			}
+			if(!zoomFinished) { 
+				zoomDuration += 0.1; 
+			}
 		}
 		else {
 			setZoom(targetZoom);
@@ -154,7 +180,7 @@ public class View {
 	
 	public void process(double dt) {
 		if(!zoomFinished) {
-			setZoom(Transition.t(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, 0.5, Transition.type.EASEINOUT));
+			setZoom(Transition.t(GlobalInfo.time-zoomSetTime, oldZoom, targetZoom, zoomDuration, Transition.type.EASEINOUT));
 			zoomFinished = (zoom == targetZoom);
 		}
 		

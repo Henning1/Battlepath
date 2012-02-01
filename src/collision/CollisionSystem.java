@@ -1,3 +1,21 @@
+/**
+ * Copyright (c) 2011-2012 Henning Funke.
+ * 
+ * This file is part of Battlepath.
+ *
+ * Battlepath is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+
+ * Battlepath is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 package collision;
 
 import java.awt.Point;
@@ -36,8 +54,8 @@ public class CollisionSystem {
 		Point a = field.tileIndexAt(topleft);
 		Point b = field.tileIndexAt(bottomright);
 
-		field.movePointIntoIndexBounds(a);
-		field.movePointIntoIndexBounds(b);
+		field.clamp(a);
+		field.clamp(b);
 		
 		ArrayList<Line2D> collModel = new ArrayList<Line2D>();
 		
@@ -98,6 +116,12 @@ public class CollisionSystem {
 		
 		while(current != destination && current != null) {
 			result.add(current);
+			//vertical line
+			if(line.direction.y == 0) {
+				current = field.tileAt(current.center.add(line.direction));
+				continue;
+			}
+			
 			//line penetrates right edge
 			double y = line.yAt(current.bottomright.x);
 			if(Util.isValueInBounds(current.topleft.y, y, current.bottomright.y)) {
