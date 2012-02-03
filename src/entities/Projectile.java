@@ -42,7 +42,6 @@ public class Projectile extends CollisionEntity {
 	public void process(double dt) {
 		velocity = direction.scalar(speed);
 		move = new Move(this,dt);
-		move.move();
 		game.particleSystem.particleSpray(pos, 3, 0.9);
 	}
 

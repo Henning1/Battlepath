@@ -28,11 +28,19 @@ public class Move {
 	Vector2D basepoint;
 	Vector2D v;
 	boolean finished = false;
+	double dt;
 	
 	public Move(Entity e, double dt) {
+		this.dt = dt;
 		this.e = e;
 		v = e.velocity.scalar(dt);
 		basepoint = e.pos;
+	}
+	
+	public void modify(Vector2D m) {
+		System.out.println("Before: " + v + "m: " + m);
+		v = v.add(m.scalar(dt));
+		System.out.println("After: " + v);
 	}
 	
 	// returns new velocity
@@ -81,7 +89,6 @@ public class Move {
 	public void move() {
 		basepoint = basepoint.add(v);
 		finished = true;
-		v = new Vector2D(0,0);
 	}
 	
 	public void apply() {

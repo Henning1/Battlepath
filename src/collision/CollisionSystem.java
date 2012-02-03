@@ -23,8 +23,9 @@ import java.util.ArrayList;
 
 
 import engine.Field;
+import engine.GlobalInfo;
 import engine.Tile;
-import entities.Entity;
+import entities.CollisionEntity;
 import game.Game;
 
 import util.Line2D;
@@ -42,7 +43,7 @@ public class CollisionSystem {
 	}
 	
 	
-	public ArrayList<Line2D> relevantData(Entity e) {
+	public ArrayList<Line2D> relevantData(CollisionEntity e) {
 		Vector2D velocity = e.velocity.scalar(game.dt);
 		
 		double length = velocity.length();
@@ -147,28 +148,30 @@ public class CollisionSystem {
 		
 	}
 	
-	public Move collideAndSlide(Entity e) {
-		Move m = new Move(e, game.dt);
-		pCollideAndSlide(m,3);
-		return m;
+	public void collideAndSlide(CollisionEntity e) {
+		pCollideAndSlide(e,3);
 	}
 	
-	public Collision collide(Entity e) {
-		return collide(relevantData(e), new Move(e,game.dt));
+	public Collision collide(CollisionEntity e) {
+		if(e.getMove() == null) return null;
+		return collide(relevantData(e), e);
 	}
 	
-	private void pCollideAndSlide(Move move,int d) {
+	private void pCollideAndSlide(CollisionEntity e,int d) {
 		if(d==0) return;
-
-		ArrayList<Line2D> model = relevantData(move.e);	
-		Collision closestCollision = collide(model,move);
+		
+		Move move = e.getMove();
+		if(move.equals(GlobalInfo.nullVector)) return;
+		
+		ArrayList<Line2D> model = relevantData(e);	
+		Collision closestCollision = collide(model,e);
 
 		if(closestCollision != null) {
 			//slide to obstacle and retrieve transformed velocity
 			move.slide(closestCollision);
 			//recurse
 			if(!move.finished)
-				pCollideAndSlide(move,--d);
+				pCollideAndSlide(e,--d);
 		}
 		else {
 			move.move();
@@ -176,11 +179,12 @@ public class CollisionSystem {
 		
 	}
 
-	private Collision collide(ArrayList<Line2D> model, Move move) {
+	private Collision collide(ArrayList<Line2D> model, CollisionEntity e) {
+		if(e.getMove() == null) return null;
 		Collision closestCollision = null;
 		double howClose = Double.MAX_VALUE;
 		for(Line2D line : model) {
-			Collision cp = new Collision(move,line);
+			Collision cp = new Collision(e.getMove(),line);
 			cp.calcIntersection();
 			if(cp.collision && cp.distance < howClose) {
 				closestCollision = cp;

@@ -222,6 +222,7 @@ public class OpenGLRenderer implements GLEventListener {
 		int shockwaves = 0;
 		
 		for(FxEntity e : fxs) {
+			if(shockwaves >= 10) break;
 			if(e instanceof Shockwave) {
 				Shockwave sw = (Shockwave)e;
 				
@@ -421,7 +422,7 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glMatrixMode(GL2.GL_PROJECTION);
 		gl.glLoadIdentity();
 		
-		gl.glBlendFunc(GL2.GL_ONE, GL2.GL_ONE);
+		gl.glBlendFunc(GL2.GL_ONE,GL2.GL_ONE);
 		
 		setupShaders(gl);
 	}

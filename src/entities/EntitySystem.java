@@ -26,22 +26,31 @@ import util.Vector2D;
 
 public class EntitySystem {
 	
+	ArrayList<EntityComparator> xOrderUnits = new ArrayList<EntityComparator>();
 	ArrayList<EntityComparator> xOrderEntities = new ArrayList<EntityComparator>();
 	ArrayList<EntityComparator> xOrderCollisionEntities = new ArrayList<EntityComparator>();
 	ArrayList<Unit> selectedUnits = new ArrayList<Unit>();
-
+	public ArrayList<Unit> units = new ArrayList<Unit>();
+	public ArrayList<CollisionEntity> collisionEntities = new ArrayList<CollisionEntity>();
+	
 	public void arrange(SafeList<Entity> entities) {
+		xOrderUnits.clear();
 		xOrderEntities.clear();
 		xOrderCollisionEntities.clear();
 		selectedUnits.clear();
+		units.clear();
+		collisionEntities.clear();
 		
 		for(Entity e : entities) {
 			EntityComparator ec = new EntityComparator(e,1);
 			xOrderEntities.add(ec);
 			if(e instanceof CollisionEntity) {
+				collisionEntities.add((CollisionEntity)e);
 				xOrderCollisionEntities.add(ec);
 			}
 			if(e instanceof Unit) {
+				units.add((Unit)e);
+				xOrderUnits.add(ec);
 				if(((Unit)e).isSelected)
 					selectedUnits.add((Unit) e);
 			
@@ -49,6 +58,7 @@ public class EntitySystem {
 		}
 		Collections.sort(xOrderEntities);
 		Collections.sort(xOrderCollisionEntities);
+		Collections.sort(xOrderUnits);
 	}
 	
 	public ArrayList<Unit> selected() {
@@ -143,5 +153,14 @@ public class EntitySystem {
 			if(e instanceof CollisionEntity) ces.add((CollisionEntity)e);
 		}
 		return ces;
+	}
+	
+	public ArrayList<Unit> unitsInRange(Vector2D pos, double range) {
+		ArrayList<Unit> us = new ArrayList<Unit>();
+		ArrayList<Entity> es = entitiesInRange(xOrderUnits,pos,range);
+		for(Entity e : es) {
+			if(e instanceof Unit) us.add((Unit)e);
+		}
+		return us;
 	}
 }

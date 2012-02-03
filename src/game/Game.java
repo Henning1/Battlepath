@@ -57,6 +57,7 @@ public class Game {
 	public Input input;
 	public EntitySystem entitySystem = new EntitySystem();
 	public SafeList<Entity> entities = new SafeList<Entity>();
+	public ArrayList<Swarm> swarms = new ArrayList<Swarm>();
 	public Rectangle2D selectionRect;
 	public boolean found = false;
 	
@@ -110,7 +111,7 @@ public class Game {
 			}
 		}
 		
-		movementSystem.process(getCollisionEntities());
+		movementSystem.process(entitySystem.collisionEntities,entitySystem.units,dt);
 		particleSystem.process(dt);
 		
 		entities.applyChanges();
@@ -139,19 +140,6 @@ public class Game {
 		}
 	}
 	
-	/**
-	 * Gives all collision entities known to the game
-	 * @return set of collision entities
-	 */
-	public ArrayList<CollisionEntity> getCollisionEntities() {
-		ArrayList<CollisionEntity> es = new ArrayList<CollisionEntity>();
-		for(Entity e : entities) {
-			if(e instanceof CollisionEntity) {
-				es.add((CollisionEntity) e);
-			}
-		}
-		return es;
-	}
 	
 	/**
 	 * Switch between ACTION and STRATEGY mode.

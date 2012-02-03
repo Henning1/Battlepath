@@ -22,6 +22,7 @@ package entities;
 import java.util.ArrayList;
 
 import collision.CollisionSystem;
+import collision.Move;
 
 import util.Vector2D;
 
@@ -67,7 +68,6 @@ public class Unit extends HealthEntity {
 	
 	public void process(double dt) {
 		
-		CollisionSystem cs = game.collisionSystem;
 		
 		
 		if(path != null && path.size() > 0) {
@@ -81,8 +81,9 @@ public class Unit extends HealthEntity {
 			}
 			
 		}
+		move = new Move(this,dt);
 		
-		move = cs.collideAndSlide(this);
+
 	}
 
 	@Override

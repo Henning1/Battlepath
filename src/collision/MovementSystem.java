@@ -19,45 +19,73 @@
 package collision;
 
 import entities.CollisionEntity;
+import entities.Unit;
 import game.Game;
 
 import java.util.ArrayList;
+
+import util.Vector2D;
 
 
 
 public class MovementSystem {
 	
-	private ArrayList<Move> moves;
 	private Game game;
 	
 	public MovementSystem(Game game) {
 		this.game = game;
-		moves = new ArrayList<Move>();
 	}
 	
-	public void register(Move c) {
-		moves.add(c);
+	
+	private void repellUnits(ArrayList<Unit> units, double dt) {
+		
+		for(Unit u1 : units) {
+			Move m1 = u1.getMove();
+
+			for(Unit u2 : game.entitySystem.unitsInRange(u1.pos, 2.0)) {
+				if(u1 == u2) continue;
+				//Move m2 = u2.getMove();
+				Vector2D aToB = u1.pos.subtract(u2.pos);
+				double distance = aToB.length();
+				double force = Math.exp(-distance+1)*4;
+				m1.modify(aToB.normalize().scalar(force));
+			}
+
+			
+		}
 	}
 	
-	public void process(ArrayList<CollisionEntity> ces) {
-		for(CollisionEntity c1 : ces) {
-			Move m1 = c1.getMove();
-			if(m1 != null) m1.apply();
+	public void collideUnitsWithLevel(ArrayList<Unit> units, double dt) {
+		System.out.println(units.size());
+		for(Unit u : units) {
+			game.collisionSystem.collideAndSlide(u);			
+		}
+	}
+	
+	public void process(ArrayList<CollisionEntity> ces, ArrayList<Unit> units, double dt) {
+		
+		repellUnits(units,dt);
+		collideUnitsWithLevel(units,dt);		
+
+		for(CollisionEntity c : ces) {
+			Move move = c.getMove();
+			if(move != null) {
+				if(!c.getMove().finished)
+					move.move();
+				c.getMove().apply();
+			}
 		}
 		
-		
 		for(CollisionEntity c1 : ces) {
-			Move m1 = c1.getMove();
-			if(m1 == null) continue;
-			
-			//collision with level
-			if(game.collisionSystem.collide(c1) != null) {
-				c1.collide(null);
-			}
+
 			
 			//collision with entities
 
 			ArrayList<CollisionEntity> cesInRange = game.entitySystem.collisionEntitiesInRange(c1.pos, 3.0);
+			
+			if(game.collisionSystem.collide(c1) != null) {
+				c1.collide(null);
+			}
 			
 			for(CollisionEntity c2 : cesInRange) {
 				
@@ -80,12 +108,15 @@ public class MovementSystem {
 				
 				if(c1.pos.distance(c2.pos) < c1.getRadius() + c2.getRadius()) {
 					c1.collide(c2);
-					c2.collide(c1);
 				}
 				
 
 			}
+			
+	
 		}
+		
+
 
 		
 	}

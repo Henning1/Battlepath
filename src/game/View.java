@@ -182,10 +182,10 @@ public class View {
 				zoomFinished = false;
 			}
 			else if(!zoomFinished) {
-				/*zoomTransition.setStartValue(this.zoom);
+				zoomTransition.setStartValue(this.zoom);
 				zoomTransition.setEndValue(zoom);
 				zoomTransition.setType(Transition.type.INTERMEDIARY);
-				zoomTransition.setStartSpeed(zoomTransition.getSpeed(GlobalInfo.time-zoomSetTime));*/
+				zoomTransition.setStartSpeed(zoomTransition.getSpeed(GlobalInfo.time-zoomSetTime));
 			}
 		}
 		else {
