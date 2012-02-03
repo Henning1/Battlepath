@@ -21,8 +21,7 @@ package util;
 public class Transition {
 	public enum type {
 		EASEINOUT,
-		INTERMEDIARY,
-		LINEAR
+		LINEAR,
 	}
 	
 	private double s, e, d, i;
@@ -39,7 +38,7 @@ public class Transition {
 	
 	public double get(double time) {		
 		if(time >= d) return e;
-		//System.out.println("start: "+s+" end:"+e+"duration: "+d+"speed: "+getSpeed(time)+" type:"+t);
+		//System.out.println("time:"+time+" start: "+s+" end:"+e+"duration: "+d+"speed: "+getSpeed(time)+" type:"+t);
 		return doMath(time);
 	}
 
@@ -55,9 +54,6 @@ public class Transition {
 		switch(type) {
 		case EASEINOUT:
 			t = new easeInOut();
-			break;
-		case INTERMEDIARY:
-			t = new intermediary();
 			break;
 		case LINEAR:
 			t = new linear();
@@ -129,19 +125,5 @@ public class Transition {
 			return (c - b);
 		}
 		
-	}
-	
-	private class intermediary implements transitionMethod {
-		@Override
-		public double getValue(double a, double b, double c, double d, double e) {
-			a /= d;
-			return (e+2*b)*a*a*a + (0.5*c-2*e-3*b)*a*a + e*a + b;
-		}
-		
-		@Override
-		public double getDerivateValue(double a, double b, double c, double d, double e) {
-			a /= d/2;
-			return 3*(e+2*b)*a*a + 2*(0.5*c-2*e-3*b)*a + e;
-		}
 	}
 }
