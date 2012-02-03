@@ -56,7 +56,6 @@ public class MovementSystem {
 	}
 	
 	public void collideUnitsWithLevel(ArrayList<Unit> units, double dt) {
-		System.out.println(units.size());
 		for(Unit u : units) {
 			game.collisionSystem.collideAndSlide(u);			
 		}

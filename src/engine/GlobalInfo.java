@@ -33,6 +33,6 @@ public class GlobalInfo {
 	/**Accuracy*/
 	public static double accuracy = 0.02;
 	/**How close to go to a line in collision detection*/
-	public static double veryCloseDistance = 0.002;
+	public static double veryCloseDistance = 0.020;
 	
 }

@@ -175,17 +175,16 @@ public class View {
 		if(smooth) {
 			if(zoomFinished) {
 				zoomSetTime = GlobalInfo.time; 
-				zoomTransition.setType(Transition.type.EASEINOUT);
 				zoomTransition.setStartValue(this.zoom);
 				zoomTransition.setEndValue(zoom);
 				zoomTransition.setDuration(1);
 				zoomFinished = false;
 			}
 			else if(!zoomFinished) {
-				zoomTransition.setStartValue(this.zoom);
-				zoomTransition.setEndValue(zoom);
-				zoomTransition.setType(Transition.type.INTERMEDIARY);
-				zoomTransition.setStartSpeed(zoomTransition.getSpeed(GlobalInfo.time-zoomSetTime));
+
+				if(GlobalInfo.time-zoomSetTime<0.3) {
+					zoomTransition.setEndValue(zoom);
+				}
 			}
 		}
 		else {
