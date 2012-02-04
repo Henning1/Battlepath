@@ -233,7 +233,8 @@ public class Game {
 			
 			if(input.isPressed(KeyBindings.MOVE_DOWN)) selected.get(0).velocity.y = -1;
 			else if(input.isPressed(KeyBindings.MOVE_UP)) selected.get(0).velocity.y = 1;
-			else selected.get(0).velocity.y = 0;
+
+			else selected.get(0).velocity.y = 0.0;
 			
 			if(selected.get(0).velocity.length() > 0)
 				selected.get(0).velocity = selected.get(0).velocity.normalize().scalar(10);

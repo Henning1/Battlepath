@@ -69,15 +69,13 @@ public class MovementSystem {
 		for(CollisionEntity c : ces) {
 			Move move = c.getMove();
 			if(move != null) {
-				if(!c.getMove().finished)
+				if(!move.finished)
 					move.move();
-				c.getMove().apply();
+				move.apply();
 			}
 		}
 		
 		for(CollisionEntity c1 : ces) {
-
-			
 			//collision with entities
 
 			ArrayList<CollisionEntity> cesInRange = game.entitySystem.collisionEntitiesInRange(c1.pos, 3.0);
@@ -87,36 +85,12 @@ public class MovementSystem {
 			}
 			
 			for(CollisionEntity c2 : cesInRange) {
-				
 				if(c1 == c2) continue;
-				/*
-				Move m2 = c2.getMove();
-				
-				//static collision
-				if(m2 == null) {
-					
-				}
-				//dynamic collision
-				else {
-					m2.apply();
-				}
-				
-				m1.apply();
-				*/
-				
 				
 				if(c1.pos.distance(c2.pos) < c1.getRadius() + c2.getRadius()) {
 					c1.collide(c2);
 				}
-				
-
 			}
-			
-	
 		}
-		
-
-
-		
 	}
 }

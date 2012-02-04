@@ -98,9 +98,7 @@ public class CollisionSystem {
 		}
 		return result;
 	}
-	
 
-	
 	
 	public ArrayList<Tile> getTilesOn(Line2D l) {
 		
@@ -111,8 +109,6 @@ public class CollisionSystem {
 		if(l.a.x > l.b.x) {
 			line = new Line2D(l.b,l.a);
 		}
-		
-		
 		
 		Tile current = field.tileAt(line.a);
 		Tile destination = field.tileAt(line.b);
@@ -158,9 +154,14 @@ public class CollisionSystem {
 	}
 	
 	private void pCollideAndSlide(CollisionEntity e,int d) {
-		if(d==0) return;
+		
 		
 		Move move = e.getMove();
+		if(d==0) {
+			move.finished = true;
+			return;
+		}
+		
 		if(move.equals(GlobalInfo.nullVector)) return;
 		
 		ArrayList<Line2D> model = relevantData(e);	

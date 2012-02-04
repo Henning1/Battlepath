@@ -16,23 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package engine;
+package game;
+import java.util.ArrayList;
 
-import util.Vector2D;
-
+import entities.Entity;
 /**
- * Class with general information that may concern all other classes of the game.
+ * @author henning
+ *
  */
-public class GlobalInfo {
-	/**Indicates whether the game is running*/
-	public static boolean running = true;
-	/**Current time since start, in seconds*/
-	public static double time = 0.0;
-	/**Null vector*/
-	public static Vector2D nullVector = new Vector2D(0,0);
-	/**Accuracy*/
-	public static double accuracy = 0.02;
-	/**How close to go to a line in collision detection*/
-	public static double veryCloseDistance = 0.0005;
+public class Swarm {
 	
+	ArrayList<Entity> units;
+	
+	public Swarm(ArrayList<Entity> units) {
+		this.units = units;
+	}
 }
