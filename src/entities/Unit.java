@@ -88,7 +88,7 @@ public class Unit extends HealthEntity {
 
 	@Override
 	public double getRadius() {
-		return 1.49;
+		return 0.49;
 	}
 
 	@Override
