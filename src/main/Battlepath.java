@@ -109,7 +109,7 @@ public class Battlepath {
 	 * @param n Number of towers
 	 * @param g Used game
 	 * @return List of towers
-	 */
+	 */ 	
 	public static ArrayList<Entity> randomTowers(Field f, int n, Game g) {
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		Tile[][] tiles = f.getTiles();

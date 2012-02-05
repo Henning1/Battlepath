@@ -105,7 +105,8 @@ public class OpenGLRenderer implements GLEventListener {
 		//Collision Data selection
 		gl.glColor4d(0.3,0.0,0.0, 0.5);
 		if(game.entitySystem.selected().size() > 0) {
-			ArrayList<Line2D> cls = game.collisionSystem.relevantData(game.entitySystem.selected().get(0));
+			ArrayList<Line2D> cls = game.collisionSystem.relevantData(
+					game.entitySystem.selected().get(0).getMove());
 			for(Line2D l : cls) {
 				line(l,1);
 			}

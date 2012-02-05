@@ -38,9 +38,7 @@ public class Move {
 	}
 	
 	public void modify(Vector2D m) {
-		System.out.println("Before: " + v + "m: " + m);
 		v = v.add(m.scalar(dt));
-		System.out.println("After: " + v);
 	}
 	
 	// returns new velocity
@@ -74,7 +72,6 @@ public class Move {
 		Vector2D newDestinationPoint = destinationPoint.subtract(
 				slidingPlane.normal().scalar(slidingPlane.signedDistance(destinationPoint)));
 
-	
 		// Generate the slide vector, which will become our new
 		// velocity vector for the next iteration
 		v = newDestinationPoint.subtract(slidePoint);
@@ -86,12 +83,11 @@ public class Move {
 		basepoint = newBasePoint;
 	}
 	
-	public void move() {
-		basepoint = basepoint.add(v);
-		finished = true;
-	}
-	
 	public void apply() {
+		if(!finished) {
+			basepoint = basepoint.add(v);
+			finished = true;
+		}
 		e.pos = basepoint;
 	}
 	

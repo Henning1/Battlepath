@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import engine.Field;
 import engine.GlobalInfo;
 import engine.Tile;
-import entities.CollisionEntity;
 import game.Game;
 
 import util.Line2D;
@@ -43,36 +42,6 @@ public class CollisionSystem {
 	}
 	
 	
-	public ArrayList<Line2D> relevantData(CollisionEntity e) {
-		Vector2D velocity = e.velocity.scalar(game.dt);
-		
-		double length = velocity.length();
-		Vector2D topleft = new Vector2D(
-				e.pos.x() - length - e.getRadius(), e.pos.y() - length - e.getRadius());
-		Vector2D bottomright = new Vector2D(
-				e.pos.x() + length + e.getRadius(), e.pos.y() + length + e.getRadius());
-		
-		Point a = field.tileIndexAt(topleft);
-		Point b = field.tileIndexAt(bottomright);
-
-		field.clamp(a);
-		field.clamp(b);
-		
-		ArrayList<Line2D> collModel = new ArrayList<Line2D>();
-		
-		collModel.addAll(field.getBoundingFrame());
-		
-		Tile[][] tiles = field.getTiles();
-		
-		for(int x=a.x; x<=b.x;x++) {
-			for(int y=a.y; y<=b.y; y++) {
-				collModel.addAll(tiles[x][y].getCollisionModel());
-			}
-		}
-		
-		return collModel;
-	}
-	
 	public boolean collideWithLevel(Line2D l) {
 		ArrayList<Tile> rTiles = getTilesOn(l);
 		
@@ -87,19 +56,7 @@ public class CollisionSystem {
 
 		return false;
 	}
-	
-	public ArrayList<Vector2D> collisionsWithTile(Line2D l, Tile t) {
-		ArrayList<Vector2D> result = new ArrayList<Vector2D>();
-		ArrayList<Line2D> model = t.getCollisionModel();
-		for(Line2D edge : model) {
-			Vector2D i = l.intersectionPoint(edge);
-			result.add(i);
-			
-		}
-		return result;
-	}
 
-	
 	public ArrayList<Tile> getTilesOn(Line2D l) {
 		
 		ArrayList<Tile> result = new ArrayList<Tile>();
@@ -137,55 +94,71 @@ public class CollisionSystem {
 			}
 		}
 		if(current == destination) result.add(current);
-		
-		
-		
+
 		return result;
 		
 	}
 	
-	public void collideAndSlide(CollisionEntity e) {
-		pCollideAndSlide(e,3);
-	}
-	
-	public Collision collide(CollisionEntity e) {
-		if(e.getMove() == null) return null;
-		return collide(relevantData(e), e);
-	}
-	
-	private void pCollideAndSlide(CollisionEntity e,int d) {
+	public ArrayList<Line2D> relevantData(Move m) {
+		Vector2D velocity = m.v;
 		
+		double length = velocity.length();
+		Vector2D topleft = m.basepoint.subtract(m.e.getRadius()+length*2);
+		Vector2D bottomright = m.basepoint.add(m.e.getRadius()+length*2);
 		
-		Move move = e.getMove();
-		if(d==0) {
-			move.finished = true;
-			return;
+		Point a = field.tileIndexAt(topleft);
+		Point b = field.tileIndexAt(bottomright);
+
+		field.clamp(a);
+		field.clamp(b);
+		
+		ArrayList<Line2D> collModel = new ArrayList<Line2D>();
+		
+		collModel.addAll(field.getBoundingFrame());
+		
+		Tile[][] tiles = field.getTiles();
+		
+		for(int x=a.x; x<=b.x;x++) {
+			for(int y=a.y; y<=b.y; y++) {
+				collModel.addAll(tiles[x][y].getCollisionModel());
+			}
 		}
 		
-		if(move.equals(GlobalInfo.nullVector)) return;
+		return collModel;
+	}
+	
+	public void collideAndSlide(Move m) {
+		if(m.v.equals(GlobalInfo.nullVector)) return;
+		pCollideAndSlide(m,3);
+	}
+	
+	private void pCollideAndSlide(Move m,int d) {
+		if(d==0) return;
 		
-		ArrayList<Line2D> model = relevantData(e);	
-		Collision closestCollision = collide(model,e);
+		ArrayList<Line2D> model = relevantData(m);	
+		Collision closestCollision = collide(model,m);
 
 		if(closestCollision != null) {
-			//slide to obstacle and retrieve transformed velocity
-			move.slide(closestCollision);
+			System.out.println(closestCollision);
+			//slide to obstacle
+			m.slide(closestCollision);
 			//recurse
-			if(!move.finished)
-				pCollideAndSlide(e,--d);
-		}
-		else {
-			move.move();
-		}
-		
+			if(!m.finished)
+				pCollideAndSlide(m,--d);
+		}		
 	}
 
-	private Collision collide(ArrayList<Line2D> model, CollisionEntity e) {
-		if(e.getMove() == null) return null;
+	public Collision collide(Move m) {
+		if(m == null) return null;
+		return collide(relevantData(m), m);
+	}
+	
+	private Collision collide(ArrayList<Line2D> model, Move m) {
+		if(m == null) return null;
 		Collision closestCollision = null;
 		double howClose = Double.MAX_VALUE;
 		for(Line2D line : model) {
-			Collision cp = new Collision(e.getMove(),line);
+			Collision cp = new Collision(m,line);
 			cp.calcIntersection();
 			if(cp.collision && cp.distance < howClose) {
 				closestCollision = cp;
@@ -194,8 +167,4 @@ public class CollisionSystem {
 		}
 		return closestCollision;
 	}
-	
-
-	
-	
 }

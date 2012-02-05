@@ -237,7 +237,7 @@ public class Game {
 			else selected.get(0).velocity.y = 0.0;
 			
 			if(selected.get(0).velocity.length() > 0)
-				selected.get(0).velocity = selected.get(0).velocity.normalize().scalar(10);
+				selected.get(0).velocity = selected.get(0).velocity.normalize().scalar(selected.get(0).speed);
 		}
 		
 		if(mode == GameMode.STRATEGY) {

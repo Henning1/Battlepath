@@ -57,7 +57,7 @@ public class MovementSystem {
 	
 	public void collideUnitsWithLevel(ArrayList<Unit> units, double dt) {
 		for(Unit u : units) {
-			game.collisionSystem.collideAndSlide(u);			
+			game.collisionSystem.collideAndSlide(u.getMove());			
 		}
 	}
 	
@@ -66,24 +66,21 @@ public class MovementSystem {
 		repellUnits(units,dt);
 		collideUnitsWithLevel(units,dt);		
 
+		
 		for(CollisionEntity c : ces) {
 			Move move = c.getMove();
 			if(move != null) {
-				if(!move.finished)
-					move.move();
 				move.apply();
+				
 			}
 		}
 		
 		for(CollisionEntity c1 : ces) {
 			//collision with entities
-
-			ArrayList<CollisionEntity> cesInRange = game.entitySystem.collisionEntitiesInRange(c1.pos, 3.0);
-			
-			if(game.collisionSystem.collide(c1) != null) {
+			ArrayList<CollisionEntity> cesInRange = game.entitySystem.collisionEntitiesInRange(c1.pos, 3.0);		
+			if(game.collisionSystem.collide(c1.getMove()) != null) {
 				c1.collide(null);
 			}
-			
 			for(CollisionEntity c2 : cesInRange) {
 				if(c1 == c2) continue;
 				

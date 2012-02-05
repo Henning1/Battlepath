@@ -105,8 +105,7 @@ public class Vector2D {
 	public boolean equals(Object o) {
 		if(o instanceof Vector2D) {
 			Vector2D v = (Vector2D)o;
-			return Util.doubleEquals(x, v.x, GlobalInfo.accuracy)
-				&& Util.doubleEquals(y, v.y, GlobalInfo.accuracy);
+			return x == v.x && y == v.y;
 		}
 		return false;
 	}
@@ -117,6 +116,14 @@ public class Vector2D {
 	
 	public String toString() {
 		return "("+x+","+y+")";
+	}
+
+	/**
+	 * @param d
+	 * @return returns a Vector with both components subtracted by d
+	 */
+	public Vector2D subtract(double d) {
+		return new Vector2D(x-d,y-d);
 	}
 	
 	

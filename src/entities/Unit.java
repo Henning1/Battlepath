@@ -34,10 +34,9 @@ public class Unit extends HealthEntity {
 
 	public ArrayList<Vector2D> path;
 	public Vector2D direction = new Vector2D(0,0);
-	double speed = 4;
+	public double speed = 15;
 	public boolean actionmode = true;
 
-	
 	public Unit(Vector2D position, Game game) {
 		super(position,game);
 		health = 500;
@@ -67,9 +66,6 @@ public class Unit extends HealthEntity {
 	}
 	
 	public void process(double dt) {
-		
-		
-		
 		if(path != null && path.size() > 0) {
 			if(pos.distance(path.get(0)) < GlobalInfo.accuracy) {
 				path.remove(0);
@@ -77,13 +73,11 @@ public class Unit extends HealthEntity {
 			}
 			if(path.size() > 0) {
 				Vector2D dest = path.get(0);
-				velocity = dest.subtract(pos).normalize().scalar(speed);
+				velocity = dest.subtract(pos).normalize().scalar(5);
 			}
 			
 		}
 		move = new Move(this,dt);
-		
-
 	}
 
 	@Override

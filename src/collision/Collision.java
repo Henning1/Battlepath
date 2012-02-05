@@ -56,6 +56,7 @@ public class Collision {
 		// position to triangle plane
 		double signedDistToTrianglePlane =
 				line.signedDistance(basepoint);
+		//distance = Math.abs(signedDistToTrianglePlane)-move.e.getRadius();
 		// cache this as we're going to use it a few times below:
 		double normalDotVelocity =
 			line.normal.dotProduct(velocity);
@@ -156,16 +157,6 @@ public class Collision {
 					t = newT;
 					collision = true;
 					collisionPoint = p2;
-				}
-	
-				// Set result:
-				if (collision == true) {
-					// distance to collision: 't' is time of collision
-					//distance = t*velocity.length();
-					// Does this triangle qualify for the closest hit?
-					// it does if it's the first hit or the closest
-					// Collision information nessesary for sliding
-					//colPackage->nearestDistance = distToCollision;
 				}
 		}
 		return collision;
