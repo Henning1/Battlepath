@@ -19,6 +19,7 @@
 package entities;
 
 import game.Game;
+import game.Team;
 import collision.Move;
 import util.Vector2D;
 
@@ -32,8 +33,8 @@ public class Projectile extends CollisionEntity {
 	public double length = 1.3;
 	double speed = 50;
 	
-	public Projectile(Vector2D position, Vector2D direction, Game game) {
-		super(position,game);
+	public Projectile(Vector2D position, Vector2D direction, Game game, Team team) {
+		super(position,game, team);
 		this.direction = direction.normalize();
 		this.origin = position;
 	}
@@ -42,7 +43,7 @@ public class Projectile extends CollisionEntity {
 	public void process(double dt) {
 		velocity = direction.scalar(speed);
 		move = new Move(this,dt);
-		game.particleSystem.particleSpray(pos, 3, 0.9);
+		game.particleSystem.particleSpray(pos, 1, 0.5);
 	}
 
 	@Override
@@ -51,15 +52,19 @@ public class Projectile extends CollisionEntity {
 	}
 	
 	public void collide(CollisionEntity c) {
-		game.entities.remove(this);
 		
 		if(c instanceof HealthEntity) {
-			HealthEntity h = (HealthEntity)c;
-			h.damage(power);
-			game.particleSystem.particleSpray(pos, 500, 1);
+			if(c.team != this.team) {
+				HealthEntity h = (HealthEntity)c;
+				h.damage(power);
+				game.particleSystem.particleSpray(pos, 500, 1);
+				game.entities.remove(this);
+			}
 		}
 		else {
+			
 			game.particleSystem.particleSpray(pos, 100, 1);
+			game.entities.remove(this);
 		}
 	}
 	

@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import engine.GlobalInfo;
 import game.Game;
+import game.Team;
 import util.Line2D;
 import util.Vector2D;
 
@@ -29,8 +30,8 @@ public class Tower extends HealthEntity {
 	public Vector2D aim = new Vector2D(0,0);
 	double lastShot;
 	
-	public Tower(Vector2D position, Game game) {
-		super(position, game);
+	public Tower(Vector2D position, Game game, Team team) {
+		super(position, game, team);
 		move = null;
 	}
 
@@ -53,12 +54,12 @@ public class Tower extends HealthEntity {
 		ArrayList<Entity> aims = game.entitySystem.entitiesInRange(pos, 20);
 		
 		for(Entity u : aims) {
-			if(!(u instanceof Unit)) continue;			
+			if(!(u instanceof Unit) || u.team == team) continue;			
 			if(game.collisionSystem.collideWithLevel(new Line2D(pos,u.pos))) continue;
 			
 			aim = u.pos.subtract(pos).normalize();
 			if(pos.distance(u.pos) < 20 && GlobalInfo.time-lastShot > 1) {
-				game.emitShot(pos.add(aim.scalar(getRadius())), aim);
+				game.emitShot(pos.add(aim.scalar(getRadius())), aim, this.team);
 				lastShot = GlobalInfo.time;
 			}
 			break;

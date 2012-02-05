@@ -23,7 +23,7 @@ import util.Util;
 import util.Vector2D;
 
 public class Collision {
-	public double t,t1,t0,distance,signeddistance;
+	public double t,t1,t0,distance;
 	public Vector2D collisionPoint;
 	public Vector2D basepoint;
 	public Vector2D velocity;
@@ -50,13 +50,13 @@ public class Collision {
 		//if (trianglePlane.isFrontFacingTo(
 				//colPackage->normalizedVelocity)) {
 			// Get interval of plane intersection:
-		double t0, t1, radius = move.e.getRadius();
+		double radius = move.e.getRadius();
 		boolean embeddedInPlane = false;
 		// Calculate the signed distance from sphere
 		// position to triangle plane
 		double signedDistToTrianglePlane =
 				line.signedDistance(basepoint);
-		//distance = Math.abs(signedDistToTrianglePlane)-move.e.getRadius();
+		distance = Math.abs(signedDistToTrianglePlane)-radius;
 		// cache this as we're going to use it a few times below:
 		double normalDotVelocity =
 			line.normal.dotProduct(velocity);
@@ -170,7 +170,6 @@ public class Collision {
 		return "velocity: " + velocity + "\n"
 				+ "basepoint: " + basepoint + "\n"
 				+ "distance: " + distance + "\n"
-				+ "signeddistance: " + signeddistance + "\n"
 				+ "normal: " + line.normal() + "\n"
 				+ "collision: " + collision + "\n"
 				+ "intersection point" + collisionPoint + "\n"

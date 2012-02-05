@@ -19,16 +19,92 @@
 package game;
 import java.util.ArrayList;
 
+import util.SafeList;
+import util.Vector2D;
+
 import entities.Entity;
+import entities.Unit;
 /**
  * @author henning
  *
  */
 public class Swarm {
 	
-	ArrayList<Entity> units;
+	private SafeList<Unit> units;
+	private Game game;
+	private Unit leader;
 	
-	public Swarm(ArrayList<Entity> units) {
-		this.units = units;
+	boolean alive = true;
+	
+	public Swarm(ArrayList<Unit> units, Game game) {
+		this.game = game;
+		this.units = new SafeList<Unit>(units);
+		
+		for(Unit u : this.units) {
+			u.setSwarm(this);
+		}
+		findLeader();
+
+
 	}
+	
+	private void findLeader() {
+		switch(units.size()) {
+		case 0: 
+			alive = false;
+		break;
+		case 1:
+			leader = units.get(0);
+		break;
+		case 2:
+			leader = units.get(1);
+		break;
+		default:
+			averagePositionLeader();
+		}
+		leader.leader = true;
+	}
+
+	
+	private void averagePositionLeader() {
+		Vector2D averagePosition=new Vector2D(0,0);
+		for(Unit u : units) {
+			averagePosition.add(u.pos);
+		}
+		averagePosition.scalar(1.0/(double)units.size());
+		Unit closest=null;
+		double minDistance = Double.MAX_VALUE;
+		for(Unit u : units) {
+			double distance = averagePosition.distance(u.pos);
+			if(distance < minDistance) {
+				minDistance = distance;
+				closest = u;
+			}
+		}
+		leader = closest;
+	}
+	
+	public void shootAt(Vector2D pos) {
+		for(Unit u : units) {
+			Vector2D dir = pos.subtract(u.pos).normalize();
+			u.shoot(dir);
+		}
+	}
+	
+	public Unit getLeader() {
+		return leader;
+	}
+	
+	public void process() {
+		for(Unit u : units) {
+			if(!u.alive) {
+				units.remove(u);
+			}
+		}
+		units.applyChanges();
+		if(leader != null && !leader.alive) {
+			findLeader();
+		}
+	}
+	
 }

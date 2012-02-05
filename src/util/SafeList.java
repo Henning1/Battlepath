@@ -29,7 +29,10 @@ public class SafeList<T> implements Iterable<T> {
 	protected ArrayList<T> deleteList = new ArrayList<T>();
 	
 	public SafeList() {
-
+	}
+	
+	public SafeList(ArrayList<T> elems) {
+		list.addAll(elems);
 	}
 	
 	public boolean applyChanges() {

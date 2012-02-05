@@ -24,21 +24,27 @@ import java.util.ArrayList;
 import collision.CollisionSystem;
 import collision.Move;
 
+import util.Line2D;
 import util.Vector2D;
 
 import engine.GlobalInfo;
 import game.Game;
+import game.Swarm;
+import game.Team;
 
 
 public class Unit extends HealthEntity {
 
 	public ArrayList<Vector2D> path;
+	public Swarm swarm;
+	public boolean leader=false;
 	public Vector2D direction = new Vector2D(0,0);
-	public double speed = 15;
+	public double speed = 8;
 	public boolean actionmode = true;
-
-	public Unit(Vector2D position, Game game) {
-		super(position,game);
+	public double lastPlan=0;
+	
+	public Unit(Vector2D position, Game game, Team team) {
+		super(position,game, team);
 		health = 500;
 	}
 	
@@ -58,16 +64,50 @@ public class Unit extends HealthEntity {
 	}
 	
 	public void shoot(Vector2D direction) {
-		game.entities.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, game));
+		if(GlobalInfo.time - lastShot > 0.3) {
+			game.entities.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, game, team));
+			lastShot = GlobalInfo.time;
+		}
 	}
 	
 	public Vector2D velocityDt() {
 		return velocity.scalar(game.dt);
 	}
 	
+	public void setLeader(boolean value) {
+		leader = value;		
+	}
+	
+	public void setSwarm(Swarm swarm) {
+		this.swarm = swarm;
+	}
+	
 	public void process(double dt) {
+		System.out.println(pos);
+		
+		if(swarm != null && !leader) {
+			Unit leader = swarm.getLeader();
+			Line2D toLeader = new Line2D(pos,leader.pos);
+			Vector2D vecToLeader = leader.pos.subtract(pos);
+			if(vecToLeader.length() > 2) {
+				if(game.collisionSystem.collideWithLevel(toLeader)) {
+					if(path == null | GlobalInfo.time - lastPlan > 1) {
+						path = game.pathPlanner.plan(this.pos, leader.pos);
+						lastPlan = GlobalInfo.time;
+					}
+				} 
+				else {
+					path = null;
+					velocity = toLeader.direction.scalar(speed);
+				}
+			}
+			else {
+				velocity = GlobalInfo.nullVector;
+			}
+		}
+			
 		if(path != null && path.size() > 0) {
-			if(pos.distance(path.get(0)) < GlobalInfo.accuracy) {
+			if(pos.distance(path.get(0)) < GlobalInfo.accuracy+0.1) {
 				path.remove(0);
 				velocity = new Vector2D(0,0);
 			}
@@ -82,12 +122,13 @@ public class Unit extends HealthEntity {
 
 	@Override
 	public double getRadius() {
-		return 0.49;
+		return 0.4;
 	}
 
 	@Override
 	public void collide(CollisionEntity e) {
 		
 	}
+
 
 }

@@ -49,18 +49,18 @@ public class Move {
 		Vector2D newBasePoint = basepoint;
 		Vector2D slidePoint = closestCollision.collisionPoint;
 		double veryCloseDistance = GlobalInfo.veryCloseDistance;
-		// only update if we are not already very close
+		// only move if we are not already very close
 		// and if so we only move very close to intersection..not
 		// to the exact spot.
 		if (closestCollision.distance>=veryCloseDistance)
 		{
 			Vector2D newV = v.copy();
-			newV.normalize().scalar(closestCollision.distance-veryCloseDistance);
+			newV = newV.normalize().scalar(closestCollision.distance-veryCloseDistance);
 			newBasePoint = basepoint.add(newV);
 			// Adjust polygon intersection point (so sliding
 			// plane will be unaffected by the fact that we
 			// move slightly less than collision tells us)
-			newV.normalize();
+			newV = newV.normalize();
 			slidePoint = closestCollision.collisionPoint.subtract(newV.scalar(veryCloseDistance));
 		}
 		// Determine the sliding plane

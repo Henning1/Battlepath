@@ -22,6 +22,7 @@ import interaction.Input;
 import interaction.KeyBindings;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import main.Battlepath;
 
@@ -57,7 +58,10 @@ public class Game {
 	public Input input;
 	public EntitySystem entitySystem = new EntitySystem();
 	public SafeList<Entity> entities = new SafeList<Entity>();
-	public ArrayList<Swarm> swarms = new ArrayList<Swarm>();
+	public SafeList<Swarm> swarms = new SafeList<Swarm>();
+	public Swarm swarm = null;
+	public ArrayList<Team> teams = new ArrayList<Team>();
+	public Team playerteam = null;
 	public Rectangle2D selectionRect;
 	public boolean found = false;
 	
@@ -73,10 +77,12 @@ public class Game {
 	 * 
 	 * @param startpos Start position of the first Unit.
 	 */
-	public Game(Vector2D startpos) {
+	public Game(Vector2D startpos, ArrayList<Team> teams, int team) {
 		movementSystem = new MovementSystem(this);
 		particleSystem = new EffectsSystem(this);
-		entities.add(new Unit(startpos, this));
+		this.teams = teams;
+		this.playerteam = teams.get(team);
+		entities.add(new Unit(startpos, this, playerteam));
 	}
 	
 	/**
@@ -89,11 +95,11 @@ public class Game {
 		
 		entitySystem.arrange(entities);
 		
-		if(entitySystem.selected().size() == 0) {
+		if(swarm == null) {
 			this.setMode(GameMode.STRATEGY);
 		}
 		if(mode==GameMode.ACTION) {
-			view.follow(entitySystem.selected().get(0));
+			view.follow(swarm.getLeader());
 		}
 		
 		for(Entity e : entities) {
@@ -101,7 +107,7 @@ public class Game {
 			
 			if(e instanceof Unit) {
 				if(selectionRect != null && !(found)) {
-					if(selectionRect.inside(e.pos)) {
+					if(selectionRect.inside(e.pos) && e.team == playerteam) {
 						((Unit) e).isSelected = true;
 					}
 					else {
@@ -110,12 +116,19 @@ public class Game {
 				}
 			}
 		}
-		
 		movementSystem.process(entitySystem.collisionEntities,entitySystem.units,dt);
-		particleSystem.process(dt);
-		
 		entities.applyChanges();
+		
+		for(Swarm s : swarms) {
+			s.process();
+			if(!s.alive) swarms.remove(s);
+		}
+		swarms.applyChanges();
+		
+		
+		particleSystem.process(dt);
 		view.process(dt);
+		
 	}
 	
 	/**
@@ -125,9 +138,13 @@ public class Game {
 	public void setMode(GameMode gm) {
 		switch(gm) {
 		case ACTION:
-			if(entitySystem.selected().size() != 0) {
+			if(swarms.size() == 0) {
+				swarmify();
+			}
+			
+			if(swarm != null) {
 				mode = gm;
-				view.follow(entitySystem.selected().get(0));
+				view.follow(swarm.getLeader());
 			}
 			break;
 		case STRATEGY:
@@ -177,7 +194,8 @@ public class Game {
 	 * @param dt time step
 	 */
 	public void processInput(double dt) {
-		
+		Unit controlledU = null;
+		if(swarm != null) controlledU = swarm.getLeader();
 		ArrayList<Unit> selected = entitySystem.selected();
 		
 		//Mouse
@@ -188,7 +206,7 @@ public class Game {
 					if(!(e instanceof Unit)) continue;
 					Unit u = (Unit)e;
 					if(input.getCursorPos().distance(e.pos) < e.getRadius()) {
-						if(!u.isSelected) {
+						if(!u.isSelected && u.team == playerteam) {
 							((Unit) e).isSelected = true;
 						}
 						found = true;
@@ -216,9 +234,8 @@ public class Game {
 		}
 		
 		if(mode == GameMode.ACTION) {
-			if((input.mouseButtonPressed[0] && selected.size() != 0 && GlobalInfo.time - lastShot > 0.3)) {
-				selected.get(0).shoot(input.getCursorPos().subtract(selected.get(0).pos).normalize());
-				lastShot = GlobalInfo.time;
+			if(input.mouseButtonPressed[0]) {
+				swarm.shootAt(input.getCursorPos());
 			}
 		}
 		
@@ -227,17 +244,18 @@ public class Game {
 		//Keyboard part one (input.isPressed)
 		
 		if(selected.size() != 0 & mode == GameMode.ACTION) {
-			if(input.isPressed(KeyBindings.MOVE_LEFT)) selected.get(0).velocity.x = 1;
-			else if(input.isPressed(KeyBindings.MOVE_RIGHT)) selected.get(0).velocity.x = -1;
-			else selected.get(0).velocity.x = 0;
 			
-			if(input.isPressed(KeyBindings.MOVE_DOWN)) selected.get(0).velocity.y = -1;
-			else if(input.isPressed(KeyBindings.MOVE_UP)) selected.get(0).velocity.y = 1;
+			if(input.isPressed(KeyBindings.MOVE_LEFT)) controlledU.velocity.x = 1;
+			else if(input.isPressed(KeyBindings.MOVE_RIGHT)) controlledU.velocity.x = -1;
+			else controlledU.velocity.x = 0;
+			
+			if(input.isPressed(KeyBindings.MOVE_DOWN)) controlledU.velocity.y = -1;
+			else if(input.isPressed(KeyBindings.MOVE_UP)) controlledU.velocity.y = 1;
 
-			else selected.get(0).velocity.y = 0.0;
+			else controlledU.velocity.y = 0.0;
 			
-			if(selected.get(0).velocity.length() > 0)
-				selected.get(0).velocity = selected.get(0).velocity.normalize().scalar(selected.get(0).speed);
+			if(controlledU.velocity.length() > 0)
+				controlledU.velocity = controlledU.velocity.normalize().scalar(controlledU.speed);
 		}
 		
 		if(mode == GameMode.STRATEGY) {
@@ -265,11 +283,24 @@ public class Game {
 					toggleMode();
 					break;
 				case 'r':
-					entities.add(new Unit(Battlepath.findStartPos(field), this));
+					// random team
+					java.util.Random random = new Random();
+					int team = random.nextInt(teams.size());
+					entities.add(new Unit(Battlepath.findStartPos(field), this, teams.get(team)));
+					break;
+				case 'e':
+					swarmify();
 					break;
 			}
 		}
 		
+	}
+	
+	public void swarmify() {
+		if(entitySystem.selected().size() > 0) {
+			swarm = new Swarm(entitySystem.selected(),this);
+			swarms.add(swarm);
+		}
 	}
 	
 	/**
@@ -277,8 +308,8 @@ public class Game {
 	 * @param start world position of the shot to start
 	 * @param direction direction to shoot
 	 */
-	public void emitShot(Vector2D start, Vector2D direction) {
-		Projectile p = new Projectile(start, direction, this);
+	public void emitShot(Vector2D start, Vector2D direction, Team team) {
+		Projectile p = new Projectile(start, direction, this, team);
 		entities.add(p);
 	}
 	

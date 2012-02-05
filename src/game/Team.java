@@ -16,35 +16,19 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package entities;
+package game;
 
-import game.Game;
-import game.Team;
-import util.Vector2D;
-
-public abstract class HealthEntity extends CollisionEntity{
+/**
+ * @author henning
+ *
+ */
+public class Team {
 	
-	protected double health = 100;
-	public boolean alive = true;
-	public boolean isSelected = false;
-	public double lastShot = 0;
+	public String name;
+	public int color;
 	
-	public HealthEntity(Vector2D position, Game game, Team team) {
-		super(position, game, team);
+	public Team(String name, int color) {
+		this.name = name;
+		this.color = color;
 	}
-
-	public double getHealth() {
-		return health;
-	}
-	
-	public void damage(double d) {
-		health -= d;
-		if(health <= 0) {
-			game.particleSystem.explosion(pos);
-			game.entities.remove(this);
-			isSelected = false;
-			alive = false;
-		}
-	}
-	
 }

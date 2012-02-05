@@ -78,7 +78,7 @@ public class Line2D {
 	
 	
 	public boolean pointInSegment(Vector2D point) {
-		return a.distance(point) + b.distance(point) <= a.distance(b) + 0.01;
+		return a.distance(point) + b.distance(point) <= a.distance(b) + 0.000001;
 	}
 	
 	

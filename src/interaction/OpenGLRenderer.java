@@ -28,6 +28,7 @@ import fx.Particle;
 import fx.Shockwave;
 import game.Game;
 import game.GameMode;
+import game.Team;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -242,6 +243,17 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glUniform2fv(posUniform, swPositions.length, swPositions, 0);
 	}
 	
+	public void teamColor(Team team) {
+		if(team == null) {
+			gl.glColor3d(1,0,0);
+			return;
+		}
+		int i = team.color;
+		if(i==0) gl.glColor3d(1,1,1);
+		if(i==1) gl.glColor3d(1,1,0);
+		if(i==2) gl.glColor3d(0,0,1);
+	}
+	
 	private void drawEntities() {
 		for(Entity e : game.entities) {
         	
@@ -250,7 +262,10 @@ public class OpenGLRenderer implements GLEventListener {
 			
 			if(e instanceof Tower) {
         		Tower tower = (Tower)e;
-        		gl.glColor3d(0,0,1);
+        		
+        		
+        		teamColor(e.team);
+        		
         		rhombus(tower.pos, 1);
         		line(tower.pos, tower.pos.add(tower.aim.scalar(1.4)), 0.05f);
         	}
@@ -285,7 +300,7 @@ public class OpenGLRenderer implements GLEventListener {
         			gl.glDisable(GL2.GL_BLEND);
         		}
         			
-        		gl.glColor3d(0,1,0);
+        		teamColor(e.team);
         		circle(u.pos, u.getRadius());
         	}
 

@@ -19,6 +19,7 @@
 package main;
 import game.Game;
 import game.GameMode;
+import game.Team;
 import game.View;
 import interaction.Input;
 import interaction.OpenGLRenderer;
@@ -61,7 +62,11 @@ public class Battlepath {
 		randomCircles(f, fieldWidth*fieldHeight/50, 3);
 		Vector2D start = findStartPos(f);
 
-		Game game = new Game(start);
+		ArrayList<Team> teams = new ArrayList<Team>();
+		teams.add(new Team("SWAR", 0));
+		teams.add(new Team("sWARm", 1));
+		
+		Game game = new Game(start, teams, 0);
 		
 		BFrame frame = new BFrame(windowSize);
 		Dimension paneSize = frame.getContentPane().getSize();
@@ -73,7 +78,7 @@ public class Battlepath {
 		game.collisionSystem = new CollisionSystem(f,game);
 		game.view = new View(paneSize, tileSize, game);
 		game.setMode(GameMode.STRATEGY);
-		game.entities.addAll(randomTowers(f, 20, game));
+		game.entities.addAll(randomTowers(f, 3, game,teams));
 		game.entities.applyChanges();
 		
 		MainLoop.startLoop(game, renderer, frame);
@@ -110,14 +115,16 @@ public class Battlepath {
 	 * @param g Used game
 	 * @return List of towers
 	 */ 	
-	public static ArrayList<Entity> randomTowers(Field f, int n, Game g) {
+	public static ArrayList<Entity> randomTowers(Field f, int n, Game g, ArrayList<Team> teams) {
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		Tile[][] tiles = f.getTiles();
 		for(int i=0; i<n;i++) {
 			Point tower = new Point(rand.nextInt(f.getTilesX()), rand.nextInt(f.getTilesY()));
 			while(tiles[tower.x][tower.y].getValue() == 1)
 				tower = new Point(rand.nextInt(f.getTilesX()), rand.nextInt(f.getTilesY()));
-			list.add(new Tower(f.getWorldPos(tower), g));
+			
+			int team = rand.nextInt(teams.size());
+			list.add(new Tower(f.getWorldPos(tower), g, teams.get(team)));
 		}
 		return list;
 	}

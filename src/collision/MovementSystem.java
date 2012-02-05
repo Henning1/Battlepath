@@ -41,8 +41,8 @@ public class MovementSystem {
 		
 		for(Unit u1 : units) {
 			Move m1 = u1.getMove();
-
-			for(Unit u2 : game.entitySystem.unitsInRange(u1.pos, 2.0)) {
+			if(u1.leader) continue;
+			for(Unit u2 : game.entitySystem.unitsInRange(u1.pos, 1.5)) {
 				if(u1 == u2) continue;
 				//Move m2 = u2.getMove();
 				Vector2D aToB = u1.pos.subtract(u2.pos);
@@ -66,12 +66,10 @@ public class MovementSystem {
 		repellUnits(units,dt);
 		collideUnitsWithLevel(units,dt);		
 
-		
 		for(CollisionEntity c : ces) {
 			Move move = c.getMove();
 			if(move != null) {
 				move.apply();
-				
 			}
 		}
 		

@@ -70,11 +70,11 @@ public class EntitySystem {
 	private EntityComparator getPivot(int dimension, double value) {
 		EntityComparator pivot = null;
 		if(dimension == 1) {
-			Entity e = new Unit(new Vector2D(value,0.0), null);
+			Entity e = new Unit(new Vector2D(value,0.0), null, null);
 			pivot = new EntityComparator(e, 1);
 		}
 		else if(dimension == 2) {
-			Entity e = new Unit(new Vector2D(0.0,value), null);
+			Entity e = new Unit(new Vector2D(0.0,value), null, null);
 			pivot = new EntityComparator(e, 2);
 		}
 		return pivot;
