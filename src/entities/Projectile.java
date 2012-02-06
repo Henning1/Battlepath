@@ -61,7 +61,7 @@ public class Projectile extends CollisionEntity {
 				game.entities.remove(this);
 			}
 		}
-		else {
+		else if(c == null) {
 			
 			game.particleSystem.particleSpray(pos, 100, 1);
 			game.entities.remove(this);
