@@ -42,11 +42,12 @@ public class MovementSystem {
 		for(Unit u1 : units) {
 			Move m1 = u1.getMove();
 			if(u1.leader) continue;
-			for(Unit u2 : game.entitySystem.unitsInRange(u1.pos, 1.5)) {
+			for(Unit u2 : game.entitySystem.unitsInRange(u1.pos, 5)) {
 				if(u1 == u2) continue;
 				//Move m2 = u2.getMove();
 				Vector2D aToB = u1.pos.subtract(u2.pos);
 				double distance = aToB.length();
+				//double force = Math.sqrt((Math.exp(-distance+1)));
 				double force = Math.exp(-distance+1)*4;
 				m1.modify(aToB.normalize().scalar(force));
 			}

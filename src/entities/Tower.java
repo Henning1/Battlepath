@@ -33,6 +33,7 @@ public class Tower extends HealthEntity {
 	public Tower(Vector2D position, Game game, Team team) {
 		super(position, game, team);
 		move = null;
+		health = 300;
 	}
 
 	@Override
@@ -58,7 +59,7 @@ public class Tower extends HealthEntity {
 			if(game.collisionSystem.collideWithLevel(new Line2D(pos,u.pos))) continue;
 			
 			aim = u.pos.subtract(pos).normalize();
-			if(pos.distance(u.pos) < 20 && GlobalInfo.time-lastShot > 1) {
+			if(pos.distance(u.pos) < 20 && GlobalInfo.time-lastShot > 0.5) {
 				game.emitShot(pos.add(aim.scalar(getRadius())), aim, this.team);
 				lastShot = GlobalInfo.time;
 			}

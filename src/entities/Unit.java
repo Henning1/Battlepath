@@ -45,7 +45,7 @@ public class Unit extends HealthEntity {
 	
 	public Unit(Vector2D position, Game game, Team team) {
 		super(position,game, team);
-		health = 500;
+		health = 300;
 	}
 	
 	public void moveTo(Vector2D dest) {
@@ -83,13 +83,14 @@ public class Unit extends HealthEntity {
 	}
 	
 	public void process(double dt) {
-		System.out.println(pos);
 		
 		if(swarm != null && !leader) {
+			
+			
 			Unit leader = swarm.getLeader();
 			Line2D toLeader = new Line2D(pos,leader.pos);
 			Vector2D vecToLeader = leader.pos.subtract(pos);
-			if(vecToLeader.length() > 2) {
+			if(vecToLeader.length() > 1) {
 				if(game.collisionSystem.collideWithLevel(toLeader)) {
 					if(path == null | GlobalInfo.time - lastPlan > 1) {
 						path = game.pathPlanner.plan(this.pos, leader.pos);

@@ -139,7 +139,6 @@ public class CollisionSystem {
 		Collision closestCollision = collide(model,m);
 
 		if(closestCollision != null) {
-			System.out.println(closestCollision);
 			//slide to obstacle
 			m.slide(closestCollision);
 			//recurse

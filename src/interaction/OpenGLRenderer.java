@@ -89,16 +89,16 @@ public class OpenGLRenderer implements GLEventListener {
 		// Unit Range selection
 		
 		gl.glColor4d(0.8,0.0,0.0, 0.5);
-		if(game.entitySystem.selected().size() > 0) {
+		if(game.swarm != null) {
 			ArrayList<Entity> es = game.entitySystem.entitiesInRange(
-					game.entitySystem.selected().get(0).pos, 7);
+					game.swarm.getLeader().pos, 7);
 			if(es != null) {
 				for(Entity e : es) {
 					square(e.pos, 0.5);
 				}
 			}
 			gl.glColor4d(0.2,0.0,0.0, 0.5);
-			circle(game.entitySystem.selected().get(0).pos, 7, false);
+			circle(game.swarm.getLeader().pos, 7, false);
 		}
 
 		
@@ -126,7 +126,7 @@ public class OpenGLRenderer implements GLEventListener {
 		else gl.glColor4d(0.3,0.3,0.0, 0.5);
 		
 		for(Tile t : tilesOnLine) {
-			square(t.center,1);
+			square(t.getCenter(),1);
 		}
 		line(line.a,line.b,1);
 		*/
@@ -282,7 +282,7 @@ public class OpenGLRenderer implements GLEventListener {
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
         		
-        		if(u.isSelected && game.mode == GameMode.ACTION) {
+        		if(u.swarm != null && game.mode == GameMode.ACTION) {
         			gl.glColor3d(1,0,0);
         			circle(u.pos, u.getRadius()+0.2);
         		}
