@@ -33,7 +33,6 @@ public abstract class HealthEntity extends CollisionEntity{
 	public boolean isSelected = false;
 	public double lastShot = 0;
 	public HUDMenu menu;
-	//private abstract ArrayList<HUDButton> buttons;
 	
 	public HealthEntity(Vector2D position, Game game, Team team) {
 		super(position, game, team);
@@ -53,6 +52,7 @@ public abstract class HealthEntity extends CollisionEntity{
 	public void damage(double d) {
 		health -= d;
 		if(health <= 0) {
+			closeMenu();
 			game.particleSystem.explosion(pos);
 			game.entitySystem.remove(this);
 			isSelected = false;

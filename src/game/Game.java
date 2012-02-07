@@ -306,7 +306,10 @@ public class Game {
 					break;
 				case 'q':
 					if(selected.size() > 0)
-						selected.get(0).openMenu();
+						if(!selected.get(0).isMenuVisible())
+							selected.get(0).openMenu();
+						else
+							selected.get(0).closeMenu();
 					break;
 			}
 		}

@@ -31,7 +31,7 @@ public class HUDMenu {
 	private HealthEntity entity;
 	private double animationState;
 	private int animationDirection; //1: Open //-1: Close
-	private double animationLength = 0.6;
+	private double animationLength = 0.2;
 	private Game game;
 	public ArrayList<HUDButton> buttons = new ArrayList<HUDButton>();
 	
@@ -64,6 +64,7 @@ public class HUDMenu {
 	}
 	
 	public void process(double dt) {
+		//TODO: Make animations nice
 		if(animationDirection == 1 && animationState < 1) {
 			for(int i = 0;i<buttons.size();i++) {
 				HUDButton b = buttons.get(i);
@@ -73,11 +74,15 @@ public class HUDMenu {
 			animationState += dt/animationLength;
 		}
 		else if(animationDirection == -1 && animationState > 0) {
-			//TODO: Closing animation
+			for(int i = 0;i<buttons.size();i++) {
+				HUDButton b = buttons.get(i);
+				double x = animationState*2;
+				b.position = game.view.worldToViewGL(entity.pos.add(b.direction.scalar(x)));
+			}
 			animationState -= dt/animationLength;
 		
 		}
-		else {
+		else if(isVisible()){
 			for(int i = 0;i<buttons.size();i++) {
 				HUDButton b = buttons.get(i);
 				b.position = game.view.worldToViewGL(entity.pos.add(b.direction.scalar(2)));
