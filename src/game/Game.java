@@ -304,6 +304,10 @@ public class Game {
 				case 'e':
 					swarmify();
 					break;
+				case 'q':
+					if(selected.size() > 0)
+						selected.get(0).openMenu();
+					break;
 			}
 		}
 		

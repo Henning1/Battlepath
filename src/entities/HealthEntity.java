@@ -18,7 +18,11 @@
  */
 package entities;
 
+import java.util.ArrayList;
+
 import game.Game;
+import game.HUDButton;
+import game.HUDMenu;
 import game.Team;
 import util.Vector2D;
 
@@ -28,11 +32,20 @@ public abstract class HealthEntity extends CollisionEntity{
 	public boolean alive = true;
 	public boolean isSelected = false;
 	public double lastShot = 0;
+	public HUDMenu menu;
+	//private abstract ArrayList<HUDButton> buttons;
 	
 	public HealthEntity(Vector2D position, Game game, Team team) {
 		super(position, game, team);
+		menu = new HUDMenu(this, getButtons(), game);
 	}
 
+	protected abstract ArrayList<HUDButton> getButtons();
+	
+	public void process(double dt) {
+		menu.process(dt);
+	}
+	
 	public double getHealth() {
 		return health;
 	}
@@ -45,6 +58,22 @@ public abstract class HealthEntity extends CollisionEntity{
 			isSelected = false;
 			alive = false;
 		}
+	}
+	
+	public void openMenu() {
+		menu.open();
+	}
+	
+	public void closeMenu() {
+		menu.close();
+	}
+	
+	public boolean isMenuOpen() {
+		return menu.isOpen();
+	}
+	
+	public boolean isMenuVisible() {
+		return menu.isVisible();
 	}
 	
 }

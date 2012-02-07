@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import engine.GlobalInfo;
 import game.Game;
+import game.HUDButton;
 import game.Team;
 import util.Line2D;
 import util.Vector2D;
@@ -38,6 +39,7 @@ public class Tower extends HealthEntity {
 
 	@Override
 	public void process(double dt) {
+		super.process(dt);
 		/*
 		ArrayList<Unit> aims = game.getUnitsInRange(pos, 20);
 		
@@ -75,6 +77,11 @@ public class Tower extends HealthEntity {
 	@Override
 	public void collide(CollisionEntity e) {
 
+	}
+
+	@Override
+	protected ArrayList<HUDButton> getButtons() {
+		return new ArrayList<HUDButton>();
 	}
 
 }
