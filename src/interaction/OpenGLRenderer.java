@@ -20,6 +20,7 @@ package interaction;
 
 import engine.Tile;
 import entities.Entity;
+import entities.HealthEntity;
 import entities.Projectile;
 import entities.Tower;
 import entities.Unit;
@@ -28,6 +29,7 @@ import fx.Particle;
 import fx.Shockwave;
 import game.Game;
 import game.GameMode;
+import game.HUDButton;
 import game.Team;
 
 import java.awt.Dimension;
@@ -228,7 +230,7 @@ public class OpenGLRenderer implements GLEventListener {
 			if(e instanceof Shockwave) {
 				Shockwave sw = (Shockwave)e;
 				
-				Point screenPos = game.view.worldToViewShader(sw.pos);
+				Point screenPos = game.view.worldToViewGL(sw.pos);
 
 				swPositions[shockwaves*2] = screenPos.x;
 				swPositions[shockwaves*2+1] = screenPos.y;
@@ -352,6 +354,26 @@ public class OpenGLRenderer implements GLEventListener {
 			gl.glColor3d(0.1,0.1,0.2);
 			rectangle(sel.topleft, sel.bottomright);
 		}
+		
+		//HealthEntity menus
+		for(HealthEntity e : game.entitySystem.visibleMenuEntities) {
+			for(HUDButton b : e.menu.buttons) {
+				gl.glColor3d(0.1,0.1,0.2);
+				circle(b.position, 15, false);
+			}
+		}
+	}
+	
+	private void circle(Point pos, double radius, boolean filled) {
+		double angle;
+		if(filled) gl.glBegin(GL2.GL_POLYGON);
+		else gl.glBegin(GL2.GL_LINE_STRIP);
+	    for(int i = 20; i >= 0; i--) {
+	        angle = i * 2 * Math.PI / 20;
+        	gl.glVertex2d(pos.x + (Math.cos(angle) * radius), 
+        			(+ pos.y + (Math.sin(angle) * radius)));
+	    }
+	    gl.glEnd();
 	}
 	
 	private void circle(Vector2D pos, double radius, boolean filled) {
@@ -360,8 +382,8 @@ public class OpenGLRenderer implements GLEventListener {
 		else gl.glBegin(GL2.GL_LINE_STRIP);
 	    for(int i = 20; i >= 0; i--) {
 	        angle = i * 2 * Math.PI / 20;
-	        gl.glVertex2d((offset.x + pos.x + (Math.cos(angle) * radius)) * scaleFactor, 
-	        		(offset.y + pos.y + (Math.sin(angle) * radius)) * scaleFactor);
+        	gl.glVertex2d((offset.x + pos.x + (Math.cos(angle) * radius)) * scaleFactor, 
+        			(offset.y + pos.y + (Math.sin(angle) * radius)) * scaleFactor);
 	    }
 	    gl.glEnd();
 	}

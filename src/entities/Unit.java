@@ -30,6 +30,7 @@ import util.Vector2D;
 
 import engine.GlobalInfo;
 import game.Game;
+import game.HUDButton;
 import game.Swarm;
 import game.Team;
 
@@ -93,7 +94,7 @@ public class Unit extends HealthEntity {
 	}
 	
 	public void process(double dt) {
-		
+		super.process(dt);
 		double goal = 0;
 		
 		if(swarm != null && !leader) {
@@ -158,6 +159,15 @@ public class Unit extends HealthEntity {
 	@Override
 	public void collide(CollisionEntity e) {
 		
+	}
+
+	@Override
+	protected ArrayList<HUDButton> getButtons() {
+		ArrayList<HUDButton> b = new ArrayList<HUDButton>();
+		b.add(new HUDButton());
+		b.add(new HUDButton());
+		b.add(new HUDButton());
+		return b;
 	}
 
 

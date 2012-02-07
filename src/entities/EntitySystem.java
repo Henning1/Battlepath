@@ -35,6 +35,7 @@ public class EntitySystem {
 	public ArrayList<Unit> selectedUnits = new ArrayList<Unit>();
 	public ArrayList<Unit> units = new ArrayList<Unit>();
 	public ArrayList<CollisionEntity> collisionEntities = new ArrayList<CollisionEntity>();
+	public ArrayList<HealthEntity> visibleMenuEntities = new ArrayList<HealthEntity>();
 	
 	
 	public void arrange() {
@@ -61,6 +62,11 @@ public class EntitySystem {
 					selectedUnits.add((Unit) e);
 			
 			}
+			if(e instanceof HealthEntity) {
+				if(((HealthEntity)e).isMenuVisible())
+					visibleMenuEntities.add((HealthEntity) e);
+			}
+				
 		}
 		
 		

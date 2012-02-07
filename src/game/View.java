@@ -110,7 +110,7 @@ public class View {
 	 * @param worldPos world position
 	 * @return viewport position in pixels
 	 */
-	public Point worldToViewShader(Vector2D worldPos) {
+	public Point worldToViewGL(Vector2D worldPos) {
 		Vector2D viewpos = worldPos.add(offset).scalar(tileSize*zoom);
 		return new Point((int)viewpos.x,(int)viewpos.y);
 	}
