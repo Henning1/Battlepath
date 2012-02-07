@@ -41,7 +41,7 @@ public class Swarm {
 		this.units = new SafeList<Unit>(units);
 		
 		for(Unit u : this.units) {
-			u.leader = false;
+			u.setLeader(false);
 			u.setSwarm(this);
 		}
 		findLeader();
@@ -61,7 +61,7 @@ public class Swarm {
 		default:
 			averagePositionLeader();
 		}
-		leader.leader = true;
+		leader.setLeader(true);
 	}
 
 	
@@ -82,6 +82,10 @@ public class Swarm {
 			}
 		}
 		leader = closest;
+		
+		if(leader == null) {
+			System.out.println("problem");
+		}
 	}
 	
 	public void shootAt(Vector2D pos) {

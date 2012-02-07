@@ -38,13 +38,13 @@ public class Unit extends HealthEntity {
 
 	public ArrayList<Vector2D> path;
 	public Swarm swarm;
-	public boolean leader=false;
 	public Vector2D direction = new Vector2D(0,0);
 	public double speed = 8;
 	public boolean actionmode = true;
 	public double lastPlan=0;
 	public double distanceToLeader=0;
 	public double constantDistanceTime=0;
+	private boolean leader=false;
 	
 	public Unit(Vector2D position, Game game, Team team) {
 		super(position,game, team);
@@ -73,12 +73,19 @@ public class Unit extends HealthEntity {
 		}
 	}
 	
+
+	
 	public Vector2D velocityDt() {
 		return velocity.scalar(game.dt);
 	}
 	
 	public void setLeader(boolean value) {
 		leader = value;		
+		if(leader==true) velocity = GlobalInfo.nullVector;
+	}
+	
+	public boolean getLeader() {
+		return leader;
 	}
 	
 	public void setSwarm(Swarm swarm) {

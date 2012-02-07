@@ -54,6 +54,16 @@ public class Battlepath {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
+		
+		double full = Math.PI*2;
+		double steps= 16;
+		double stepsize = full/steps;
+		for(int i=0;i<steps;i++) {
+			System.out.println(stepsize*i/full*360 + "° " + Vector2D.fromAngle(stepsize*i, 1));
+		}
+		
+		
+		
 		int tileSize = 20;
 		int fieldWidth = 100;
 		int fieldHeight = 100;

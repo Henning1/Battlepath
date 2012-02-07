@@ -41,7 +41,7 @@ public class MovementSystem {
 		
 		for(Unit u1 : units) {
 			Move m1 = u1.getMove();
-			if(u1.leader) continue;
+			if(u1.getLeader()) continue;
 			for(Unit u2 : game.entitySystem.unitsInRange(u1.pos, 5)) {
 				if(u1 == u2) continue;
 				//Move m2 = u2.getMove();
