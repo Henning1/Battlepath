@@ -58,13 +58,13 @@ public class Projectile extends CollisionEntity {
 				HealthEntity h = (HealthEntity)c;
 				h.damage(power);
 				game.particleSystem.particleSpray(pos, 500, 1);
-				game.entities.remove(this);
+				game.entitySystem.remove(this);
 			}
 		}
 		else if(c == null) {
 			
 			game.particleSystem.particleSpray(pos, 100, 1);
-			game.entities.remove(this);
+			game.entitySystem.remove(this);
 		}
 	}
 	

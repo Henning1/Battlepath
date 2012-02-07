@@ -68,7 +68,7 @@ public class Unit extends HealthEntity {
 	
 	public void shoot(Vector2D direction) {
 		if(GlobalInfo.time - lastShot > 0.3) {
-			game.entities.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, game, team));
+			game.entitySystem.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, game, team));
 			lastShot = GlobalInfo.time;
 		}
 	}

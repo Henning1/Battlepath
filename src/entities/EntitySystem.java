@@ -25,15 +25,21 @@ import util.SafeList;
 import util.Vector2D;
 
 public class EntitySystem {
-	
+	//general list of all entities
+	public SafeList<Entity> entities = new SafeList<Entity>();
+	//specialized lists for search close to locations
 	ArrayList<EntityComparator> xOrderUnits = new ArrayList<EntityComparator>();
 	ArrayList<EntityComparator> xOrderEntities = new ArrayList<EntityComparator>();
 	ArrayList<EntityComparator> xOrderCollisionEntities = new ArrayList<EntityComparator>();
-	ArrayList<Unit> selectedUnits = new ArrayList<Unit>();
+	//specialized lists
+	public ArrayList<Unit> selectedUnits = new ArrayList<Unit>();
 	public ArrayList<Unit> units = new ArrayList<Unit>();
 	public ArrayList<CollisionEntity> collisionEntities = new ArrayList<CollisionEntity>();
 	
-	public void arrange(SafeList<Entity> entities) {
+	
+	public void arrange() {
+		entities.applyChanges();
+		
 		xOrderUnits.clear();
 		xOrderEntities.clear();
 		xOrderCollisionEntities.clear();
@@ -56,6 +62,8 @@ public class EntitySystem {
 			
 			}
 		}
+		
+		
 		Collections.sort(xOrderEntities);
 		Collections.sort(xOrderCollisionEntities);
 		Collections.sort(xOrderUnits);
@@ -65,7 +73,17 @@ public class EntitySystem {
 		return selectedUnits;
 	}
 	
+	public void add(Entity e) {
+		entities.add(e);
+	}
 	
+	public void addAll(ArrayList<Entity> e) {
+		entities.addAll(e);
+	}
+	
+	public void remove(Entity e) {
+		entities.remove(e);
+	}
 	
 	private EntityComparator getPivot(int dimension, double value) {
 		return new EntityComparator(value,dimension);

@@ -57,7 +57,6 @@ public class Game {
 	public EffectsSystem particleSystem;
 	public Input input;
 	public EntitySystem entitySystem = new EntitySystem();
-	public SafeList<Entity> entities = new SafeList<Entity>();
 	public SafeList<Swarm> swarms = new SafeList<Swarm>();
 	public Swarm swarm = null;
 	public ArrayList<Team> teams = new ArrayList<Team>();
@@ -82,9 +81,21 @@ public class Game {
 		particleSystem = new EffectsSystem(this);
 		this.teams = teams;
 		this.playerteam = teams.get(team);
-		entities.add(new Unit(startpos, this, playerteam));
-		entitySystem.arrange(entities);
-		//view.center(entitySystem.units.get(0).pos);
+		entitySystem.add(new Unit(startpos, this, playerteam));
+		entitySystem.arrange();
+	}
+	
+	public void setView(View view) {
+		this.view = view;
+	}
+	
+	public void initialize() {
+		if(entitySystem.units.size() > 0) {
+			view.center(entitySystem.units.get(0).pos);
+		} else {
+			view.center(new Vector2D(field.getTilesX()/2,field.getTilesY()/2));
+		}
+		setMode(GameMode.STRATEGY);
 	}
 	
 	/**
@@ -93,9 +104,10 @@ public class Game {
 	 */
 	public void step(double dt) {
 		this.dt = dt;
-		processInput(dt);
 		
-		entitySystem.arrange(entities);
+		entitySystem.arrange();
+		
+		processInput(dt);
 		
 		if(swarm == null) {
 			this.setMode(GameMode.STRATEGY);
@@ -104,7 +116,7 @@ public class Game {
 			view.follow(swarm.getLeader());
 		}
 		
-		for(Entity e : entities) {
+		for(Entity e : entitySystem.entities) {
 			e.process(dt);
 			
 			if(e instanceof Unit) {
@@ -119,7 +131,6 @@ public class Game {
 			}
 		}
 		movementSystem.process(entitySystem.collisionEntities,entitySystem.units,dt);
-		entities.applyChanges();
 		
 		for(Swarm s : swarms) {
 			s.process();
@@ -172,7 +183,7 @@ public class Game {
 		}
 	}
 	
-	/**
+	/** Obsolete! Replaced by EntitySystem (kept for testing)
 	 * Gets all units in range of the provided world position position
 	 * @param pos world position
 	 * @param range range radius
@@ -182,7 +193,7 @@ public class Game {
 		
 		ArrayList<Unit> result = new ArrayList<Unit>();
 		
-		for(Entity e : entities) {
+		for(Entity e : entitySystem.units) {
 			if(!(e instanceof Unit)) continue;
 			if(e.pos.distance(pos) < range) {
 				result.add((Unit)e);
@@ -204,7 +215,7 @@ public class Game {
 		if(mode == GameMode.STRATEGY) {
 			if(input.mouseButtonPressed[0]  && !lastMouseState[0]) {
 				found = false;
-				for(Entity e : entities) {
+				for(Entity e : entitySystem.entities) {
 					if(!(e instanceof Unit)) continue;
 					Unit u = (Unit)e;
 					if(input.getCursorPos().distance(e.pos) < e.getRadius()) {
@@ -288,7 +299,7 @@ public class Game {
 					// random team
 					java.util.Random random = new Random();
 					int team = random.nextInt(teams.size());
-					entities.add(new Unit(Battlepath.findStartPos(field), this, teams.get(team)));
+					entitySystem.add(new Unit(Battlepath.findStartPos(field), this, teams.get(team)));
 					break;
 				case 'e':
 					swarmify();
@@ -312,7 +323,7 @@ public class Game {
 	 */
 	public void emitShot(Vector2D start, Vector2D direction, Team team) {
 		Projectile p = new Projectile(start, direction, this, team);
-		entities.add(p);
+		entitySystem.add(p);
 	}
 	
 }

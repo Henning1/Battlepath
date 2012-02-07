@@ -255,7 +255,7 @@ public class OpenGLRenderer implements GLEventListener {
 	}
 	
 	private void drawEntities() {
-		for(Entity e : game.entities) {
+		for(Entity e : game.entitySystem.entities) {
         	
 			if(!game.view.getScreenRect().inside(e.pos, e.getRadius()))
 				continue;
