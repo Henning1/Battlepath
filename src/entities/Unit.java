@@ -25,6 +25,7 @@ import collision.CollisionSystem;
 import collision.Move;
 
 import util.Line2D;
+import util.Util;
 import util.Vector2D;
 
 import engine.GlobalInfo;
@@ -42,6 +43,8 @@ public class Unit extends HealthEntity {
 	public double speed = 8;
 	public boolean actionmode = true;
 	public double lastPlan=0;
+	public double distanceToLeader=0;
+	public double constantDistanceTime=0;
 	
 	public Unit(Vector2D position, Game game, Team team) {
 		super(position,game, team);
@@ -84,13 +87,24 @@ public class Unit extends HealthEntity {
 	
 	public void process(double dt) {
 		
+		double goal = 0;
+		
 		if(swarm != null && !leader) {
 			
 			
 			Unit leader = swarm.getLeader();
 			Line2D toLeader = new Line2D(pos,leader.pos);
 			Vector2D vecToLeader = leader.pos.subtract(pos);
+			double newDistanceToLeader = vecToLeader.length() - getRadius() - leader.getRadius();
+			
+			if(Util.doubleEquals(distanceToLeader, newDistanceToLeader, 0.01))
+				constantDistanceTime += dt;
+			else constantDistanceTime = 0;
+			
+			distanceToLeader = newDistanceToLeader;
+				
 			if(vecToLeader.length() > 1) {
+			
 				if(game.collisionSystem.collideWithLevel(toLeader)) {
 					if(path == null | GlobalInfo.time - lastPlan > 1) {
 						path = game.pathPlanner.plan(this.pos, leader.pos);
@@ -99,7 +113,14 @@ public class Unit extends HealthEntity {
 				} 
 				else {
 					path = null;
+					/*System.out.println(constantDistanceTime);
+					if(constantDistanceTime > 0.1 & leader.velocity.length() > 1.0) {
+						velocity = leader.velocity;
+					} else {*/		
 					velocity = toLeader.direction.scalar(speed);
+					if(velocity.length() > distanceToLeader)
+						goal = distanceToLeader / velocity.length();
+	
 				}
 			}
 			else {
@@ -118,7 +139,8 @@ public class Unit extends HealthEntity {
 			}
 			
 		}
-		move = new Move(this,dt);
+		if(goal != 0) move = new Move(this,dt);
+		else move = new Move(this,goal,dt);
 	}
 
 	@Override

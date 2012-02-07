@@ -18,31 +18,46 @@
  */
 package entities;
 
+import util.Vector2D;
+
 public class EntityComparator implements Comparable<EntityComparator> {
 	
-	Entity e;
+	Entity e=null;
 	int dimension;
+	boolean knowsEntity=true;
+	Vector2D value;
 	
 	public EntityComparator(Entity e, int dimension) {
 		this.e = e;
+		this.dimension = dimension;
+		value = e.pos;
+	}
+	
+	public EntityComparator(double value, int dimension) {
+		this.dimension = dimension;
+		this.value = new Vector2D(value,value);
+		knowsEntity = false;
+	}
+	
+	public double getValue() {
+		if(dimension == 1) {
+			return value.x;
+		} else if(dimension == 2) {
+			return value.y;
+		} else {
+			return Double.NaN;
+		}
+	}
+	
+	public void setDimension(int dimension) {
 		this.dimension = dimension;
 	}
 
 	@Override
 	public int compareTo(EntityComparator c) {
-
-		
-		if(dimension==1) {
-			if(e.pos.x > c.e.pos.x) return 1;
-			if(e.pos.x == c.e.pos.x) return 0;
-			else return -1;
-		} else if(dimension==2) {
-			if(e.pos.y > c.e.pos.y) return 1;
-			if(e.pos.y == c.e.pos.y) return 0;
-			else return -1;
-			
-		}
-		return 0;
+		if(getValue() > c.getValue()) return 1;
+		if(getValue() == c.getValue()) return 0;
+		else return -1;
 	}
 
 }

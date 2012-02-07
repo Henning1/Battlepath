@@ -29,8 +29,16 @@ public class Move {
 	Vector2D v;
 	boolean finished = false;
 	double dt;
+	double goal=0;
 	
 	public Move(Entity e, double dt) {
+		this.dt = dt;
+		this.e = e;
+		v = e.velocity.scalar(dt);
+		basepoint = e.pos;
+	}
+	
+	public Move(Entity e, double goal, double dt) {
 		this.dt = dt;
 		this.e = e;
 		v = e.velocity.scalar(dt);
@@ -85,7 +93,9 @@ public class Move {
 	
 	public void apply() {
 		if(!finished) {
-			basepoint = basepoint.add(v);
+			
+			if(goal == 0) basepoint = basepoint.add(v);
+			else basepoint = basepoint.add(v.scalar(goal));
 			finished = true;
 		}
 		e.pos = basepoint;
