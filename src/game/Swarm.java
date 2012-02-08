@@ -20,6 +20,7 @@ package game;
 import java.util.ArrayList;
 
 import util.SafeList;
+import util.Util;
 import util.Vector2D;
 
 import entities.Entity;
@@ -37,10 +38,14 @@ public class Swarm {
 	boolean alive = true;
 	
 	public Swarm(ArrayList<Unit> units, Game game) {
+		
 		this.game = game;
 		this.units = new SafeList<Unit>(units);
 		
 		for(Unit u : this.units) {
+			if(u.pos.x == Double.NaN)
+				System.out.println("problem");
+			
 			u.setLeader(false);
 			u.setSwarm(this);
 		}
@@ -69,9 +74,11 @@ public class Swarm {
 		Vector2D averagePosition=new Vector2D(0,0);
 		for(Unit u : units) {
 			averagePosition = averagePosition.add(u.pos);
+			if(u.pos.x == Double.NaN)
+				System.out.println("problem");
 		}
 		averagePosition = averagePosition.scalar(1.0/(double)units.size());
-		System.out.println(averagePosition);
+		System.out.println("Average position in swarm: " + averagePosition);
 		Unit closest=null;
 		double minDistance = Double.MAX_VALUE;
 		for(Unit u : units) {
@@ -83,9 +90,10 @@ public class Swarm {
 		}
 		leader = closest;
 		
-		if(leader == null) {
-			System.out.println("problem");
+		if(leader==null) {
+			System.out.println("problem: leader invalid");
 		}
+		
 	}
 	
 	public void shootAt(Vector2D pos) {

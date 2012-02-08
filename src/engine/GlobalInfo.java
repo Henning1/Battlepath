@@ -34,5 +34,4 @@ public class GlobalInfo {
 	public static double accuracy = 0.02;
 	/**How close to go to a line in collision detection*/
 	public static double veryCloseDistance = 0.0005;
-	
 }

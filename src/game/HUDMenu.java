@@ -42,7 +42,6 @@ public class HUDMenu {
 		int i = 0;
 		for(HUDButton butt : buttons) {
 			butt.direction = Vector2D.fromAngle(((double)i/(buttons.size()))*Math.PI*2, 1);
-			System.out.println(((double)i/(buttons.size()))*Math.PI*2);
 			i++;
 		}
 	}

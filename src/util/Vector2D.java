@@ -35,7 +35,7 @@ public class Vector2D {
 		this.y = p.getY();
 	}
 	
-	//0° horizontal to the right. Counter-clockwise, radian!
+	//0° is horizontal to the right. Counter-clockwise, radian!
 	public static Vector2D fromAngle(double alpha, double length) {
 		return new Vector2D(Math.cos(alpha)*length, Math.sin(alpha)*length);
 	

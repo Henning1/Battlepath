@@ -26,6 +26,7 @@ import util.Vector2D;
 public abstract class CollisionEntity extends Entity {
 	
 	protected Move move;
+	public boolean collideWithLevel=true;
 	
 	public CollisionEntity(Vector2D position, Game game, Team team) {
 		super(position, game, team);

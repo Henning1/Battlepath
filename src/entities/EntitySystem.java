@@ -49,6 +49,9 @@ public class EntitySystem {
 		collisionEntities.clear();
 		
 		for(Entity e : entities) {
+			
+			
+			
 			EntityComparator ec = new EntityComparator(e,1);
 			xOrderEntities.add(ec);
 			if(e instanceof CollisionEntity) {

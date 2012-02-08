@@ -42,5 +42,4 @@ public abstract class Entity {
 	public Vector2D velocityDt() {
 		return velocity.scalar(game.dt);
 	}
-
 }

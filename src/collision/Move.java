@@ -92,12 +92,15 @@ public class Move {
 	}
 	
 	public void apply() {
+		
+		
 		if(!finished) {
 			
 			if(goal == 0) basepoint = basepoint.add(v);
 			else basepoint = basepoint.add(v.scalar(goal));
 			finished = true;
 		}
+		
 		e.pos = basepoint;
 	}
 	

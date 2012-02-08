@@ -74,8 +74,6 @@ public class Unit extends HealthEntity {
 		}
 	}
 	
-
-	
 	public Vector2D velocityDt() {
 		return velocity.scalar(game.dt);
 	}
@@ -98,8 +96,7 @@ public class Unit extends HealthEntity {
 		double goal = 0;
 		
 		if(swarm != null && !leader) {
-			
-			
+
 			Unit leader = swarm.getLeader();
 			Line2D toLeader = new Line2D(pos,leader.pos);
 			Vector2D vecToLeader = leader.pos.subtract(pos);
@@ -159,6 +156,10 @@ public class Unit extends HealthEntity {
 	@Override
 	public void collide(CollisionEntity e) {
 		
+	}
+	
+	public String toString() {
+		return "Unit - Pos: " + pos;
 	}
 
 	@Override
