@@ -35,6 +35,20 @@ public class Tile {
 	private Point index;
 	private int value;
 	
+	/* value codes:
+	 * 0: empty
+	 * 1: square
+	 * 2: triangle 
+	 * 		|\
+	 * 3: triangle
+	 * 		|/
+	 * 4: triangle
+	 * 		\|
+	 * 5: triangle
+	 * 		/|
+	 */
+	
+	
 	/**
 	 * @param index Field index of the Tile
 	 * @param value Value of the Tile (0: Free, 1: Obstacle)
@@ -61,6 +75,26 @@ public class Tile {
 			collisionModel.add(new Line2D(bottomleft,bottomright));
 			collisionModel.add(new Line2D(bottomright, topright));
 			collisionModel.add(new Line2D(topright, topleft));
+		}
+		if(value==2) {
+			collisionModel.add(new Line2D(topleft,bottomleft));
+			collisionModel.add(new Line2D(bottomleft,bottomright));
+			collisionModel.add(new Line2D(bottomright,topleft));
+		}
+		if(value==3) {
+			collisionModel.add(new Line2D(topleft,bottomleft));
+			collisionModel.add(new Line2D(bottomleft,topright));
+			collisionModel.add(new Line2D(topright,topleft));
+		}
+		if(value==4) {
+			collisionModel.add(new Line2D(bottomright,topright));
+			collisionModel.add(new Line2D(topright,topleft));
+			collisionModel.add(new Line2D(topleft,bottomright));
+		}
+		if(value==5) {
+			collisionModel.add(new Line2D(bottomright,topright));
+			collisionModel.add(new Line2D(topright,bottomleft));
+			collisionModel.add(new Line2D(bottomleft,bottomright));
 		}
 	}
 	

@@ -158,7 +158,7 @@ public class Field {
 	}
 	
 	/**
-	 * Wrapper for dumbasses
+	 * Wrapper for Fujnky
 	 */
 	public Tile tileAt(int x,int y) {
 		return tileAt(new Point(x,y));
@@ -193,13 +193,22 @@ public class Field {
 		top = getWorldPos(new Point(tile.x,tile.y-1));
 		bottom = getWorldPos(new Point(tile.x,tile.y+1));
 		
-		if(tileValueAt(left) != 1 && tileValueAt(top) != 1)
+		int vLeft = tileValueAt(left);
+		int vRight = tileValueAt(right);
+		int vTop = tileValueAt(top);
+		int vBottom = tileValueAt(bottom);
+		
+		//move to topleft
+		if((vLeft == 0 || vLeft == 2) && (vTop == 0 || vTop == 4))
 			result.add(getWorldPos(new Point(tile.x-1,tile.y-1)));
-		if(tileValueAt(right) != 1 && tileValueAt(top) != 1)
+		//move to topright
+		if((vRight == 0 || vRight == 5) && (vTop == 0 || vTop == 3))
 			result.add(getWorldPos(new Point(tile.x+1,tile.y-1)));
-		if(tileValueAt(left) != 1 && tileValueAt(bottom) != 1)
+		//move to bottomleft
+		if((vLeft == 0 || vLeft == 3) && (vBottom == 0 || vBottom == 5))
 			result.add(getWorldPos(new Point(tile.x-1,tile.y+1)));
-		if(tileValueAt(right) != 1 && tileValueAt(bottom) != 1)
+		//move to bottomright
+		if((vRight == 0 || vRight == 4) && (vBottom == 0 || vBottom == 2))
 			result.add(getWorldPos(new Point(tile.x+1,tile.y+1)));
 		
 		result.add(left);
