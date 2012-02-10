@@ -47,6 +47,7 @@ public class EntitySystem {
 		selectedUnits.clear();
 		units.clear();
 		collisionEntities.clear();
+		visibleMenuEntities.clear();
 		
 		for(Entity e : entities) {
 			
