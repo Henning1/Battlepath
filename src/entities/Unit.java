@@ -165,9 +165,9 @@ public class Unit extends HealthEntity {
 	@Override
 	protected ArrayList<HUDButton> getButtons() {
 		ArrayList<HUDButton> b = new ArrayList<HUDButton>();
-		b.add(new HUDButton());
-		b.add(new HUDButton());
-		b.add(new HUDButton());
+		b.add(new HUDButton(game));
+		b.add(new HUDButton(game));
+		b.add(new HUDButton(game));
 		return b;
 	}
 

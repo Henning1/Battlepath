@@ -355,12 +355,16 @@ public class OpenGLRenderer implements GLEventListener {
 			rectangle(sel.topleft, sel.bottomright);
 		}
 		
+		gl.glDisable(GL2.GL_BLEND);
+		
 		//HealthEntity menus
-		gl.glColor3d(0.1,0.1,0.2);
+		gl.glColor3d(1,1,1);
 		for(HealthEntity e : game.entitySystem.visibleMenuEntities) {
 			if(e.isMenuVisible())
 				for(HUDButton b : e.menu.buttons) {
-					circle(b.position, 15, false);
+					if(b.mouseOver) gl.glColor3d(1,0,0);
+					circle(b.position, b.getRadius(), false);
+					if(b.mouseOver) gl.glColor3d(1,1,1);
 				}
 		}
 	}

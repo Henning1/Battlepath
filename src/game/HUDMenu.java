@@ -85,6 +85,8 @@ public class HUDMenu {
 			for(int i = 0;i<buttons.size();i++) {
 				HUDButton b = buttons.get(i);
 				b.position = game.view.worldToViewGL(entity.pos.add(b.direction.scalar(2)));
+				//Process buttons
+				b.process(dt);
 			}
 		}
 	}

@@ -25,4 +25,25 @@ import util.Vector2D;
 public class HUDButton {
 	public Point position;
 	public Vector2D direction;
+	public boolean mouseOver = false;
+	private Game game;
+	
+	public HUDButton(Game g) {
+		game = g;
+	}
+	
+	public double getRadius() {
+		return 15;
+	}
+	
+	public void process(double dt) {
+		Point cursor = (Point)game.input.viewCursorPos.clone();
+		cursor.y = game.view.windowSize.height - cursor.y;
+		if(cursor.distance(position) < getRadius()) {
+			mouseOver = true;
+		}
+		else if(mouseOver == true) {
+			mouseOver = false;
+		}
+	}
 }
