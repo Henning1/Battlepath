@@ -161,13 +161,20 @@ public class Unit extends HealthEntity {
 	public String toString() {
 		return "Unit - Pos: " + pos;
 	}
+	
+	private class Transform implements HUDButton.callback {
+		public void run() {
+			die();
+			game.entitySystem.add(new Tower(pos, game, team));
+		}
+	}
 
 	@Override
 	protected ArrayList<HUDButton> getButtons() {
 		ArrayList<HUDButton> b = new ArrayList<HUDButton>();
-		b.add(new HUDButton(game));
-		b.add(new HUDButton(game));
-		b.add(new HUDButton(game));
+		b.add(new HUDButton(game, new Transform()));
+		b.add(new HUDButton(game, new Transform()));
+		b.add(new HUDButton(game, new Transform()));
 		return b;
 	}
 

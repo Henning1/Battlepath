@@ -20,6 +20,8 @@ package game;
 
 import java.awt.Point;
 
+import entities.HealthEntity;
+
 import util.Vector2D;
 
 public class HUDButton {
@@ -27,9 +29,11 @@ public class HUDButton {
 	public Vector2D direction;
 	public boolean mouseOver = false;
 	private Game game;
+	private callback cb;
 	
-	public HUDButton(Game g) {
+	public HUDButton(Game g, HUDButton.callback c) {
 		game = g;
+		cb = c;
 	}
 	
 	public double getRadius() {
@@ -45,5 +49,13 @@ public class HUDButton {
 		else if(mouseOver == true) {
 			mouseOver = false;
 		}
+		
+		if(mouseOver && game.input.mouseButtonPressed[0]) {
+			cb.run();
+		}
+	}
+	
+	public interface callback {
+		public void run();
 	}
 }
