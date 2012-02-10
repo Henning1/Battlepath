@@ -447,8 +447,26 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glVertex2d((pos.x+0.5+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x-0.5+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
 	}
+	
+	private void polygonLines(ArrayList<Line2D> lines, boolean filled) {
+		if(filled) gl.glBegin(GL2.GL_POLYGON);
+		else gl.glBegin(GL2.GL_LINE_STRIP);
+		for(Line2D line : lines) {
+			gl.glVertex2d((line.a.x+offset.x)*scaleFactor, (line.a.y+offset.y)*scaleFactor);
+		}
+		gl.glVertex2d((lines.get(lines.size()-1).b.x+offset.x)*scaleFactor, 
+				(lines.get(lines.size()-1).b.y+offset.y)*scaleFactor);
+		gl.glEnd();
+	}
 
-
+	private void polygonVectors(ArrayList<Vector2D> vectors, boolean filled) {
+		if(filled) gl.glBegin(GL2.GL_POLYGON);
+		else gl.glBegin(GL2.GL_LINE_STRIP);
+		for(Vector2D vec : vectors) {
+			gl.glVertex2d((vec.x+offset.x)*scaleFactor, (vec.y+offset.y)*scaleFactor);
+		}
+		gl.glEnd();
+	}
 	
 	@Override
 	public void dispose(GLAutoDrawable drawable) {
