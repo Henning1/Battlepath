@@ -49,14 +49,18 @@ public abstract class HealthEntity extends CollisionEntity{
 		return health;
 	}
 	
+	public void die() {
+		closeMenu();
+		game.particleSystem.explosion(pos);
+		game.entitySystem.remove(this);
+		isSelected = false;
+		alive = false;
+	}
+	
 	public void damage(double d) {
 		health -= d;
 		if(health <= 0) {
-			closeMenu();
-			game.particleSystem.explosion(pos);
-			game.entitySystem.remove(this);
-			isSelected = false;
-			alive = false;
+			die();
 		}
 	}
 	
