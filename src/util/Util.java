@@ -59,11 +59,19 @@ public class Util {
 	 *  |c d|f|
 	 */
 	public static Tuple<Double,Double> LES2x2(double a, double b, double c, double d, double e, double f) {
-		double y = (e*c - a*f) / (b*c - a*d);
-		double x = (e - y*b) / a;
+		Tuple<Double, Double> xs = new Tuple<Double,Double>();
+		xs.a = (e*d - f*b) / (a*d - c*b);
+		xs.b = (a*f - e*c) / (a*d - b*c);
+		return xs;
 		
+		/*
+		double x,y;
+		y = (e*c - a*f) / (b*c - a*d);
+		if(a != 0)
+			x = (e - y*b) / a;
+		else x = (f - d*y) / d;
 		return new Tuple<Double,Double>(x,y);
-		
+		*/
 	}
 	
 	

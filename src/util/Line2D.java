@@ -66,16 +66,14 @@ public class Line2D {
 	}
 	
 	public Vector2D intersectionPoint(Line2D line) {
-	
+		
 		Tuple<Double,Double> params = Util.LES2x2(
 				direction.x, line.direction.x, direction.y, line.direction.y,
 				line.a.x-a.x, line.a.y-a.y);
 		
 		return a.add(direction.scalar(params.a));
-		
+		//return b.subtract(direction.scalar(-params.b));
 	}
-	
-	
 	
 	public boolean pointInSegment(Vector2D point) {
 		return a.distance(point) + b.distance(point) <= a.distance(b) + 0.000001;
