@@ -32,6 +32,7 @@ import java.util.Random;
 
 import collision.CollisionSystem;
 
+import util.Line2D;
 import util.Vector2D;
 
 import engine.Field;
@@ -54,7 +55,6 @@ public class Battlepath {
 	 * @param args Command line arguments
 	 */
 	public static void main(String[] args) {
-		
 		
 		int tileSize = 20;
 		int fieldWidth = 100;

@@ -1,4 +1,5 @@
 /**
+
  * Copyright (c) 2011-2012 Henning Funke.
  * 
  * This file is part of Battlepath.

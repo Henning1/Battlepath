@@ -25,5 +25,8 @@ public class Tuple<T,V> {
 		this.a = a;
 		this.b = b;
 	}
+	public Tuple() {
+		
+	}
 	
 }
