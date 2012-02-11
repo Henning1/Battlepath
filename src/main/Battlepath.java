@@ -27,16 +27,19 @@ import interaction.BFrame;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
 import collision.CollisionSystem;
 
 import util.Line2D;
+import util.Util;
 import util.Vector2D;
 
 import engine.Field;
 import engine.MainLoop;
+import engine.MapCodec;
 import engine.Pathplanner;
 import engine.Tile;
 import entities.Entity;
@@ -60,14 +63,30 @@ public class Battlepath {
 		int fieldWidth = 100;
 		int fieldHeight = 100;
 		Dimension windowSize = new Dimension(1000,800);
-		Field f = new Field(fieldWidth, fieldHeight);
+		Field f = new Field(fieldWidth, fieldHeight, "random");
 		randomCircles(f, fieldWidth*fieldHeight/50, 3);
 		
 		//f.setTile(new Vector2D(40.5,40.5), 4);
 		//f.setTile(new Vector2D(40.5,41.5), 4);
 		
 		Vector2D start = findStartPos(f);
-
+		
+		/*byte[] fi = null;
+		try {
+			fi = Util.readFile("testmap");
+		} catch (IOException e) {
+			System.out.println("I/O error.");
+		}
+		f = MapCodec.decode(fi);
+		*/
+		/*byte[] m = MapCodec.encode(f);
+		
+		try {
+			Util.writeFile("testmap", m);
+		} catch (IOException e) {
+			System.out.println("I/O error.");
+		}*/
+		
 		ArrayList<Team> teams = new ArrayList<Team>();
 		teams.add(new Team("SWAR", 0));
 		teams.add(new Team("sWARm", 1));
