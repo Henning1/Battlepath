@@ -126,21 +126,36 @@ public class CollisionSystem {
 		
 		return collModel;
 	}
-	
+	boolean collided;
 	public void collideAndSlide(Move m) {
+		
+		collided=false;
 		if(m.v.equals(GlobalInfo.nullVector)) return;
 		pCollideAndSlide(m,3);
+		if(collided) System.out.println("Initial position: " + m.e.pos + "\n");
 	}
 	
 	private void pCollideAndSlide(Move m,int d) {
+		
 		if(d==0) return;
 		
 		ArrayList<Line2D> model = relevantData(m);	
 		Collision closestCollision = collide(model,m);
 
 		if(closestCollision != null) {
+			collided=true;
+
+			//analyze slide and collision
+			//check if it is actually only sliding to the point of collision
+			
+			//System.out.println("Collisionpoint: " + closestCollision.collisionPoint);
+			//System.out.println("distance: " + (m.basepoint.distance(closestCollision.collisionPoint)-m.e.getRadius()));
+			//System.out.println(closestCollision.distance);
 			//slide to obstacle
 			m.slide(closestCollision);
+			//System.out.println("Slided to: " + m.basepoint);
+			
+			
 			//recurse
 			if(!m.finished)
 				pCollideAndSlide(m,--d);

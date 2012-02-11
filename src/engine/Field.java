@@ -20,6 +20,7 @@ package engine;
 
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.Random;
 
 import util.Line2D;
 import util.Util;
@@ -63,9 +64,10 @@ public class Field {
 	public void createCircle(Vector2D pos, double r) {
 		for(int x=0; x<tilesX; x++) {
 			for(int y=0; y<tilesY; y++) {
+				Random rand = new Random();
 				//System.out.println(pos.distance(getWorldPos(new Point(x,y))));
 				if(pos.distance(getWorldPos(new Point(x,y))) < r)
-					tiles[x][y].setValue(1);
+					tiles[x][y].setValue(rand.nextInt(6));
 			}
 		}
 	}

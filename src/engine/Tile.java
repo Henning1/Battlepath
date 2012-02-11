@@ -29,7 +29,7 @@ import util.Vector2D;
  */
 public class Tile {
 	
-	private ArrayList<Line2D> collisionModel = new ArrayList<Line2D>();
+	private ArrayList<Line2D> model = new ArrayList<Line2D>();
 	//bounding box
 	private Vector2D topleft, bottomright, center;
 	private Point index;
@@ -63,38 +63,48 @@ public class Tile {
 	
 	/**
 	 * Set the value of the Tile
+	 * 0: empty
+	 * 1: square
+	 * 2: triangle 
+	 * 		|\
+	 * 3: triangle
+	 * 		|/
+	 * 4: triangle
+	 * 		\|
+	 * 5: triangle
+	 * 		/|
 	 * @param value Value. 0: Free, 1: Obstacle
 	 */
 	public void setValue(int value) {
 		this.value = value;
-		collisionModel.clear();
+		model.clear();
 		Vector2D bottomleft = new Vector2D(topleft.x(), bottomright.y());
 		Vector2D topright = new Vector2D(bottomright.x(), topleft.y());
 		if(value==1) {
-			collisionModel.add(new Line2D(topleft,bottomleft));
-			collisionModel.add(new Line2D(bottomleft,bottomright));
-			collisionModel.add(new Line2D(bottomright, topright));
-			collisionModel.add(new Line2D(topright, topleft));
+			model.add(new Line2D(topleft,bottomleft));
+			model.add(new Line2D(bottomleft,bottomright));
+			model.add(new Line2D(bottomright, topright));
+			model.add(new Line2D(topright, topleft));
 		}
 		if(value==2) {
-			collisionModel.add(new Line2D(topleft,bottomleft));
-			collisionModel.add(new Line2D(bottomleft,bottomright));
-			collisionModel.add(new Line2D(bottomright,topleft));
+			model.add(new Line2D(topleft,bottomleft));
+			model.add(new Line2D(bottomleft,bottomright));
+			model.add(new Line2D(bottomright,topleft));
 		}
 		if(value==3) {
-			collisionModel.add(new Line2D(topleft,bottomleft));
-			collisionModel.add(new Line2D(bottomleft,topright));
-			collisionModel.add(new Line2D(topright,topleft));
+			model.add(new Line2D(topleft,bottomleft));
+			model.add(new Line2D(bottomleft,topright));
+			model.add(new Line2D(topright,topleft));
 		}
 		if(value==4) {
-			collisionModel.add(new Line2D(bottomright,topright));
-			collisionModel.add(new Line2D(topright,topleft));
-			collisionModel.add(new Line2D(topleft,bottomright));
+			model.add(new Line2D(bottomright,topright));
+			model.add(new Line2D(topright,topleft));
+			model.add(new Line2D(topleft,bottomright));
 		}
 		if(value==5) {
-			collisionModel.add(new Line2D(bottomright,topright));
-			collisionModel.add(new Line2D(topright,bottomleft));
-			collisionModel.add(new Line2D(bottomleft,bottomright));
+			model.add(new Line2D(bottomright,topright));
+			model.add(new Line2D(topright,bottomleft));
+			model.add(new Line2D(bottomleft,bottomright));
 		}
 	}
 	
@@ -123,6 +133,6 @@ public class Tile {
 	}
 
 	public ArrayList<Line2D> getCollisionModel() {
-		return collisionModel;
+		return model;
 	}
 }
