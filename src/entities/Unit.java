@@ -21,7 +21,6 @@ package entities;
 
 import java.util.ArrayList;
 
-import collision.CollisionSystem;
 import collision.Move;
 
 import util.Line2D;

@@ -18,12 +18,10 @@
  */
 package game;
 import java.util.ArrayList;
-
 import util.SafeList;
-import util.Util;
+
 import util.Vector2D;
 
-import entities.Entity;
 import entities.Unit;
 /**
  * @author henning

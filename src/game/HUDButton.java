@@ -20,7 +20,6 @@ package game;
 
 import java.awt.Point;
 
-import entities.HealthEntity;
 
 import util.Vector2D;
 
