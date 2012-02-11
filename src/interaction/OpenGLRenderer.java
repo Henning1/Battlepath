@@ -285,8 +285,10 @@ public class OpenGLRenderer implements GLEventListener {
         		Unit u = (Unit)e;
         		
         		if(u.swarm != null && game.mode == GameMode.ACTION) {
-        			gl.glColor3d(1,0,0);
+        			gl.glEnable(GL2.GL_BLEND);
+        			gl.glColor3d(0.3,0,0);
         			circle(u.pos, u.getRadius()+0.2);
+        			gl.glDisable(GL2.GL_BLEND);
         		}
         		else if(u.isSelected && game.mode == GameMode.STRATEGY) {
         			gl.glColor3d(1, 0, 0);
@@ -323,13 +325,12 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		for(int x=topleft.x; x <= bottomright.x; x++) {
 			for(int y=bottomright.y; y <= topleft.y; y++) {
-				
-				switch(tiles[x][y].getValue()) {
-				case 1:
-					gl.glColor3d((double)x/game.field.getTilesX()-0.2, (double)x/game.field.getTilesX()-0.2, (double)y/game.field.getTilesY()-0.2);
+				int tileValue = tiles[x][y].getValue();
+				gl.glColor3d((double)x/game.field.getTilesX()-0.2, (double)x/game.field.getTilesX()-0.2, (double)y/game.field.getTilesY()-0.2);
+				if(tileValue == 1) {
 					tile(new Vector2D(x+0.5,y+0.5));
-					break;
-				}
+				} else if(tileValue > 1 && tileValue < 6)
+					this.polygonLines(tiles[x][y].getCollisionModel(), true);
 			}
 		}
 
@@ -442,10 +443,12 @@ public class OpenGLRenderer implements GLEventListener {
 	}
 	
 	private void tile(Vector2D pos) {
+		gl.glBegin(GL2.GL_QUADS);
 		gl.glVertex2d((pos.x-0.5+offset.x)*scaleFactor, (pos.y+0.5+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x+0.5+offset.x)*scaleFactor, (pos.y+0.5+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x+0.5+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
 		gl.glVertex2d((pos.x-0.5+offset.x)*scaleFactor, (pos.y-0.5+offset.y)*scaleFactor);
+		gl.glEnd();
 	}
 	
 	private void polygonLines(ArrayList<Line2D> lines, boolean filled) {

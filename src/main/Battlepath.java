@@ -60,6 +60,10 @@ public class Battlepath {
 		Dimension windowSize = new Dimension(1000,800);
 		Field f = new Field(fieldWidth, fieldHeight, "random");
 		randomCircles(f, fieldWidth*fieldHeight/50, 3);
+		
+		//f.setTile(new Vector2D(40.5,40.5), 4);
+		//f.setTile(new Vector2D(40.5,41.5), 4);
+		
 		Vector2D start = findStartPos(f);
 		
 		/*byte[] fi = null;
@@ -92,7 +96,7 @@ public class Battlepath {
 		game.input = new Input(frame, game);
 		game.pathPlanner =  new Pathplanner(f);
 		game.collisionSystem = new CollisionSystem(f,game);
-		game.entitySystem.addAll(randomTowers(f, 30, game,teams));
+		//game.entitySystem.addAll(randomTowers(f, 30, game,teams));
 		game.setView(new View(paneSize, tileSize, game));
 		
 		game.initialize();
