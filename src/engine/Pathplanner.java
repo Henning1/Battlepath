@@ -52,7 +52,7 @@ public class Pathplanner {
 		Tile tile = field.tileAt(goal);
 		if(tile == null) return null;
 		if(tile.getValue() == 1) return null;
-		fChecks = new Field(field.getTilesX(),field.getTilesY());
+		fChecks = new Field(field.getTilesX(),field.getTilesY(), "");
 		fringe = new PriorityQueue<Node>();
 		nodes = new HashMap<Integer, Node>();
 	

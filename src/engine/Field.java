@@ -36,16 +36,18 @@ public class Field {
 	private int tilesX=0;
 	private int tilesY=0;
 	private ArrayList<Line2D> boundingFrame = new ArrayList<Line2D>();
+	private String name;
 	
 	/**
 	 * 
 	 * @param numX number of X tiles
 	 * @param numY number of Y tiles
 	 */
-	public Field(int numX, int numY) {
+	public Field(int numX, int numY, String title) {
 		tiles = new Tile[numX][numY];
 		tilesX = numX;
 		tilesY = numY;
+		name = title;
 		
 		for(int x=0;x<tilesX;x++) {
 			for(int y=0;y<tilesY;y++) {
@@ -299,6 +301,14 @@ public class Field {
 		return tilesY;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
 	/**
 	 * Prints the whole Field to the console. Debug output.
 	 */

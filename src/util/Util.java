@@ -18,6 +18,12 @@
  */
 package util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 public class Util {
 	public static boolean doubleEquals(double d1, double d2, double epsilon) {
 		return Math.abs(d1 - d2) < epsilon;
@@ -108,4 +114,36 @@ public class Util {
 		if(value > limit2) return false;
 		return true;
 	}
+	
+	public static byte[] readFile(String filename) throws IOException {
+        File file = new File(filename);
+        long length = file.length();
+		
+		byte[] buffer = new byte[(int)length];
+        
+        FileInputStream in = null;
+        try {
+            in = new FileInputStream(filename);
+            in.read(buffer);
+
+        } finally {
+            if (in != null) {
+                in.close();
+            }
+        }
+        return buffer;
+	}
+	
+	public static void writeFile(String filename, byte[] buffer) throws IOException {
+        FileOutputStream out = null;
+        try {
+            out = new FileOutputStream(filename);
+            out.write(buffer);
+
+        } finally {
+            if (out != null) {
+                out.close();
+            }
+        }
+    }
 }
