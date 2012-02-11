@@ -35,9 +35,7 @@ import util.SafeList;
 import util.Vector2D;
 
 import engine.Field;
-import engine.GlobalInfo;
 import engine.Pathplanner;
-import entities.CollisionEntity;
 import entities.Entity;
 import entities.EntitySystem;
 import entities.Projectile;
