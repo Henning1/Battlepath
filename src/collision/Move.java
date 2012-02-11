@@ -64,6 +64,7 @@ public class Move {
 		{
 			Vector2D newV = v.copy();
 			newV = newV.normalize().scalar(closestCollision.distance-veryCloseDistance);
+			//System.out.println("moving by " + (closestCollision.distance-veryCloseDistance));
 			newBasePoint = basepoint.add(newV);
 			// Adjust polygon intersection point (so sliding
 			// plane will be unaffected by the fact that we
