@@ -20,7 +20,6 @@ package game;
 
 import java.util.ArrayList;
 
-import util.Util;
 import util.Vector2D;
 import entities.HealthEntity;
 

@@ -20,8 +20,6 @@ package util;
 
 import java.awt.geom.Point2D;
 
-import engine.GlobalInfo;
-
 public class Vector2D {
 	public double x,y;
 	

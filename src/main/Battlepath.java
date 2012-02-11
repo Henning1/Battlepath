@@ -18,7 +18,6 @@
  */
 package main;
 import game.Game;
-import game.GameMode;
 import game.Team;
 import game.View;
 import interaction.Input;
@@ -33,8 +32,6 @@ import java.util.Random;
 
 import collision.CollisionSystem;
 
-import util.Line2D;
-import util.Util;
 import util.Vector2D;
 
 import engine.Field;
