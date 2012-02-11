@@ -26,6 +26,7 @@ import interaction.BFrame;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -35,6 +36,7 @@ import util.Vector2D;
 
 import engine.Field;
 import engine.MainLoop;
+import engine.MapCodec;
 import engine.Pathplanner;
 import engine.Tile;
 import entities.Entity;
