@@ -65,7 +65,7 @@ public class Collision {
 			if (Math.abs(signedDistToTrianglePlane) >= radius) {
 				// Sphere is not embedded in plane.
 				// No collision possible:
-				return collision;
+				return false;
 			}
 			else {
 				// sphere is embedded in plane.
@@ -107,58 +107,63 @@ public class Collision {
 		// as this is when the sphere rests on the front side
 		// of the triangle plane. Note, this can only happen if
 		// the sphere is not embedded in the triangle plane.
-		
 		if (!embeddedInPlane) {
 			Vector2D planeIntersectionPoint = 
-				basepoint.subtract(line.normal.scalar(radius))
-				.add(velocity.scalar(t0));
-				if (line.pointInSegment(planeIntersectionPoint))
-				{
-					edge = true;
-					collision = true;
-					t = t0;
-					collisionPoint = planeIntersectionPoint;
-				}
+					basepoint.subtract(line.normal.scalar(radius))
+					.add(velocity.scalar(t0));
+			if (line.pointInSegment(planeIntersectionPoint))
+			{
+				edge = true;
+				collision = true;
+				t = t0;
+				collisionPoint = planeIntersectionPoint;
 			}
-			// if we haven't found a collision already we'll have to
-			// sweep sphere against points and edges of the triangle.
-			// Note: A collision inside the triangle (the check above)
-			// will always happen before a vertex or edge collision!
-			// This is why we can skip the swept test if the above
-			// gives a collision!
-			if (collision == false) {
-				// some commonly used terms:
-				double velocitySquaredLength = velocity.squaredLength();
-				double a,b,c; // Params for equation
-				double newT;
-				// For each vertex or edge a quadratic equation have to
-				// be solved. We parameterize this equation as
-				// a*t^2 + b*t + c = 0 and below we calculate the
-				// parameters a,b and c for each test.
-				// Check against points:
-				a = velocitySquaredLength;
-				// P1
-				Vector2D p1 = line.a;
-				b = 2.0*(velocity.dotProduct(basepoint.subtract(p1)));
-				c = (p1.subtract(basepoint)).squaredLength() - Math.pow(radius, 2);
-				newT = Util.getLowestRoot(a,b,c, t);
-				if(newT != -1) {
-					t = newT;
-					collision = true;
-					collisionPoint = p1;
-				}
-				// P2
-				Vector2D p2 = line.b;
-				b = 2.0*(velocity.dotProduct(basepoint.subtract(p2)));
-				c = (p2.subtract(basepoint)).squaredLength() - Math.pow(radius, 2);
-				
-				newT = Util.getLowestRoot(a,b,c, t);
-				if(newT != -1) {
-					t = newT;
-					collision = true;
-					collisionPoint = p2;
-				}
 		}
+		// if we haven't found a collision already we'll have to
+		// sweep sphere against points and edges of the triangle.
+		// Note: A collision inside the triangle (the check above)
+		// will always happen before a vertex or edge collision!
+		// This is why we can skip the swept test if the above
+		// gives a collision!
+		if (collision == false) {
+			// some commonly used terms:
+			double velocitySquaredLength = velocity.squaredLength();
+			double a,b,c; // Params for equation
+			double newT;
+			// For each vertex or edge a quadratic equation have to
+			// be solved. We parameterize this equation as
+			// a*t^2 + b*t + c = 0 and below we calculate the
+			// parameters a,b and c for each test.
+			// Check against points:
+			a = velocitySquaredLength;
+			// P1
+			Vector2D p1 = line.a;
+			b = 2.0*(velocity.dotProduct(basepoint.subtract(p1)));
+			c = (p1.subtract(basepoint)).squaredLength() - Math.pow(radius, 2);
+			newT = Util.getLowestRoot(a,b,c, t);
+			if(newT != -1) {
+				t = newT;
+				collision = true;
+				collisionPoint = p1;
+				distance = collisionPoint.distance(basepoint)-move.e.getRadius();
+			}
+			// P2
+			Vector2D p2 = line.b;
+			b = 2.0*(velocity.dotProduct(basepoint.subtract(p2)));
+			c = (p2.subtract(basepoint)).squaredLength() - Math.pow(radius, 2);
+			
+			newT = Util.getLowestRoot(a,b,c, t);
+			if(newT != -1) {
+				t = newT;
+				collision = true;
+				collisionPoint = p2;
+				distance = collisionPoint.distance(basepoint)-move.e.getRadius();
+			}
+		}
+		
+		if(collision == true) distance = t*velocity.length();
+
+		
 		return collision;
 	}
 	

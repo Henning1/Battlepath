@@ -82,7 +82,7 @@ public class Game {
 		this.teams = teams;
 		this.playerteam = teams.get(team);
 		entitySystem.add(new Unit(startpos, this, playerteam));
-		entitySystem.add(new Unit(startpos, this, playerteam));
+		//entitySystem.add(new Unit(startpos, this, playerteam));
 		entitySystem.arrange();
 	}
 	

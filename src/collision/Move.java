@@ -60,11 +60,11 @@ public class Move {
 		// only move if we are not already very close
 		// and if so we only move very close to intersection..not
 		// to the exact spot.
-		if (closestCollision.distance>=veryCloseDistance)
+		if (closestCollision.distance>=veryCloseDistance+0.0000001)
 		{
 			Vector2D newV = v.copy();
 			newV = newV.normalize().scalar(closestCollision.distance-veryCloseDistance);
-			//System.out.println("moving by " + (closestCollision.distance-veryCloseDistance));
+			System.out.println("moving by " + (closestCollision.distance-veryCloseDistance));
 			newBasePoint = basepoint.add(newV);
 			// Adjust polygon intersection point (so sliding
 			// plane will be unaffected by the fact that we

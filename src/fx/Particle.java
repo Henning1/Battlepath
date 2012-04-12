@@ -25,7 +25,6 @@ public class Particle extends FxEntity {
 	public Vector2D direction;
 	public double acceleration;
 	public double speed;
-	EffectsSystem system;
 	
 	public Particle(Vector2D position, Vector2D direction, double lifetime, double speed, double accel, EffectsSystem pS) {
 		super(pS,lifetime,position);

@@ -70,6 +70,7 @@ public class Field {
 				//System.out.println(pos.distance(getWorldPos(new Point(x,y))));
 				if(pos.distance(getWorldPos(new Point(x,y))) < r)
 					tiles[x][y].setValue(rand.nextInt(6));
+					//tiles[x][y].setValue(1);
 			}
 		}
 	}
