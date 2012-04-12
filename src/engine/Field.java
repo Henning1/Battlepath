@@ -64,10 +64,13 @@ public class Field {
 	 * @param r radius of the circle
 	 */
 	public void createCircle(Vector2D pos, double r) {
-		for(int x=0; x<tilesX; x++) {
-			for(int y=0; y<tilesY; y++) {
+		Point topleft = tileIndexAt(new Vector2D(pos.x-r, pos.y-r));
+		Point bottomright = tileIndexAt(new Vector2D(pos.x+r, pos.y+r));
+		clamp(topleft);
+		clamp(bottomright);
+		for(int x=topleft.x; x<bottomright.x; x++) {
+			for(int y=topleft.y; y<bottomright.y; y++) {
 				Random rand = new Random();
-				//System.out.println(pos.distance(getWorldPos(new Point(x,y))));
 				if(pos.distance(getWorldPos(new Point(x,y))) < r)
 					tiles[x][y].setValue(rand.nextInt(6));
 					//tiles[x][y].setValue(1);
