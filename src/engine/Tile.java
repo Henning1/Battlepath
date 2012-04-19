@@ -56,8 +56,8 @@ public class Tile {
 	public Tile(Point index, int value) {
 		this.value = value;
 		this.index = index;
-		this.topleft = new Vector2D(index.x,index.y);
-		this.bottomright = new Vector2D(index.x+1,index.y+1);
+		this.topleft = new Vector2D(index.x,index.y+1);
+		this.bottomright = new Vector2D(index.x+1,index.y);
 		this.center = new Vector2D((double)index.x+0.5,(double)index.y+0.5);
 	}
 	
@@ -81,30 +81,30 @@ public class Tile {
 		Vector2D bottomleft = new Vector2D(topleft.x(), bottomright.y());
 		Vector2D topright = new Vector2D(bottomright.x(), topleft.y());
 		if(value==1) {
-			model.add(new Line2D(topleft,bottomleft));
-			model.add(new Line2D(bottomleft,bottomright));
-			model.add(new Line2D(bottomright, topright));
-			model.add(new Line2D(topright, topleft));
+			model.add(new Line2D(topleft,topright));
+			model.add(new Line2D(topright,bottomright));
+			model.add(new Line2D(bottomright,bottomleft));
+			model.add(new Line2D(bottomleft,topleft));
 		}
 		if(value==2) {
-			model.add(new Line2D(topleft,bottomleft));
-			model.add(new Line2D(bottomleft,bottomright));
-			model.add(new Line2D(bottomright,topleft));
+			model.add(new Line2D(topleft,bottomright));
+			model.add(new Line2D(bottomright,bottomleft));
+			model.add(new Line2D(bottomleft,topleft));
 		}
 		if(value==3) {
-			model.add(new Line2D(topleft,bottomleft));
-			model.add(new Line2D(bottomleft,topright));
-			model.add(new Line2D(topright,topleft));
+			model.add(new Line2D(topleft,topright));
+			model.add(new Line2D(topright,bottomleft));
+			model.add(new Line2D(bottomleft,topleft));
 		}
 		if(value==4) {
-			model.add(new Line2D(bottomright,topright));
-			model.add(new Line2D(topright,topleft));
-			model.add(new Line2D(topleft,bottomright));
+			model.add(new Line2D(topleft,topright));
+			model.add(new Line2D(topright,bottomright));
+			model.add(new Line2D(bottomright,topleft));
 		}
 		if(value==5) {
-			model.add(new Line2D(bottomright,topright));
-			model.add(new Line2D(topright,bottomleft));
-			model.add(new Line2D(bottomleft,bottomright));
+			model.add(new Line2D(topright,bottomright));
+			model.add(new Line2D(bottomright,bottomleft));
+			model.add(new Line2D(bottomleft,topright));
 		}
 	}
 	

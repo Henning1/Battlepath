@@ -67,6 +67,7 @@ public class MovementSystem {
 		collideUnitsWithLevel(units,dt);		
 
 		for(CollisionEntity c : ces) {
+			
 			Move move = c.getMove();
 			if(move != null) {
 				move.apply();
@@ -75,7 +76,7 @@ public class MovementSystem {
 		
 		for(CollisionEntity c1 : ces) {
 			//collision with entities
-			ArrayList<CollisionEntity> cesInRange = game.entitySystem.collisionEntitiesInRange(c1.pos, 3.0);		
+			ArrayList<CollisionEntity> cesInRange = game.entitySystem.collisionEntitiesInRange(c1.pos, 7.0);		
 			if(game.collisionSystem.collide(c1.getMove()) != null) {
 				c1.collide(null);
 			}

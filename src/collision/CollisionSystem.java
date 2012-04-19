@@ -123,13 +123,6 @@ public class CollisionSystem {
 				collModel.addAll(tiles[x][y].getCollisionModel());
 			}
 		}
-		/*
-		collModel.add(new Line2D(new Vector2D(60,60),new Vector2D(55,55)));
-		collModel.add(new Line2D(new Vector2D(55,65),new Vector2D(60,60)));
-		*/
-		collModel.add(new Line2D(new Vector2D(50,50),new Vector2D(55,60)));
-		collModel.add(new Line2D(new Vector2D(45,60),new Vector2D(50,50)));
-		//collModel.add(new Line2D(new Vector2D(60.01,55),new Vector2D(60.01,65)));
 		
 		return collModel;
 	}
@@ -157,12 +150,9 @@ public class CollisionSystem {
 
 			//analyze slide and collision
 			//check if it is actually only sliding to the point of collision
-			
-			System.out.println("Collisionpoint: " + closestCollision.collisionPoint);
-			System.out.println("distance: " + (closestCollision.distance));
+
 			//slide to obstacle
 			m.slide(closestCollision);
-			System.out.println("Slided to: " + m.basepoint);
 			
 			
 			//recurse

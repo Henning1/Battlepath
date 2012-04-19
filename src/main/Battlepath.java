@@ -99,7 +99,7 @@ public class Battlepath {
 		game.input = new Input(frame, game);
 		game.pathPlanner =  new Pathplanner(f);
 		game.collisionSystem = new CollisionSystem(f,game);
-		game.entitySystem.addAll(randomTowers(f, 30, game,teams));
+		//game.entitySystem.addAll(randomTowers(f, 30, game,teams));
 		game.setView(new View(paneSize, tileSize, game));
 		
 		game.initialize();

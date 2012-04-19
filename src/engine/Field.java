@@ -73,7 +73,7 @@ public class Field {
 				Random rand = new Random();
 				if(pos.distance(getWorldPos(new Point(x,y))) < r)
 					tiles[x][y].setValue(rand.nextInt(6));
-					//tiles[x][y].setValue(1);
+					//tiles[x][y].setValue(2);
 			}
 		}
 	}
@@ -186,11 +186,12 @@ public class Field {
 	}
 	
 	/**
-	 * Returns a list of the neighbours of the tile specified by world position
+	 * Returns a list of the reachable neighbours from the tile at 
+	 * the specified world position
 	 * @param pos world position
 	 * @return list of neighbours of that tile
 	 */
-	public ArrayList<Vector2D> neighbours(Vector2D pos) {
+	public ArrayList<Vector2D> freeneighbours(Vector2D pos) {
 		ArrayList<Vector2D> result = new ArrayList<Vector2D>();
 		
 		Point tile = tileIndexAt(pos);
@@ -198,8 +199,8 @@ public class Field {
 		Vector2D left,right,top,bottom;
 		left = getWorldPos(new Point(tile.x-1,tile.y));
 		right = getWorldPos(new Point(tile.x+1,tile.y));
-		top = getWorldPos(new Point(tile.x,tile.y-1));
-		bottom = getWorldPos(new Point(tile.x,tile.y+1));
+		top = getWorldPos(new Point(tile.x,tile.y+1));
+		bottom = getWorldPos(new Point(tile.x,tile.y-1));
 		
 		int vLeft = tileValueAt(left);
 		int vRight = tileValueAt(right);
@@ -208,16 +209,16 @@ public class Field {
 		
 		//move to topleft
 		if((vLeft == 0 || vLeft == 2) && (vTop == 0 || vTop == 4))
-			result.add(getWorldPos(new Point(tile.x-1,tile.y-1)));
+			result.add(getWorldPos(new Point(tile.x-1,tile.y+1)));
 		//move to topright
 		if((vRight == 0 || vRight == 5) && (vTop == 0 || vTop == 3))
-			result.add(getWorldPos(new Point(tile.x+1,tile.y-1)));
+			result.add(getWorldPos(new Point(tile.x+1,tile.y+1)));
 		//move to bottomleft
 		if((vLeft == 0 || vLeft == 3) && (vBottom == 0 || vBottom == 5))
-			result.add(getWorldPos(new Point(tile.x-1,tile.y+1)));
+			result.add(getWorldPos(new Point(tile.x-1,tile.y-1)));
 		//move to bottomright
 		if((vRight == 0 || vRight == 4) && (vBottom == 0 || vBottom == 2))
-			result.add(getWorldPos(new Point(tile.x+1,tile.y+1)));
+			result.add(getWorldPos(new Point(tile.x+1,tile.y-1)));
 		
 		result.add(left);
 		result.add(right);
@@ -226,6 +227,7 @@ public class Field {
 		
 		
 		result = removeInvalidTiles(result);
+		removeObstacles(result);
 		
 		
 		return result;
@@ -261,14 +263,14 @@ public class Field {
 	}
 	
 	/**
-	 * Removes all non-obstacle tiles from a set of tiles
+	 * Removes all obstacle tiles from a set of tiles
 	 * @param tiles bunch of tiles, in world coordinates
 	 * @return list with obstacle tiles
 	 */
-	public ArrayList<Vector2D> removeNotOnes(ArrayList<Vector2D> tiles) {
+	public ArrayList<Vector2D> removeObstacles(ArrayList<Vector2D> tiles) {
 		for(int i=0; i<tiles.size();i++) {
 			Vector2D p = tiles.get(i);
-			if(this.tileValueAt(p) == 1) {
+			if(this.tileValueAt(p) != 0) {
 				tiles.remove(i);
 				i--;
 			}
@@ -276,19 +278,8 @@ public class Field {
 		}
 		return tiles;
 	}
-	
-	/**
-	 * Gives a list of non-obstacle neighbours of a tile
-	 * @param pos tile, in world coordinates
-	 * @return list of free neighbours
-	 */
-	public ArrayList<Vector2D> freeneighbours(Vector2D pos) {
-		ArrayList<Vector2D> result = neighbours(pos);
-		
-		result = removeNotOnes(result);
-		
-		return result;
-	}
+
+
 	
 	/**
 	 * Checks whether the positions are on the same tile
