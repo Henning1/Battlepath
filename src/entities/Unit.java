@@ -28,7 +28,8 @@ import util.Util;
 import util.Vector2D;
 
 import engine.GlobalInfo;
-import game.Game;
+import engine.Pathplanner;
+import game.Core;
 import game.HUDButton;
 import game.Swarm;
 import game.Team;
@@ -46,13 +47,14 @@ public class Unit extends HealthEntity {
 	public double constantDistanceTime=0;
 	private boolean leader=false;
 	
-	public Unit(Vector2D position, Game game, Team team) {
-		super(position,game, team);
+	public Unit(Vector2D position, Team team) {
+		super(position, team);
 		health = 300;
 	}
 	
 	public void moveTo(Vector2D dest) {
-		path = game.pathPlanner.plan(pos, dest);
+		Pathplanner planner = new Pathplanner(Core.field); 
+		path = planner.plan(pos, dest);
 	}
 	
 	public void setHealth(int h) {
@@ -66,15 +68,21 @@ public class Unit extends HealthEntity {
 		health = h;
 	}
 	
+	public void setDirection(Vector2D dir) {
+		if(dir.length() > 0)
+			velocity = dir.normalize().scalar(speed);
+		else velocity = GlobalInfo.nullVector.copy();
+	}
+	
 	public void shoot(Vector2D direction) {
 		if(GlobalInfo.time - lastShot > 0.3) {
-			game.entitySystem.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, game, team));
+			Core.entitySystem.add(new Projectile(pos.add(direction.scalar(getRadius())), direction, team));
 			lastShot = GlobalInfo.time;
 		}
 	}
 	
 	public Vector2D velocityDt() {
-		return velocity.scalar(game.dt);
+		return velocity.scalar(Core.dt);
 	}
 	
 	public void setLeader(boolean value) {
@@ -109,9 +117,10 @@ public class Unit extends HealthEntity {
 				
 			if(vecToLeader.length() > 1) {
 			
-				if(game.collisionSystem.collideWithLevel(toLeader)) {
+				if(Core.collisionSystem.collideWithLevel(toLeader)) {
 					if(path == null | GlobalInfo.time - lastPlan > 1) {
-						path = game.pathPlanner.plan(this.pos, leader.pos);
+						Pathplanner planner = new Pathplanner(Core.field);
+						path = planner.plan(this.pos, leader.pos);
 						lastPlan = GlobalInfo.time;
 					}
 				} 
@@ -164,16 +173,16 @@ public class Unit extends HealthEntity {
 	private class Transform implements HUDButton.callback {
 		public void run() {
 			die();
-			game.entitySystem.add(new Tower(pos, game, team));
+			Core.entitySystem.add(new Tower(pos, team));
 		}
 	}
 
 	@Override
 	protected ArrayList<HUDButton> getButtons() {
 		ArrayList<HUDButton> b = new ArrayList<HUDButton>();
-		b.add(new HUDButton(game, new Transform()));
-		b.add(new HUDButton(game, new Transform()));
-		b.add(new HUDButton(game, new Transform()));
+		b.add(new HUDButton(new Transform()));
+		b.add(new HUDButton(new Transform()));
+		b.add(new HUDButton(new Transform()));
 		return b;
 	}
 

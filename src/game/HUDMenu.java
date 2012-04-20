@@ -31,13 +31,11 @@ public class HUDMenu {
 	private double animationState;
 	private int animationDirection; //1: Open //-1: Close
 	private double animationLength = 0.2;
-	private Game game;
 	public ArrayList<HUDButton> buttons = new ArrayList<HUDButton>();
 	
-	public HUDMenu(HealthEntity e, ArrayList<HUDButton> b, Game g) {
+	public HUDMenu(HealthEntity e, ArrayList<HUDButton> b) {
 		entity = e;
 		buttons = b;
-		game = g;
 		int i = 0;
 		for(HUDButton butt : buttons) {
 			butt.direction = Vector2D.fromAngle(((double)i/(buttons.size()))*Math.PI*2, 1);
@@ -67,7 +65,7 @@ public class HUDMenu {
 			for(int i = 0;i<buttons.size();i++) {
 				HUDButton b = buttons.get(i);
 				double x = animationState*2;
-				b.position = game.view.worldToViewGL(entity.pos.add(b.direction.scalar(x)));
+				b.position = Core.view.worldToViewGL(entity.pos.add(b.direction.scalar(x)));
 			}
 			animationState += dt/animationLength;
 		}
@@ -75,7 +73,7 @@ public class HUDMenu {
 			for(int i = 0;i<buttons.size();i++) {
 				HUDButton b = buttons.get(i);
 				double x = animationState*2;
-				b.position = game.view.worldToViewGL(entity.pos.add(b.direction.scalar(x)));
+				b.position = Core.view.worldToViewGL(entity.pos.add(b.direction.scalar(x)));
 			}
 			animationState -= dt/animationLength;
 		
@@ -83,7 +81,7 @@ public class HUDMenu {
 		else if(isVisible()){
 			for(int i = 0;i<buttons.size();i++) {
 				HUDButton b = buttons.get(i);
-				b.position = game.view.worldToViewGL(entity.pos.add(b.direction.scalar(2)));
+				b.position = Core.view.worldToViewGL(entity.pos.add(b.direction.scalar(2)));
 				//Process buttons
 				b.process(dt);
 			}

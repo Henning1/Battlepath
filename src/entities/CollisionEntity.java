@@ -19,7 +19,7 @@
 package entities;
 
 import collision.Move;
-import game.Game;
+import game.Core;
 import game.Team;
 import util.Vector2D;
 
@@ -28,8 +28,8 @@ public abstract class CollisionEntity extends Entity {
 	protected Move move;
 	public boolean collideWithLevel=true;
 	
-	public CollisionEntity(Vector2D position, Game game, Team team) {
-		super(position, game, team);
+	public CollisionEntity(Vector2D position, Team team) {
+		super(position, team);
 	}
 	
 	public abstract void collide(CollisionEntity e);

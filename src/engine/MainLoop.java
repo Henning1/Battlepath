@@ -20,7 +20,7 @@ package engine;
 
 import interaction.BFrame;
 import interaction.OpenGLRenderer;
-import game.Game;
+import game.Core;
 
 /**
  * Main loop that powers the game, does all timing concerning frames, framerate independent movement, etc.
@@ -49,7 +49,7 @@ public class MainLoop {
      * @param r Renderer object to use
      * @param frame BFrame object to use
      */
-    public static void startLoop(Game g, OpenGLRenderer r, BFrame frame) {
+    public static void startLoop(OpenGLRenderer r, BFrame frame) {
     	
     	currentTime = (double)System.currentTimeMillis() / 1000.0;
     	fpsStart = currentTime;
@@ -80,7 +80,7 @@ public class MainLoop {
 
              while ( accumulator >= dt )
              {
-                  g.step(dt);
+                  Core.step(dt);
                   accumulator -= dt;
                   GlobalInfo.time += dt;
              }

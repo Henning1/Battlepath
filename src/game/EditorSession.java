@@ -18,41 +18,46 @@
  */
 package game;
 
-import java.awt.Point;
+/**
+ * @author henning
+ *
+ */
+public class EditorSession implements Session {
 
-
-import util.Vector2D;
-
-public class HUDButton {
-	public Point position;
-	public Vector2D direction;
-	public boolean mouseOver = false;
-	private callback cb;
-	
-	public HUDButton(HUDButton.callback c) {
-		cb = c;
-	}
-	
-	public double getRadius() {
-		return 15;
-	}
-	
-	public void process(double dt) {
-		Point cursor = (Point)Core.input.viewCursorPos.clone();
-		cursor.y = Core.view.windowSize.height - cursor.y;
-		if(cursor.distance(position) < getRadius()) {
-			mouseOver = true;
-		}
-		else if(mouseOver == true) {
-			mouseOver = false;
-		}
+	/* (non-Javadoc)
+	 * @see game.Session#initialize()
+	 */
+	@Override
+	public void initialize() {
+		// TODO Auto-generated method stub
 		
-		if(mouseOver && Core.input.mouseButtonPressed[0]) {
-			cb.run();
-		}
 	}
-	
-	public interface callback {
-		public void run();
+
+	/* (non-Javadoc)
+	 * @see game.Session#step(double)
+	 */
+	@Override
+	public void step(double dt) {
+		// TODO Auto-generated method stub
+		
 	}
+
+	/* (non-Javadoc)
+	 * @see game.Session#processKey(int)
+	 */
+	@Override
+	public void processKey(int key) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	/* (non-Javadoc)
+	 * @see game.Session#processInputState(double)
+	 */
+	@Override
+	public void processInputState(double dt) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

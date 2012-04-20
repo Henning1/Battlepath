@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import engine.Field;
 import engine.GlobalInfo;
 import engine.Tile;
-import game.Game;
+import game.Core;
 
 import util.Line2D;
 import util.Util;
@@ -34,11 +34,9 @@ import util.Vector2D;
 public class CollisionSystem {
 	
 	Field field;
-	Game game;
 	
-	public CollisionSystem(Field field, Game game) {
+	public CollisionSystem(Field field) {
 		this.field = field;
-		this.game = game;
 	}
 	
 	
@@ -132,7 +130,6 @@ public class CollisionSystem {
 		collided=false;
 		if(m.v.equals(GlobalInfo.nullVector)) return;
 		pCollideAndSlide(m,3);
-		if(collided) System.out.println("Initial position: " + m.e.pos + "\n");
 	}
 	
 	private void pCollideAndSlide(Move m,int d) {

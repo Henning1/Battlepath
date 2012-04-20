@@ -20,7 +20,7 @@ package entities;
 
 import java.util.ArrayList;
 
-import game.Game;
+import game.Core;
 import game.HUDButton;
 import game.HUDMenu;
 import game.Team;
@@ -34,9 +34,9 @@ public abstract class HealthEntity extends CollisionEntity{
 	public double lastShot = 0;
 	public HUDMenu menu;
 	
-	public HealthEntity(Vector2D position, Game game, Team team) {
-		super(position, game, team);
-		menu = new HUDMenu(this, getButtons(), game);
+	public HealthEntity(Vector2D position, Team team) {
+		super(position, team);
+		menu = new HUDMenu(this, getButtons());
 	}
 
 	protected abstract ArrayList<HUDButton> getButtons();
@@ -51,8 +51,8 @@ public abstract class HealthEntity extends CollisionEntity{
 	
 	public void die() {
 		closeMenu();
-		game.particleSystem.explosion(pos);
-		game.entitySystem.remove(this);
+		Core.particleSystem.explosion(pos);
+		Core.entitySystem.remove(this);
 		isSelected = false;
 		alive = false;
 	}

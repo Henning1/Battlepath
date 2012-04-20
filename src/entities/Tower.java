@@ -21,7 +21,7 @@ package entities;
 import java.util.ArrayList;
 
 import engine.GlobalInfo;
-import game.Game;
+import game.Core;
 import game.HUDButton;
 import game.Team;
 import util.Line2D;
@@ -31,8 +31,8 @@ public class Tower extends HealthEntity {
 	public Vector2D aim = new Vector2D(0,0);
 	double lastShot;
 	
-	public Tower(Vector2D position, Game game, Team team) {
-		super(position, game, team);
+	public Tower(Vector2D position, Team team) {
+		super(position, team);
 		move = null;
 		health = 300;
 	}
@@ -54,15 +54,15 @@ public class Tower extends HealthEntity {
 			break;
 		}*/
 		
-		ArrayList<Entity> aims = game.entitySystem.entitiesInRange(pos, 20);
+		ArrayList<Entity> aims = Core.entitySystem.entitiesInRange(pos, 20);
 		
 		for(Entity u : aims) {
 			if(!(u instanceof Unit) || u.team == team) continue;			
-			if(game.collisionSystem.collideWithLevel(new Line2D(pos,u.pos))) continue;
+			if(Core.collisionSystem.collideWithLevel(new Line2D(pos,u.pos))) continue;
 			
 			aim = u.pos.subtract(pos).normalize();
 			if(pos.distance(u.pos) < 20 && GlobalInfo.time-lastShot > 0.5) {
-				game.emitShot(pos.add(aim.scalar(getRadius())), aim, this.team);
+				Core.emitShot(pos.add(aim.scalar(getRadius())), aim, this.team);
 				lastShot = GlobalInfo.time;
 			}
 			break;

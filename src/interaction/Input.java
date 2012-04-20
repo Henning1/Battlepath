@@ -18,7 +18,7 @@
  */
 package interaction;
 
-import game.Game;
+import game.Core;
 
 import java.awt.Dimension;
 import java.awt.Point;
@@ -56,19 +56,23 @@ class Remover extends TimerTask {
 
 public class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
 
-	Game g;
+	Core g;
 	public Dimension size=null;
 	
+	private boolean[] mouseButtonStatus = new boolean[3];
 	public boolean[] mouseButtonPressed = new boolean[3];
+	public boolean[] mouseButtonClicked = new boolean[3];
+	public boolean[] mouseButtonHold = new boolean[3];
+	public boolean[] mouseNewPress = new boolean[3];
+	public boolean[]  lastMouseState = new boolean[3];
 	public Point viewCursorPos = new Point(0,0);
 	
 	ArrayList<Character> keyBuffer;
 	HashMap<Integer, Remover> pressedKeys;
 	Timer timer;
 	
-	public Input(BFrame frame, Game g) {
+	public Input(BFrame frame) {
 		
-		this.g = g;
 		frame.canvas.addMouseMotionListener(this);
 		frame.canvas.addMouseListener(this);
 		frame.canvas.addMouseWheelListener(this);
@@ -80,6 +84,20 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 		keyBuffer = new ArrayList<Character>();
 		timer = new Timer();
 	}
+	
+	public void process() {
+		System.arraycopy(mouseButtonPressed, 0, lastMouseState, 0, mouseButtonPressed.length);
+		System.arraycopy(mouseButtonStatus, 0, mouseButtonPressed, 0, mouseButtonPressed.length);
+		
+		for(int i=0;i<3;i++) {
+			mouseButtonClicked[i] = !mouseButtonPressed[i] & lastMouseState[i];
+			mouseButtonHold[i] = mouseButtonPressed[i] & lastMouseState[i];
+			mouseNewPress[i] = mouseButtonPressed[i] & !lastMouseState[i];
+		}
+		
+	
+	}
+	
 		
 	public boolean isPressed(Integer key) {
 		return pressedKeys.containsKey(key);
@@ -114,12 +132,12 @@ public class Input implements KeyListener, MouseListener, MouseMotionListener, M
 
 	@Override
 	public void mousePressed(MouseEvent arg0) {
-		mouseButtonPressed[arg0.getButton()-1] = true;
+		mouseButtonStatus[arg0.getButton()-1] = true;
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		mouseButtonPressed[arg0.getButton()-1] = false;
+		mouseButtonStatus[arg0.getButton()-1] = false;
 	}
 
 	@Override

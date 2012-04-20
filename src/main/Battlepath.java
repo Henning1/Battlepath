@@ -17,7 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 package main;
-import game.Game;
+import game.Core;
+import game.EditorSession;
+import game.GameSession;
+import game.Session;
 import game.Team;
 import game.View;
 import interaction.Input;
@@ -89,22 +92,21 @@ public class Battlepath {
 		teams.add(new Team("SWAR", 0));
 		teams.add(new Team("sWARm", 1));
 		
-		Game game = new Game(start, teams, 0);
+		Session game = (Session) new GameSession(start, teams, 0);
 		
 		BFrame frame = new BFrame(windowSize);
 		Dimension paneSize = frame.getContentPane().getSize();
 		
 		OpenGLRenderer renderer = new OpenGLRenderer(game,tileSize,frame);
-		game.field = f;
-		game.input = new Input(frame, game);
-		game.pathPlanner =  new Pathplanner(f);
-		game.collisionSystem = new CollisionSystem(f,game);
+		Core.field = f;
+		Core.input = new Input(frame);
+		Core.view = new View(paneSize, tileSize);
+		Core.initialize((Session)game);
+		
 		//game.entitySystem.addAll(randomTowers(f, 30, game,teams));
-		game.setView(new View(paneSize, tileSize, game));
 		
-		game.initialize();
 		
-		MainLoop.startLoop(game, renderer, frame);
+		MainLoop.startLoop(renderer, frame);
 	}
 	/**
 	 * Finds valid start position for the Unit
@@ -138,7 +140,7 @@ public class Battlepath {
 	 * @param g Used game
 	 * @return List of towers
 	 */ 	
-	public static ArrayList<Entity> randomTowers(Field f, int n, Game g, ArrayList<Team> teams) {
+	public static ArrayList<Entity> randomTowers(Field f, int n, Core g, ArrayList<Team> teams) {
 		ArrayList<Entity> list = new ArrayList<Entity>();
 		Tile[][] tiles = f.getTiles();
 		for(int i=0; i<n;i++) {
@@ -147,7 +149,7 @@ public class Battlepath {
 				tower = new Point(rand.nextInt(f.getTilesX()), rand.nextInt(f.getTilesY()));
 			
 			int team = rand.nextInt(teams.size());
-			list.add(new Tower(f.getWorldPos(tower), g, teams.get(team)));
+			list.add(new Tower(f.getWorldPos(tower), teams.get(team)));
 		}
 		return list;
 	}

@@ -18,7 +18,7 @@
  */
 package entities;
 
-import game.Game;
+import game.Core;
 import game.Team;
 import util.Vector2D;
 
@@ -26,12 +26,10 @@ import util.Vector2D;
 public abstract class Entity {
 	public Vector2D pos;
 	public Vector2D velocity = new Vector2D(0,0);
-	public Game game;
 	public Team team;
 	
-	public Entity(Vector2D position, Game game, Team team) {
+	public Entity(Vector2D position, Team team) {
 		pos = position;
-		this.game = game;
 		this.team = team;
 	}
 
@@ -40,6 +38,6 @@ public abstract class Entity {
 
 	
 	public Vector2D velocityDt() {
-		return velocity.scalar(game.dt);
+		return velocity.scalar(Core.dt);
 	}
 }

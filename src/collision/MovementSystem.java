@@ -20,7 +20,7 @@ package collision;
 
 import entities.CollisionEntity;
 import entities.Unit;
-import game.Game;
+import game.Core;
 
 import java.util.ArrayList;
 
@@ -29,11 +29,9 @@ import util.Vector2D;
 
 
 public class MovementSystem {
+
 	
-	private Game game;
-	
-	public MovementSystem(Game game) {
-		this.game = game;
+	public MovementSystem() {
 	}
 	
 	
@@ -42,7 +40,7 @@ public class MovementSystem {
 		for(Unit u1 : units) {
 			Move m1 = u1.getMove();
 			if(u1.getLeader()) continue;
-			for(Unit u2 : game.entitySystem.unitsInRange(u1.pos, 5)) {
+			for(Unit u2 : Core.entitySystem.unitsInRange(u1.pos, 5)) {
 				if(u1 == u2) continue;
 				if(u1.pos.equals(u2.pos)) u2.pos = u2.pos.add(0.0001);
 				//Move m2 = u2.getMove();
@@ -57,7 +55,7 @@ public class MovementSystem {
 	
 	public void collideUnitsWithLevel(ArrayList<Unit> units, double dt) {
 		for(Unit u : units) {
-			game.collisionSystem.collideAndSlide(u.getMove());			
+			Core.collisionSystem.collideAndSlide(u.getMove());			
 		}
 	}
 	
@@ -76,8 +74,8 @@ public class MovementSystem {
 		
 		for(CollisionEntity c1 : ces) {
 			//collision with entities
-			ArrayList<CollisionEntity> cesInRange = game.entitySystem.collisionEntitiesInRange(c1.pos, 7.0);		
-			if(game.collisionSystem.collide(c1.getMove()) != null) {
+			ArrayList<CollisionEntity> cesInRange = Core.entitySystem.collisionEntitiesInRange(c1.pos, 7.0);		
+			if(Core.collisionSystem.collide(c1.getMove()) != null) {
 				c1.collide(null);
 			}
 			for(CollisionEntity c2 : cesInRange) {

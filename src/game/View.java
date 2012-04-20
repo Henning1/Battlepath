@@ -36,7 +36,7 @@ import util.Vector2D;
 public class View {
 	
 	public Dimension windowSize;
-	Game game;
+	Core game;
 	int tileSize;
 	public double zoom = 1;
 	public Vector2D velocity = new Vector2D(0,0);
@@ -57,13 +57,11 @@ public class View {
 	 * 
 	 * @param size Size of the viewport in pixels
 	 * @param tileSize Size of one tile in pixels
-	 * @param g Game object
 	 */
-	public View(Dimension size, int tileSize, Game g) {
+	public View(Dimension size, int tileSize) {
 		windowSize = size;
 		offset = new Vector2D(0,0);
 		this.tileSize = tileSize;
-		game = g;
 		
 		zoomTransition = new Transition(1, 1, 1, 0, Transition.type.EASEINOUT);
 		offsetTransitionX = new Transition(0, 0, 1, 0, Transition.type.EASEINOUT);

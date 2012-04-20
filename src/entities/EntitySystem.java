@@ -18,9 +18,11 @@
  */
 package entities;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 
+import util.Rectangle2D;
 import util.SafeList;
 import util.Vector2D;
 
@@ -126,11 +128,9 @@ public class EntitySystem {
 		return endindex;
 	}
 
-	
-	
-	private ArrayList<Entity> entitiesInRange(ArrayList<EntityComparator> xOrder, Vector2D pos, double range) {
-		int startindex = getStartIndex(xOrder,pos.x-range,1);
-		int endindex = getEndIndex(xOrder,pos.x+range,1);
+	private ArrayList<Entity> entitiesInRect(ArrayList<EntityComparator> xOrder, Rectangle2D rect) {
+		int startindex = getStartIndex(xOrder,rect.left(),1);
+		int endindex = getEndIndex(xOrder,rect.right(),1);
 		
 		ArrayList<EntityComparator> yOrder = new ArrayList<EntityComparator>();
 		for(int i=startindex; i<=endindex; i++) {
@@ -143,21 +143,26 @@ public class EntitySystem {
 		ArrayList<Entity> result = new ArrayList<Entity>();
 		if(yOrder.size() == 0) return result;
 		
-		startindex = getStartIndex(yOrder,pos.y-range,2);
-		endindex = getEndIndex(yOrder,pos.y+range,2);
+		startindex = getStartIndex(yOrder,rect.bottom(),2);
+		endindex = getEndIndex(yOrder,rect.top(),2);
 		
 		for(int i=startindex; i<=endindex; i++) {
 			Entity e = yOrder.get(i).e;
-			if(e.pos.distance(pos) <= range)
-				result.add(e);
+			result.add(e);
 		}
 		
-		//Debug efficiency output
-		/*
-		System.out.println("count in total: " + xOrder.size());
-		System.out.println("count in xrange: " + yOrder.size());
-		System.out.println("count in yrange: " + result.size());
-		*/
+		return result;
+		
+	}
+	
+	private ArrayList<Entity> entitiesInRange(ArrayList<EntityComparator> xOrder, Vector2D pos, double range) {
+		Rectangle2D rect = new Rectangle2D(pos.add(range),pos.subtract(range));
+		ArrayList<Entity> inRect = entitiesInRect(xOrder,rect);
+		ArrayList<Entity> result = new ArrayList<Entity>();
+		for(Entity e : inRect) {
+			if(pos.distance(e.pos) <= range)
+				result.add(e);
+		}
 		return result;
 	}
 	
@@ -182,4 +187,15 @@ public class EntitySystem {
 		}
 		return us;
 	}
+	
+	public ArrayList<Unit> unitsInRect(Rectangle2D rect) {
+		ArrayList<Unit> us = new ArrayList<Unit>();
+		ArrayList<Entity> es = entitiesInRect(xOrderUnits,rect);
+		for(Entity e : es) {
+			if(e instanceof Unit) us.add((Unit)e);
+		}
+		return us;
+		
+	}
+	
 }

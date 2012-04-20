@@ -27,9 +27,11 @@ import entities.Unit;
 import fx.FxEntity;
 import fx.Particle;
 import fx.Shockwave;
-import game.Game;
+import game.Core;
 import game.GameMode;
+import game.GameSession;
 import game.HUDButton;
+import game.Session;
 import game.Team;
 
 import java.awt.Dimension;
@@ -51,7 +53,8 @@ import util.Vector2D;
 
 public class OpenGLRenderer implements GLEventListener {
 
-	private Game game;
+	private Session session;
+	private GameSession game=null;
 	private int tileSize;
 	private double scaleFactor;
 	private Vector2D offset;
@@ -66,17 +69,22 @@ public class OpenGLRenderer implements GLEventListener {
 	//only valid while display is running
 	private GL2 gl;
 	
-	public OpenGLRenderer(Game g, int tS, BFrame frame) {
-		game = g;
+	public OpenGLRenderer(Session g, int tS, BFrame frame) {
+		session = g;
 		tileSize = tS;
+		
+		if(session instanceof GameSession) {
+			game = (GameSession)session;
+		}
+		
 		frame.canvas.addGLEventListener(this);
 	}
 	
 	@Override
 	public void display(GLAutoDrawable drawable) {
 		//Draw
-		scaleFactor = tileSize * game.view.zoom;
-		offset = game.view.offset;
+		scaleFactor = tileSize * Core.view.zoom;
+		offset = Core.view.offset;
 		gl = drawable.getGL().getGL2();
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT);
 		
@@ -87,51 +95,18 @@ public class OpenGLRenderer implements GLEventListener {
 		drawParticles();
 		drawEffects();
 		
-		
-		// Unit Range selection
-		
-		gl.glColor4d(0.8,0.0,0.0, 0.5);
-		if(game.swarm != null) {
-			ArrayList<Entity> es = game.entitySystem.entitiesInRange(
-					game.swarm.getLeader().pos, 7);
-			if(es != null) {
-				for(Entity e : es) {
-					square(e.pos, 0.5);
-				}
-			}
-			gl.glColor4d(0.2,0.0,0.0, 0.5);
-			circle(game.swarm.getLeader().pos, 7, false);
-		}
 
 		
 		
 		//Collision Data selection
 		gl.glColor4d(0.3,0.0,0.0, 0.5);
-		if(game.entitySystem.selected().size() > 0) {
-			ArrayList<Line2D> cls = game.collisionSystem.relevantData(
-					game.entitySystem.selected().get(0).getMove());
+		if(Core.entitySystem.selected().size() > 0) {
+			ArrayList<Line2D> cls = Core.collisionSystem.relevantData(
+					Core.entitySystem.selected().get(0).getMove());
 			for(Line2D l : cls) {
 				line(l,1);
 			}
 		}
-		
-		
-		// Line Level intersection
-		/*
-		Line2D line = new Line2D(new Vector2D(50.5,50.5), game.input.getCursorPos());
-		ArrayList<Tile> tilesOnLine = game.collisionSystem.getTilesOn(line);
-		
-		gl.glEnable(GL2.GL_BLEND);
-		
-		if(game.collisionSystem.collideWithLevel(line))	
-			gl.glColor4d(0.3,0.0,0.0, 0.5);
-		else gl.glColor4d(0.3,0.3,0.0, 0.5);
-		
-		for(Tile t : tilesOnLine) {
-			square(t.getCenter(),1);
-		}
-		line(line.a,line.b,1);
-		*/
 
 		drawHUD();
 		gl.glDisable(GL2.GL_BLEND);
@@ -201,13 +176,13 @@ public class OpenGLRenderer implements GLEventListener {
     }
 	
 	private void drawParticles() {
-		ArrayList<Particle> particles = game.particleSystem.particles;
+		ArrayList<Particle> particles = Core.particleSystem.particles;
 		
 		gl.glPointSize((float)(0.8*scaleFactor));
 		gl.glBegin(GL.GL_POINTS);
 		
 		for(FxEntity fe : particles) {
-			if(!game.view.getScreenRect().inside(fe.pos, 5))
+			if(!Core.view.getScreenRect().inside(fe.pos, 5))
 				continue;
 			
 			Particle p = (Particle)fe;
@@ -219,7 +194,7 @@ public class OpenGLRenderer implements GLEventListener {
 	}
 	
 	private void drawEffects() {
-		SafeList<FxEntity> fxs = game.particleSystem.fxEntities;
+		SafeList<FxEntity> fxs = Core.particleSystem.fxEntities;
 		
 		float swPositions[] = new float[20];
 		float swRadiuses[] = new float[10];
@@ -230,7 +205,7 @@ public class OpenGLRenderer implements GLEventListener {
 			if(e instanceof Shockwave) {
 				Shockwave sw = (Shockwave)e;
 				
-				Point screenPos = game.view.worldToViewGL(sw.pos);
+				Point screenPos = Core.view.worldToViewGL(sw.pos);
 
 				swPositions[shockwaves*2] = screenPos.x;
 				swPositions[shockwaves*2+1] = screenPos.y;
@@ -257,15 +232,14 @@ public class OpenGLRenderer implements GLEventListener {
 	}
 	
 	private void drawEntities() {
-		for(Entity e : game.entitySystem.entities) {
+		for(Entity e : Core.entitySystem.entities) {
         	
-			if(!game.view.getScreenRect().inside(e.pos, e.getRadius()))
+			if(!Core.view.getScreenRect().inside(e.pos, e.getRadius()))
 				continue;
 			
 			if(e instanceof Tower) {
         		Tower tower = (Tower)e;
-        		
-        		
+
         		teamColor(e.team);
         		
         		rhombus(tower.pos, 1);
@@ -283,6 +257,11 @@ public class OpenGLRenderer implements GLEventListener {
         	}
         	else if(e instanceof Unit) {
         		Unit u = (Unit)e;
+        		
+           		teamColor(e.team);
+        		circle(u.pos, u.getRadius());
+        		
+        		if(game == null) continue;
         		
         		if(u.swarm != null && game.mode == GameMode.ACTION) {
         			gl.glEnable(GL2.GL_BLEND);
@@ -304,8 +283,7 @@ public class OpenGLRenderer implements GLEventListener {
         			gl.glDisable(GL2.GL_BLEND);
         		}
         			
-        		teamColor(e.team);
-        		circle(u.pos, u.getRadius());
+ 
         	}
 
         }
@@ -314,19 +292,19 @@ public class OpenGLRenderer implements GLEventListener {
 	private void drawField() {
 		gl.glBegin(GL2.GL_QUADS);
 		
-		Rectangle2D screen = game.view.getScreenRect();
-		Point topleft = game.field.tileIndexAt(screen.topleft);
-		Point bottomright = game.field.tileIndexAt(screen.bottomright);
-		Tile[][] tiles = game.field.getTiles();
+		Rectangle2D screen = Core.view.getScreenRect();
+		Point topleft = Core.field.tileIndexAt(screen.topleft);
+		Point bottomright = Core.field.tileIndexAt(screen.bottomright);
+		Tile[][] tiles = Core.field.getTiles();
 		
 		
-		game.field.clamp(topleft);
-		game.field.clamp(bottomright);
+		Core.field.clamp(topleft);
+		Core.field.clamp(bottomright);
 		
 		for(int x=topleft.x; x <= bottomright.x; x++) {
 			for(int y=bottomright.y; y <= topleft.y; y++) {
 				int tileValue = tiles[x][y].getValue();
-				gl.glColor3d((double)x/game.field.getTilesX()-0.2, (double)x/game.field.getTilesX()-0.2, (double)y/game.field.getTilesY()-0.2);
+				gl.glColor3d((double)x/Core.field.getTilesX()-0.2, (double)x/Core.field.getTilesX()-0.2, (double)y/Core.field.getTilesY()-0.2);
 				if(tileValue == 1) {
 					tile(new Vector2D(x+0.5,y+0.5));
 				} else if(tileValue > 1 && tileValue < 6)
@@ -339,19 +317,19 @@ public class OpenGLRenderer implements GLEventListener {
 	
 	private void drawHUD() {
 		//Cursor
-		Point cursor = game.input.viewCursorPos;
+		Point cursor = Core.input.viewCursorPos;
 		gl.glLineWidth(2);
 		gl.glBegin(GL2.GL_LINES);
 		gl.glColor3d(0,1,0);
-		gl.glVertex2d(cursor.x, game.view.windowSize.height-cursor.y-10);
-		gl.glVertex2d(cursor.x, game.view.windowSize.height-cursor.y+10);
-		gl.glVertex2d(cursor.x-10, game.view.windowSize.height-cursor.y);
-		gl.glVertex2d(cursor.x+10, game.view.windowSize.height-cursor.y);
+		gl.glVertex2d(cursor.x, Core.view.windowSize.height-cursor.y-10);
+		gl.glVertex2d(cursor.x, Core.view.windowSize.height-cursor.y+10);
+		gl.glVertex2d(cursor.x-10, Core.view.windowSize.height-cursor.y);
+		gl.glVertex2d(cursor.x+10, Core.view.windowSize.height-cursor.y);
 		gl.glEnd();
 		
 		//Selection Rectangle
-		if(game.selectionRect != null) {
-			Rectangle2D sel = game.selectionRect;
+		if(Core.selectionRect != null) {
+			Rectangle2D sel = Core.selectionRect;
 			gl.glColor3d(0.1,0.1,0.2);
 			rectangle(sel.topleft, sel.bottomright);
 		}
@@ -360,7 +338,7 @@ public class OpenGLRenderer implements GLEventListener {
 		
 		//HealthEntity menus
 		gl.glColor3d(1,1,1);
-		for(HealthEntity e : game.entitySystem.visibleMenuEntities) {
+		for(HealthEntity e : Core.entitySystem.visibleMenuEntities) {
 			for(HUDButton b : e.menu.buttons) {
 				if(b.mouseOver) gl.glColor3d(1,0,0);
 				circle(b.position, b.getRadius(), false);
@@ -498,7 +476,7 @@ public class OpenGLRenderer implements GLEventListener {
 		GLU glu = new GLU();
 		gl.glViewport(0, 0, width, height);
 		glu.gluOrtho2D(0, width, 0, height);
-		game.view.windowSize = new Dimension(width, height);
+		Core.view.windowSize = new Dimension(width, height);
 	}
 
 

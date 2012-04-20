@@ -30,12 +30,12 @@ import entities.Unit;
 public class Swarm {
 	
 	private SafeList<Unit> units;
-	private Game game;
+	private Core game;
 	private Unit leader;
 	
 	boolean alive = true;
 	
-	public Swarm(ArrayList<Unit> units, Game game) {
+	public Swarm(ArrayList<Unit> units) {
 		
 		this.game = game;
 		this.units = new SafeList<Unit>(units);

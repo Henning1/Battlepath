@@ -18,41 +18,13 @@
  */
 package game;
 
-import java.awt.Point;
-
-
-import util.Vector2D;
-
-public class HUDButton {
-	public Point position;
-	public Vector2D direction;
-	public boolean mouseOver = false;
-	private callback cb;
-	
-	public HUDButton(HUDButton.callback c) {
-		cb = c;
-	}
-	
-	public double getRadius() {
-		return 15;
-	}
-	
-	public void process(double dt) {
-		Point cursor = (Point)Core.input.viewCursorPos.clone();
-		cursor.y = Core.view.windowSize.height - cursor.y;
-		if(cursor.distance(position) < getRadius()) {
-			mouseOver = true;
-		}
-		else if(mouseOver == true) {
-			mouseOver = false;
-		}
-		
-		if(mouseOver && Core.input.mouseButtonPressed[0]) {
-			cb.run();
-		}
-	}
-	
-	public interface callback {
-		public void run();
-	}
+/**
+ * @author henning
+ *
+ */
+public interface Session {
+	public void initialize();
+	public void step(double dt);
+	public void processInputState(double dt);
+	public void processKey(int key);
 }
