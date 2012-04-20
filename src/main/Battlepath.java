@@ -18,7 +18,6 @@
  */
 package main;
 import game.Core;
-import game.EditorSession;
 import game.GameSession;
 import game.Session;
 import game.Team;
@@ -37,6 +36,7 @@ import collision.CollisionSystem;
 
 import util.Vector2D;
 
+import editor.EditorSession;
 import engine.Field;
 import engine.MainLoop;
 import engine.MapCodec;
@@ -64,7 +64,7 @@ public class Battlepath {
 		int fieldHeight = 100;
 		Dimension windowSize = new Dimension(1000,800);
 		Field f = new Field(fieldWidth, fieldHeight, "random");
-		randomCircles(f, fieldWidth*fieldHeight/50, 3);
+		//randomCircles(f, fieldWidth*fieldHeight/50, 3);
 		
 		f.setTile(new Vector2D(40.5,40.5), 4);
 		f.setTile(new Vector2D(40.5,41.5), 4);
@@ -93,15 +93,16 @@ public class Battlepath {
 		teams.add(new Team("sWARm", 1));
 		
 		Session game = (Session) new GameSession(start, teams, 0);
+		Session editor = (Session) new EditorSession();
 		
 		BFrame frame = new BFrame(windowSize);
 		Dimension paneSize = frame.getContentPane().getSize();
 		
-		OpenGLRenderer renderer = new OpenGLRenderer(game,tileSize,frame);
+		OpenGLRenderer renderer = new OpenGLRenderer(editor,tileSize,frame);
 		Core.field = f;
 		Core.input = new Input(frame);
 		Core.view = new View(paneSize, tileSize);
-		Core.initialize((Session)game);
+		Core.initialize((Session)editor);
 		
 		//game.entitySystem.addAll(randomTowers(f, 30, game,teams));
 		

@@ -72,8 +72,8 @@ public class Field {
 			for(int y=topleft.y; y<bottomright.y; y++) {
 				Random rand = new Random();
 				if(pos.distance(getWorldPos(new Point(x,y))) < r)
-					tiles[x][y].setValue(rand.nextInt(6));
-					//tiles[x][y].setValue(2);
+					//tiles[x][y].setValue(rand.nextInt(6));
+					tiles[x][y].setValue(1);
 			}
 		}
 	}

@@ -18,6 +18,7 @@
  */
 package interaction;
 
+import editor.EditorSession;
 import engine.Tile;
 import entities.Entity;
 import entities.HealthEntity;
@@ -55,6 +56,7 @@ public class OpenGLRenderer implements GLEventListener {
 
 	private Session session;
 	private GameSession game=null;
+	private EditorSession editor=null;
 	private int tileSize;
 	private double scaleFactor;
 	private Vector2D offset;
@@ -76,6 +78,9 @@ public class OpenGLRenderer implements GLEventListener {
 		if(session instanceof GameSession) {
 			game = (GameSession)session;
 		}
+		if(session instanceof EditorSession) {
+			editor = (EditorSession)session;
+		}
 		
 		frame.canvas.addGLEventListener(this);
 	}
@@ -93,10 +98,7 @@ public class OpenGLRenderer implements GLEventListener {
 		drawEntities();
 		gl.glEnable(GL2.GL_BLEND);
 		drawParticles();
-		drawEffects();
-		
-
-		
+		drawEffects();		
 		
 		//Collision Data selection
 		gl.glColor4d(0.3,0.0,0.0, 0.5);
@@ -326,6 +328,21 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glVertex2d(cursor.x-10, Core.view.windowSize.height-cursor.y);
 		gl.glVertex2d(cursor.x+10, Core.view.windowSize.height-cursor.y);
 		gl.glEnd();
+		
+		if(editor != null) {
+			circle(Core.input.getCursorPos(),editor.getBrush().size,false);
+			polygonLines(Core.field.getBoundingFrame(), false);
+			
+			ArrayList<Tile> edits = editor.getBrush().getPaint(Core.field, Core.input.getCursorPos());
+			
+			for(Tile t : edits) {
+				polygonLines(t.getCollisionModel(),false);
+			}
+			
+			
+		}
+		
+		
 		
 		//Selection Rectangle
 		if(Core.selectionRect != null) {

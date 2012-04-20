@@ -59,8 +59,15 @@ public class Tile {
 		this.topleft = new Vector2D(index.x,index.y+1);
 		this.bottomright = new Vector2D(index.x+1,index.y);
 		this.center = new Vector2D((double)index.x+0.5,(double)index.y+0.5);
+		setValue(value);
 	}
 	
+	public Tile(int x, int y, int value) {
+		this(new Point(x,y),value);
+	}
+	
+
+
 	/**
 	 * Set the value of the Tile
 	 * 0: empty

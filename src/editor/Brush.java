@@ -16,48 +16,21 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package game;
+package editor;
+
+import java.util.ArrayList;
+import engine.Field;
+import engine.Tile;
+import util.Line2D;
+import util.Vector2D;
 
 /**
  * @author henning
  *
  */
-public class EditorSession implements Session {
-
-	/* (non-Javadoc)
-	 * @see game.Session#initialize()
-	 */
-	@Override
-	public void initialize() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see game.Session#step(double)
-	 */
-	@Override
-	public void step(double dt) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see game.Session#processKey(int)
-	 */
-	@Override
-	public void processKey(int key) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	/* (non-Javadoc)
-	 * @see game.Session#processInputState(double)
-	 */
-	@Override
-	public void processInputState(double dt) {
-		// TODO Auto-generated method stub
-		
-	}
-
+public abstract class Brush {
+	public abstract ArrayList<Tile> getPaint(Field f, Vector2D pos);
+	public abstract void paint(Field f, Vector2D pos);
+	public int filltype=1;
+	public double size=3;
 }
