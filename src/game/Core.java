@@ -103,6 +103,7 @@ public class Core {
 	}
 	
 	public static void processKey(int key) {
+		if(input.isPressed(17)) return;
 		switch(key) {
 		case KeyBindings.ZOOM_IN:
 			Core.view.zoom(1.25*Core.view.getTargetZoom(), true);

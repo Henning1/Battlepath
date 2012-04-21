@@ -30,7 +30,7 @@ import engine.Tile;
  * @author henning
  *
  */
-public class SmoothenBrush extends SquareBrush {
+public class SmoothenBrush extends SquareBaseBrush {
 	
 	/**
 	 * Set the value of the Tile

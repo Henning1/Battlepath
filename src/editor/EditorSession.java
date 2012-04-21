@@ -18,6 +18,10 @@
  */
 package editor;
 
+import interaction.KeyBindings;
+
+import java.util.ArrayList;
+
 import util.Vector2D;
 import engine.GlobalInfo;
 import game.Core;
@@ -30,13 +34,16 @@ import game.Session;
 public class EditorSession implements Session {
 
 	int index = 0;
-	Brush brush; 
+	ArrayList<Brush> brushes = new ArrayList<Brush>(); 
 	double moved = Double.MAX_VALUE;
 	Vector2D lastPaint = GlobalInfo.nullVector.copy();
 	
 	@Override
 	public void initialize() {
-		brush = (Brush) new CircleBrush();
+		brushes.add(new CircleBrush());
+		brushes.add(new SquareBrush());
+		brushes.add(new SmoothenBrush());
+		
 		Core.useSelectionRect = false;
 	}
 
@@ -48,14 +55,14 @@ public class EditorSession implements Session {
 		moved = Core.input.getCursorPos().distance(lastPaint);
 		
 		if(Core.input.mouseButtonHold[0] && moved > 0.1) {
-			brush.paint(Core.field, Core.input.getCursorPos());
+			brushes.get(index).paint(Core.field, Core.input.getCursorPos());
 			lastPaint = Core.input.getCursorPos();
 		}
 		
 	}
 	
 	public Brush getBrush() {
-		return brush;
+		return brushes.get(index);
 	}
 
 	/* (non-Javadoc)
@@ -65,31 +72,40 @@ public class EditorSession implements Session {
 	public void processKey(int key) {
 		switch(key) {
 		case 'b':
-			if(index == 0) {
-				brush = new SmoothenBrush();
-				index = 1;
-			}
-			else if(index == 1) {
-				brush = new CircleBrush();
-				index = 0;
-			}
+			nextBrush();
 		break;
 		case 'i':
-			if(brush.filltype == 1)
-				brush.filltype = 0;
-			else if(brush.filltype == 0)
-				brush.filltype = 1;
+			if(getBrush().filltype == 1)
+				getBrush().filltype = 0;
+			else if(getBrush().filltype == 0)
+				getBrush().filltype = 1;
 		break;
 		case '+':
-			brush.size += 0.05;
+			getBrush().size += 0.1;
 		break;
 		case '-':
-			brush.size -= 0.05;
-			if(brush.size < 0.2) brush.size = 0.2;
+			getBrush().size -= 0.1;
+			if(getBrush().size < 0.4) getBrush().size = 0.2;
 		break;
+		case KeyBindings.ZOOM_IN:
+			if(Core.input.isPressed(17))
+				nextBrush();
+			break;
+		case KeyBindings.ZOOM_OUT:
+			if(Core.input.isPressed(17))
+				previousBrush();
+			break;
 		}
-		
-		
+	}
+	
+	private void nextBrush() {
+		index++;
+		index = index % brushes.size();
+	}
+	
+	private void previousBrush() {
+		index--;
+		if(index < 0) index = brushes.size()-1;
 	}
 
 	/* (non-Javadoc)

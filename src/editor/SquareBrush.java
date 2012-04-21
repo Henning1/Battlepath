@@ -18,10 +18,6 @@
  */
 package editor;
 
-import java.awt.Point;
-import java.util.ArrayList;
-
-import util.Line2D;
 import util.Vector2D;
 import engine.Field;
 import engine.Tile;
@@ -30,41 +26,14 @@ import engine.Tile;
  * @author henning
  *
  */
-public abstract class SquareBrush extends Brush {
+public class SquareBrush extends SquareBaseBrush {
 
-
-
+	/* (non-Javadoc)
+	 * @see editor.SquareBaseBrush#editTile(engine.Field, util.Vector2D, int, int)
+	 */
 	@Override
-	public void paint(Field f, Vector2D pos) {
-		ArrayList<Tile> edits = getPaint(f,pos);
-		for(Tile t : edits) {
-			f.tileAt(t.getIndex()).setValue(t.getValue());
-		}
-
+	public Tile editTile(Field f, Vector2D pos, int x, int y) {
+		return new Tile(x,y,1);
 	}
-	
-	@Override
-	public ArrayList<Tile> getPaint(Field f, Vector2D pos) {
-		ArrayList<Tile> result = new ArrayList<Tile>();
-		
-		Point topleft = f.tileIndexAt(new Vector2D(pos.x-size, pos.y-size));
-		Point bottomright = f.tileIndexAt(new Vector2D(pos.x+size, pos.y+size));
-		f.clamp(topleft);
-		f.clamp(bottomright);
-		for(int x=topleft.x; x<bottomright.x; x++) {
-			for(int y=topleft.y; y<bottomright.y; y++) {
-				if(pos.distance(f.getWorldPos(new Point(x,y))) < size) {
-					Tile t = editTile(f,pos,x,y);
-					if(t==null) continue;
-					if(t.getValue() != f.tileAt(x,y).getValue())
-						result.add(t);
-				}
-			}
-		}
-		
-		return result;
-	}
-	
-	public abstract Tile editTile(Field f, Vector2D pos,int x, int y);
 
 }

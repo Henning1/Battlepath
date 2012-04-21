@@ -61,7 +61,6 @@ public class OpenGLRenderer implements GLEventListener {
 	private double scaleFactor;
 	private Vector2D offset;
 
-
 	
 	//shockwave shader
 	int radiusUniform;
@@ -111,7 +110,13 @@ public class OpenGLRenderer implements GLEventListener {
 		}
 
 		drawHUD();
+		drawConsole();
 		gl.glDisable(GL2.GL_BLEND);
+	}
+	
+	private void drawConsole() {
+
+
 	}
 	
 	private void setupShaders(GL2 gl) {
@@ -336,7 +341,12 @@ public class OpenGLRenderer implements GLEventListener {
 			ArrayList<Tile> edits = editor.getBrush().getPaint(Core.field, Core.input.getCursorPos());
 			
 			for(Tile t : edits) {
-				polygonLines(t.getCollisionModel(),false);
+				ArrayList<Line2D> draw = t.getCollisionModel();
+				if(draw.size() == 0)
+					draw = Core.field.tileAt(t.getIndex()).getCollisionModel();
+				
+				if(draw.size() > 1)
+					polygonLines(draw,false);
 			}
 			
 			
@@ -483,6 +493,12 @@ public class OpenGLRenderer implements GLEventListener {
 		gl.glBlendFunc(GL2.GL_ONE,GL2.GL_ONE);
 		
 		setupShaders(gl);
+		initTextRender();
+	}
+	
+	public void initTextRender() {
+
+	
 	}
 
 	@Override

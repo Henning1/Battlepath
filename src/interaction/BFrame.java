@@ -24,7 +24,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 
-
 public class BFrame extends JFrame {
 	
 	private static final long serialVersionUID = 1L;
