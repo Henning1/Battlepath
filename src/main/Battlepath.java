@@ -102,7 +102,7 @@ public class Battlepath {
 		Core.field = f;
 		Core.input = new Input(frame);
 		Core.view = new View(paneSize, tileSize);
-		Core.initialize((Session)editor);
+		Core.initialize((Session)editor,(Session)game);
 		
 		//game.entitySystem.addAll(randomTowers(f, 30, game,teams));
 		

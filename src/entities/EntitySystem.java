@@ -42,7 +42,6 @@ public class EntitySystem {
 	
 	public void arrange() {
 		entities.applyChanges();
-		
 		xOrderUnits.clear();
 		xOrderEntities.clear();
 		xOrderCollisionEntities.clear();
@@ -50,11 +49,8 @@ public class EntitySystem {
 		units.clear();
 		collisionEntities.clear();
 		visibleMenuEntities.clear();
-		
+
 		for(Entity e : entities) {
-			
-			
-			
 			EntityComparator ec = new EntityComparator(e,1);
 			xOrderEntities.add(ec);
 			if(e instanceof CollisionEntity) {
@@ -74,7 +70,6 @@ public class EntitySystem {
 			}
 				
 		}
-		
 		
 		Collections.sort(xOrderEntities);
 		Collections.sort(xOrderCollisionEntities);
@@ -120,7 +115,7 @@ public class EntitySystem {
 	private int getEndIndex(ArrayList<EntityComparator> list, double value, int dimension) {
 		int endindex = Collections.binarySearch(list, getPivot(dimension,value));
 		if(endindex<0) endindex = (-endindex)-2;
-		if(endindex < 0) endindex = 0;
+		if(endindex < 0) endindex = -1;
 		
 		while((endindex<list.size()-1) && (dimVal(list.get(endindex+1).e,dimension) <= value))
 			endindex++;

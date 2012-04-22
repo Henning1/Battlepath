@@ -38,12 +38,14 @@ public class EditorSession implements Session {
 	double moved = Double.MAX_VALUE;
 	Vector2D lastPaint = GlobalInfo.nullVector.copy();
 	
-	@Override
-	public void initialize() {
+	public EditorSession() {
 		brushes.add(new CircleBrush());
 		brushes.add(new SquareBrush());
 		brushes.add(new SmoothenBrush());
-		
+	}
+	
+	@Override
+	public void initialize() {
 		Core.useSelectionRect = false;
 	}
 

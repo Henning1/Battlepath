@@ -74,18 +74,21 @@ public class OpenGLRenderer implements GLEventListener {
 		session = g;
 		tileSize = tS;
 		
-		if(session instanceof GameSession) {
-			game = (GameSession)session;
-		}
-		if(session instanceof EditorSession) {
-			editor = (EditorSession)session;
-		}
-		
 		frame.canvas.addGLEventListener(this);
 	}
 	
 	@Override
 	public void display(GLAutoDrawable drawable) {
+		session = Core.session;
+		if(session instanceof GameSession) {
+			game = (GameSession)session;
+			editor = null;
+		}
+		if(session instanceof EditorSession) {
+			editor = (EditorSession)session;
+			game = null;
+		}
+		
 		//Draw
 		scaleFactor = tileSize * Core.view.zoom;
 		offset = Core.view.offset;

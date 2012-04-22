@@ -34,6 +34,7 @@ import util.Rectangle2D;
 import util.SafeList;
 import util.Vector2D;
 
+import editor.EditorSession;
 import engine.Field;
 import engine.Pathplanner;
 import entities.Entity;
@@ -57,21 +58,28 @@ public class Core {
 	public static View view;
 	public static double dt;
 	public static Rectangle2D selectionRect;
-	public static Session session;
 	public static boolean useSelectionRect=true;
+	public static Session session;
+	private static Session session1;
+	private static Session session2;
 	
 	public void setView(View view) {
 		Core.view = view;
 	}
 	
-	public static void initialize(Session session) {
+	public static void initialize(Session sessionG, Session sessionE) {
+		session1 = sessionG;
+		session2 = sessionE;
+		session1.initialize();
 		
 		movementSystem = new MovementSystem();
 		particleSystem = new EffectsSystem();
 		Core.collisionSystem = new CollisionSystem(field);
 
-		Core.session = session;
+		Core.session = sessionE;
 		session.initialize();
+		
+		view.center(new Vector2D(field.getTilesX()/2,field.getTilesY()/2));
 	}
 	
 	/**
@@ -103,16 +111,28 @@ public class Core {
 	}
 	
 	public static void processKey(int key) {
-		if(input.isPressed(17)) return;
+		
 		switch(key) {
 		case KeyBindings.ZOOM_IN:
+			if(input.isPressed(17)) return;
 			Core.view.zoom(1.25*Core.view.getTargetZoom(), true);
 			break;
 		case KeyBindings.ZOOM_OUT:
+			if(input.isPressed(17)) return;
 			Core.view.zoom(0.8*Core.view.getTargetZoom(), true);
 			break;
+		case 'm':
+			if(session == session1) switchTo(session2);
+			else if(session == session2) switchTo(session1);
+			
 		}
 	}
+	
+	public static void switchTo(Session s) {
+		session = s;
+		s.initialize();
+	}
+	
 	
 	public static void processSelectionRect() {
 		if(input.mouseNewPress[0]) {	

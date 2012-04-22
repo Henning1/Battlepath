@@ -43,7 +43,7 @@ public class GameSession implements Session {
 	public Swarm swarm = null;
 	public ArrayList<Team> teams = new ArrayList<Team>();
 	public Team playerteam = null;
-	public GameMode mode;
+	public GameMode mode = GameMode.STRATEGY;
 	public boolean found = false;
 	double lastShot = 0;
 	
@@ -56,12 +56,16 @@ public class GameSession implements Session {
 
 	@Override
 	public void initialize() {
-		if(Core.entitySystem.units.size() > 0) {
-			Core.view.center(Core.entitySystem.units.get(0).pos);
-		} else {
-			Core.view.center(new Vector2D(Core.field.getTilesX()/2,Core.field.getTilesY()/2));
-		}
-		setMode(GameMode.STRATEGY);
+		Core.useSelectionRect = true;
+		
+		
+		ArrayList<Entity> testResult;
+		
+		Core.entitySystem.add(new Unit(new Vector2D(30,30),new Team("bla",1)));
+		Core.entitySystem.arrange();
+		testResult = Core.entitySystem.entitiesInRange(new Vector2D(28,30), 3);
+		
+		System.out.println(testResult.size());
 	}
 
 
@@ -144,7 +148,7 @@ public class GameSession implements Session {
 			
 			if(Core.input.isPressed(KeyBindings.MOVE_LEFT)) direction.x = 1;
 			else if(Core.input.isPressed(KeyBindings.MOVE_RIGHT)) direction.x = -1;
-			else direction.x = 0;
+			else direction.x = 0.0;
 			
 			if(Core.input.isPressed(KeyBindings.MOVE_DOWN)) direction.y = -1;
 			else if(Core.input.isPressed(KeyBindings.MOVE_UP)) direction.y = 1;
@@ -190,11 +194,11 @@ public class GameSession implements Session {
 			if(swarms.size() == 0) {
 				swarmify();
 			}
-			
 			if(swarm != null) {
 				mode = gm;
 				Core.view.follow(swarm.getLeader());
 			}
+			Core.useSelectionRect = false;
 			break;
 		case STRATEGY:
 			mode = gm;
@@ -202,6 +206,7 @@ public class GameSession implements Session {
 			if(Core.entitySystem.selected().size() != 0){
 				Core.entitySystem.selected().get(0).velocity = new Vector2D(0,0);
 			}
+			Core.useSelectionRect = true;
 			break;
 		}
 	}

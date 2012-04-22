@@ -27,13 +27,15 @@ public class Rectangle2D {
 		this.bottomright = bottomright;
 		
 		if(topleft.x > bottomright.x) {
+			double temp = topleft.x;
 			this.topleft.x = bottomright.x;
-			this.bottomright.x = topleft.x;
+			this.bottomright.x = temp;
 		}
 		
 		if(topleft.y < bottomright.y) {
+			double temp = topleft.y;
 			this.topleft.y = bottomright.y;
-			this.bottomright.y = topleft.y;
+			this.bottomright.y = temp;
 		}
 	}
 	
