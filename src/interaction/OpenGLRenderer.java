@@ -314,7 +314,7 @@ public class OpenGLRenderer implements GLEventListener {
 		for(int x=topleft.x; x <= bottomright.x; x++) {
 			for(int y=bottomright.y; y <= topleft.y; y++) {
 				int tileValue = tiles[x][y].getValue();
-				gl.glColor3d((double)x/Core.field.getTilesX()-0.2, (double)x/Core.field.getTilesX()-0.2, (double)y/Core.field.getTilesY()-0.2);
+				gl.glColor3d((double)x/Core.field.getTilesX(), (double)x/Core.field.getTilesX(), (double)y/Core.field.getTilesY());
 				if(tileValue == 1) {
 					tile(new Vector2D(x+0.5,y+0.5));
 				} else if(tileValue > 1 && tileValue < 6)

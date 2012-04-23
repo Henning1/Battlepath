@@ -126,7 +126,7 @@ public class GameSession implements Session {
 				}
 			}
 			
-			if(Core.input.mouseButtonPressed[2] && !Core.input.lastMouseState[0] && selected.size() != 0) {
+			if(Core.input.mouseButtonPressed[2] && !Core.input.lastMouseState[2] && selected.size() != 0) {
 				for(Entity e : selected) {
 					Unit u = (Unit)e;
 					u.moveTo(Core.input.getCursorPos());
