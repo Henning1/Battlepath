@@ -20,6 +20,7 @@ package game;
 
 import interaction.KeyBindings;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -27,8 +28,10 @@ import main.Battlepath;
 
 import util.Rectangle2D;
 import util.SafeList;
+import util.Util;
 import util.Vector2D;
 import engine.GlobalInfo;
+import engine.MapCodec;
 import engine.Pathplanner;
 import entities.Entity;
 import entities.Unit;
@@ -179,7 +182,14 @@ public class GameSession implements Session {
 					Core.entitySystem.selectedUnits.get(0).openMenu();
 				else
 					Core.entitySystem.selectedUnits.get(0).closeMenu();
-			break;
+		case 'l':
+			byte[] m = MapCodec.encode(Core.field);
+			
+			try {
+				Util.writeFile("savedmap", m);
+			} catch (IOException e) {
+				System.out.println("I/O error.");
+			}
 		}
 	}
 
@@ -192,7 +202,7 @@ public class GameSession implements Session {
 		switch(gm) {
 		case ACTION:
 			if(swarms.size() == 0) {
-				swarmify();
+				//swarmify();
 			}
 			if(swarm != null) {
 				mode = gm;

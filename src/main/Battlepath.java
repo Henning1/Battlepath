@@ -34,6 +34,7 @@ import java.util.Random;
 
 import collision.CollisionSystem;
 
+import util.Util;
 import util.Vector2D;
 
 import editor.EditorSession;
@@ -72,14 +73,14 @@ public class Battlepath {
 		Vector2D start = new Vector2D(35,41);
 		//Vector2D start = findStartPos(f);
 		
-		/*byte[] fi = null;
+		byte[] fi = null;
 		try {
-			fi = Util.readFile("testmap");
+			fi = Util.readFile("savedmap");
 		} catch (IOException e) {
 			System.out.println("I/O error.");
 		}
 		f = MapCodec.decode(fi);
-		*/
+		
 		/*byte[] m = MapCodec.encode(f);
 		
 		try {
